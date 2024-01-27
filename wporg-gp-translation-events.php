@@ -134,6 +134,32 @@ function save_event_meta_boxes( $post_id ) {
 	}
 }
 
+/**
+ * Generate a unique event slug.
+ *
+ * @param  string $title The event title.
+ * @param  int    $post_id The event post ID.
+ * @return string The unique event slug.
+ */
+function generate_unique_event_slug( $title, $post_id = 0 ) {
+	$slug = sanitize_title( $title );
+
+	$post_exists = get_page_by_path( $slug, OBJECT, 'event' );
+
+	if ( $post_exists && $post_exists->ID != $post_id ) {
+		$suffix = 2;
+
+		while ( $post_exists ) {
+			$new_slug    = $slug . '-' . $suffix;
+			$post_exists = get_page_by_path( $new_slug, OBJECT, 'post' );
+			$suffix++;
+		}
+		$slug = $new_slug;
+	}
+	return $slug;
+}
+
+
 function submit_event_ajax() {
 	$event_id;
 	if ( 'create_event' === $_POST['form_name'] ) {
@@ -161,6 +187,7 @@ function submit_event_ajax() {
 				'post_title'   => $title,
 				'post_content' => $description,
 				'post_status'  => 'publish',
+				'post_name'    => generate_unique_event_slug( sanitize_title( $title ), 0, 'event' ),
 			)
 		);
 	}
