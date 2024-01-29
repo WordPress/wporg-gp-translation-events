@@ -1,13 +1,29 @@
 <?php
 
+class WPORG_GP_Translation_Events_Stat {
+	private int $value;
+
+	public function __construct( int $value ) {
+		$this->value = $value;
+	}
+
+	public function value(): int {
+		return $this->value;
+	}
+}
+
 class WPORG_GP_Translation_Events_Event_Stats {
-	/**
-	 * Number of translations created during the event.
-	 */
-	public int $created;
+	private WPORG_GP_Translation_Events_Stat $created;
 
 	public function __construct( int $created ) {
-		$this->created = $created;
+		$this->created = new WPORG_GP_Translation_Events_Stat( $created );
+	}
+
+	/**
+	 * Gets the number of translations created during the event.
+	 */
+	public function created(): int {
+		return $this->created->value();
 	}
 }
 
