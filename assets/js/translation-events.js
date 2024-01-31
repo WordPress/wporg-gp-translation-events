@@ -9,7 +9,8 @@ jQuery(document).ready(function($) {
             url: $translation_event.url,
             data:$form.serialize(),
             success: function(response) {
-                $gp.notices.success(response.data);
+                $('.event-slug').text(response.data.post_name)
+                history.replaceState('/events/edit/' + response.data.post_ID)
             },
             error: function(error) {
                 $gp.notices.error(response.data);

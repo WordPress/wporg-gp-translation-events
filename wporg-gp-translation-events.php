@@ -187,7 +187,6 @@ function submit_event_ajax() {
 				'post_title'   => $title,
 				'post_content' => $description,
 				'post_status'  => 'publish',
-				'post_name'    => generate_unique_event_slug( sanitize_title( $title ), 0, 'event' ),
 			)
 		);
 	}
@@ -214,7 +213,7 @@ function submit_event_ajax() {
 		update_post_meta( $event_id, '_event_project_name', $project_name );
 	}
 
-	wp_send_json_success( 'success' );
+	wp_send_json_success( get_post( $event_id ) );
 }
 
 add_action( 'wp_ajax_submit_event_ajax', 'submit_event_ajax' );
