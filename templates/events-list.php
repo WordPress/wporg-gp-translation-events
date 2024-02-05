@@ -13,6 +13,7 @@ $args   = array(
 	'post_type'      => 'event',
 	'posts_per_page' => 10,
 	'paged'          => $_paged,
+	'post_status'    => 'publish',
 );
 
 $query = new WP_Query( $args );
