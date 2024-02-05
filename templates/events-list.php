@@ -33,9 +33,12 @@ if ( $query->have_posts() ) :
 		<?php
 		while ( $query->have_posts() ) :
 			$query->the_post();
+			$event_start = ( new DateTime( get_post_meta( get_the_ID(), '_event_start', true ) ) )->format('l, F j, Y');
 			?>
-			<li>
+			<li class="event-list-item">
+				<span class="event-list-date"><?php echo esc_html( $event_start ); ?></span>
 				<a href="<?php the_permalink(); ?>"><?php the_title(); ?></a> by <span><?php the_author(); ?></span>
+				<p><?php the_excerpt(); ?></p>
 			</li>
 			<?php
 		endwhile;
