@@ -6,14 +6,23 @@ gp_tmpl_header();
 
 <h2 class="event_page_title">Upcoming Translation Events</h2>
 <?php
-
-
-$_paged = ( get_query_var( 'paged' ) ) ? get_query_var( 'paged' ) : 1;
-$args   = array(
+$current_datetime_utc = ( new DateTime( null, new DateTimeZone( 'UTC' ) ) )->format( 'Y-m-d H:i:s' );
+$_paged               = ( get_query_var( 'paged' ) ) ? get_query_var( 'paged' ) : 1;
+$args                 = array(
 	'post_type'      => 'event',
 	'posts_per_page' => 10,
 	'paged'          => $_paged,
 	'post_status'    => 'publish',
+	'meta_query'     => array(
+		array(
+			'key'     => '_event_start',
+			'value'   => $current_datetime_utc,
+			'compare' => '>=',
+			'type'    => 'DATETIME',
+		),
+	),
+	'orderby'        => 'meta_value',
+	'order'          => 'ASC',
 );
 
 $query = new WP_Query( $args );
