@@ -81,3 +81,26 @@ h2.event_page_title {
     padding-bottom: 0.5em;
     font-weight: bold;
 }
+.event-list-top-bar {
+    float: right;
+}
+.event-list-nav li {
+    display: inline;
+    margin-right: 1em;
+}
+.event-left-col {
+    width: 70%;
+    float: left;
+}
+.event-right-col {
+    width: 25%;
+    float: left;
+    padding: 1em;
+}
+.event-attending-list {
+    list-style-type: none;
+    padding: 0;
+}
+.event-attending-list li {
+    margin-bottom: 1em;
+}

@@ -3,8 +3,15 @@ gp_title( __( 'Translation Events' ) );
 gp_tmpl_header();
 
 ?>
+<div class="event-list-top-bar">
+	<ul class="event-list-nav">
+		<li><a href="<?php echo esc_url( gp_url( '/events/my-events/' ) ); ?>">My Events</a></li>
+		<li><a class="button is-primary" href="<?php echo esc_url( gp_url( '/events/new/' ) ); ?>">Create Event</a></li>
+	</ul>
+</div>
 
 <h2 class="event_page_title">Upcoming Translation Events</h2>
+<div class="event-left-col">
 <?php
 $current_datetime_utc = ( new DateTime( null, new DateTimeZone( 'UTC' ) ) )->format( 'Y-m-d H:i:s' );
 $_paged               = ( get_query_var( 'paged' ) ) ? get_query_var( 'paged' ) : 1;
@@ -60,3 +67,21 @@ else :
 	echo 'No events found.';
 endif;
 ?>
+</div>
+<div class="event-right-col">
+	<h3 class="">Events I'm Attending</h3>
+	<?php
+		// TODO: Add the list of events the user is attending.
+	?>
+	<ul class="event-attending-list">
+		<li>
+			<a href="#">Spanish Translation Day</a>
+		</li>
+		<li>
+			<a href="#">Let's Translate 2024</a>
+		</li>
+		<li>
+			<a href="#">Basics of Translation Workshop</a>
+		</li>
+	</ul>
+</div>
