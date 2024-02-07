@@ -13,7 +13,7 @@ gp_tmpl_header();
 <h2 class="event_page_title">Upcoming Translation Events</h2>
 <div class="event-left-col">
 <?php
-$current_datetime_utc = ( new DateTime( null, new DateTimeZone( 'UTC' ) ) )->format( 'Y-m-d H:i:s' );
+$current_datetime_utc = ( new DateTime( 'now', new DateTimeZone( 'UTC' ) ) )->format( 'Y-m-d H:i:s' );
 $_paged               = ( get_query_var( 'paged' ) ) ? get_query_var( 'paged' ) : 1;
 $args                 = array(
 	'post_type'      => 'event',
