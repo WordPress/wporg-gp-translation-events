@@ -1,6 +1,7 @@
 <?php
 gp_title( __( 'Translation Events - Edit Event' ) );
 gp_tmpl_header();
+gp_tmpl_load( 'events-header', get_defined_vars(), dirname( __FILE__ ) );
 
 ?>
 
