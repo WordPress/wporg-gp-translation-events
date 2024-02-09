@@ -109,7 +109,7 @@ class WPORG_GP_Translation_Events_Route extends GP_Route {
 		$event_project_name = get_post_meta( $event->ID, '_event_project_name', true ) ?: '';
 
 		$attending_event_ids = get_user_meta( $user->ID, self::USER_META_KEY_ATTENDING, true ) ?: [];
-		$user_is_attending   = array_key_exists( $event_id, $attending_event_ids );
+		$user_is_attending   = isset( $attending_event_ids[ $event_id ] );
 
 		$this->tmpl( 'event', get_defined_vars() );
 	}
@@ -137,7 +137,7 @@ class WPORG_GP_Translation_Events_Route extends GP_Route {
 			$event_ids = [];
 		}
 
-		if ( ! array_key_exists( $event_id, $event_ids ) ) {
+		if ( ! isset( $event_ids[ $event_id ] ) ) {
 			// Not yet attending, mark as attending.
 			$event_ids[ $event_id ] = true;
 		} else {
