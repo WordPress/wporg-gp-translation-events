@@ -5,7 +5,7 @@
  * @package wporg-gp-translation-events
  */
 class WPORG_GP_Translation_Events_Route extends GP_Route {
-	private const USER_META_KEY_ATTENDING = 'translation-events-attending';
+	public const USER_META_KEY_ATTENDING = 'translation-events-attending';
 
 	/**
 	 * WPORG_GP_Translation_Events_Route constructor.

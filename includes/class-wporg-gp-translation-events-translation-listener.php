@@ -114,11 +114,13 @@ class WPORG_GP_Translation_Events_Translation_Listener {
 	 * @return WP_Post[]
 	 */
 	private function select_events_user_is_registered_for( array $events, int $user_id ): array {
+		$attending_event_ids = get_user_meta( $user_id, WPORG_GP_Translation_Events_Route::USER_META_KEY_ATTENDING, true ) ?? [];
+		$attending_event_ids = array_keys( $attending_event_ids );
+
 		return array_filter(
 			$events,
-			function ( $event ) {
-				// TODO.
-				return true;
+			function ( $event ) use ( $attending_event_ids ) {
+				return array_key_exists( $event->ID, $attending_event_ids );
 			}
 		);
 	}
