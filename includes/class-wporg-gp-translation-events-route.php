@@ -99,6 +99,7 @@ class WPORG_GP_Translation_Events_Route extends GP_Route {
 		if ( ! $event ) {
 			$this->die_with_404();
 		}
+		$event_id           = $event->ID;
 		$event_title        = $event->post_title;
 		$event_description  = $event->post_content;
 		$event_start_date   = get_post_meta( $event->ID, '_event_start_date', true ) ?? '';
