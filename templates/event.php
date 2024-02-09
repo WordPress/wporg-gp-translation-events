@@ -19,8 +19,8 @@ gp_tmpl_header();
 			<p><span class="dashicons dashicons-calendar"></span> <?php echo esc_html( ( new DateTime( $event_start_date ) )->format( 'l, F j, Y' ) ); ?></p>
 			<p><span class="dashicons dashicons-clock"></span> 13:00 - 15:00</p>
 		</div>
-		<div class="event-details-join">
-			<button class="button is-primary" id="join-event">Attend Event</button>
-		</div>
+		<form class="event-details-attend">
+			<input type="submit" class="button is-primary" value="Attend Event"/>
+		</form>
 	</div>
 </div>
