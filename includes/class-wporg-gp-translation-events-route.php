@@ -5,7 +5,7 @@
  * @package wporg-gp-translation-events
  */
 class WPORG_GP_Translation_Events_Route extends GP_Route {
-
+	private const USER_META_KEY_ATTENDING = 'translation-events-attending';
 
 	/**
 	 * WPORG_GP_Translation_Events_Route constructor.
@@ -117,7 +117,7 @@ class WPORG_GP_Translation_Events_Route extends GP_Route {
 	 *
 	 * @param int $event_id
 	 */
-	public function events_attend( int $event_id) {
+	public function events_attend( int $event_id ) {
 		$user = wp_get_current_user();
 		if ( ! $user ) {
 			$this->die_with_error( 'Only logged-in users can attend events', 403 );
@@ -128,7 +128,20 @@ class WPORG_GP_Translation_Events_Route extends GP_Route {
 			$this->die_with_404();
 		}
 
-		// TODO
+		$event_ids = get_user_meta( $user->ID, self::USER_META_KEY_ATTENDING, true ) ?? [];
+		if ( ! $event_ids ) {
+			$event_ids = [];
+		}
+
+		if ( ! array_key_exists( $event_id, $event_ids ) ) {
+			// Not yet attending, mark as attending.
+			$event_ids[ $event_id ] = true;
+		} else {
+			// Currently attending, mark as not attending.
+			unset( $event_ids[ $event_id ] );
+		}
+
+		update_user_meta( $user->ID, self::USER_META_KEY_ATTENDING, $event_ids );
 
 		wp_safe_redirect( gp_url( "/events/$event->post_name" ) );
 		exit;
