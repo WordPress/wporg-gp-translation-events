@@ -123,7 +123,15 @@ class WPORG_GP_Translation_Events_Route extends GP_Route {
 			$this->die_with_error( 'Only logged-in users can attend events', 403 );
 		}
 
+		$event = get_post( $event_id );
+		if ( ! $event ) {
+			$this->die_with_404();
+		}
+
 		// TODO
+
+		wp_safe_redirect( gp_url( "/events/$event->post_name" ) );
+		exit;
 	}
 
 	/**
