@@ -120,7 +120,7 @@ class WPORG_GP_Translation_Events_Translation_Listener {
 		return array_filter(
 			$events,
 			function ( $event ) use ( $attending_event_ids ) {
-				return array_key_exists( $event->ID, $attending_event_ids );
+				return isset( $attending_event_ids[ $event->ID ] );
 			}
 		);
 	}
