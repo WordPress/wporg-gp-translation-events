@@ -105,6 +105,7 @@ class WPORG_GP_Translation_Events_Route extends GP_Route {
 		$event_end_date     = get_post_meta( $event->ID, '_event_end_date', true ) ?? '';
 		$event_locale       = get_post_meta( $event->ID, '_event_locale', true ) ?? '';
 		$event_project_name = get_post_meta( $event->ID, '_event_project_name', true ) ?? '';
+		$user_is_attending  = false; // TODO.
 		$this->tmpl( 'event', get_defined_vars() );
 	}
 

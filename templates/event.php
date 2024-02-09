@@ -20,7 +20,11 @@ gp_tmpl_header();
 			<p><span class="dashicons dashicons-clock"></span> 13:00 - 15:00</p>
 		</div>
 		<form class="event-details-attend">
-			<input type="submit" class="button is-primary" value="Attend Event"/>
+			<?php if ( ! $user_is_attending ): ?>
+				<input type="submit" class="button is-primary" value="Attend Event"/>
+			<?php else: ?>
+				<input type="submit" class="button is-secondary" value="You're attending"/>
+			<?php endif ?>
 		</form>
 	</div>
 </div>
