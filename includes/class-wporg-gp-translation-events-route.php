@@ -109,6 +109,22 @@ class WPORG_GP_Translation_Events_Route extends GP_Route {
 	}
 
 	/**
+	 * Toggle whether the current user is attending an event.
+	 * If the user is not currently marked as attending, they will be marked as attending.
+	 * If the user is currently marked as attending, they will be marked as not attending.
+	 *
+	 * @param int $event_id
+	 */
+	public function events_attend( int $event_id) {
+		$user = wp_get_current_user();
+		if ( ! $user ) {
+			$this->die_with_error( 'Only logged-in users can attend events', 403 );
+		}
+
+		// TODO
+	}
+
+	/**
 	 * Convert date time stored in UTC to a date time in a time zone.
 	 *
 	 * @param string $date_time The date time in UTC.
