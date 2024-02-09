@@ -91,7 +91,8 @@ class WPORG_GP_Translation_Events_Route extends GP_Route {
 	 * @return void
 	 */
 	public function events_details( $event_slug ) {
-		if ( ! is_user_logged_in() ) {
+		$user = wp_get_current_user();
+		if ( ! $user ) {
 			$this->die_with_404();
 		}
 		$event = get_page_by_path( $event_slug, OBJECT, 'event' );
@@ -106,7 +107,10 @@ class WPORG_GP_Translation_Events_Route extends GP_Route {
 		$event_end_date     = get_post_meta( $event->ID, '_event_end_date', true ) ?? '';
 		$event_locale       = get_post_meta( $event->ID, '_event_locale', true ) ?? '';
 		$event_project_name = get_post_meta( $event->ID, '_event_project_name', true ) ?? '';
-		$user_is_attending  = false; // TODO.
+
+		$attending_event_ids = get_user_meta( $user->ID, self::USER_META_KEY_ATTENDING, true ) ?? [];
+		$user_is_attending   = array_key_exists( $event_id, $attending_event_ids );
+
 		$this->tmpl( 'event', get_defined_vars() );
 	}
 
