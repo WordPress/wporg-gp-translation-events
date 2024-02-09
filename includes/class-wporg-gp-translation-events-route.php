@@ -103,12 +103,12 @@ class WPORG_GP_Translation_Events_Route extends GP_Route {
 		$event_id           = $event->ID;
 		$event_title        = $event->post_title;
 		$event_description  = $event->post_content;
-		$event_start_date   = get_post_meta( $event->ID, '_event_start_date', true ) ?? '';
-		$event_end_date     = get_post_meta( $event->ID, '_event_end_date', true ) ?? '';
-		$event_locale       = get_post_meta( $event->ID, '_event_locale', true ) ?? '';
-		$event_project_name = get_post_meta( $event->ID, '_event_project_name', true ) ?? '';
+		$event_start_date   = get_post_meta( $event->ID, '_event_start_date', true ) ?: '';
+		$event_end_date     = get_post_meta( $event->ID, '_event_end_date', true ) ?: '';
+		$event_locale       = get_post_meta( $event->ID, '_event_locale', true ) ?: '';
+		$event_project_name = get_post_meta( $event->ID, '_event_project_name', true ) ?: '';
 
-		$attending_event_ids = get_user_meta( $user->ID, self::USER_META_KEY_ATTENDING, true ) ?? [];
+		$attending_event_ids = get_user_meta( $user->ID, self::USER_META_KEY_ATTENDING, true ) ?: [];
 		$user_is_attending   = array_key_exists( $event_id, $attending_event_ids );
 
 		$this->tmpl( 'event', get_defined_vars() );
