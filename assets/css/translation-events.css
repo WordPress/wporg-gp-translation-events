@@ -40,10 +40,6 @@
     float: left;
     padding: 1em;
 }
-button#join-event {
-    width: 100%;
-    display: block;
-}
 .hide-event-url {
     display: none;
 }

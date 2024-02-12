@@ -21,8 +21,12 @@ gp_tmpl_load( 'events-header', get_defined_vars(), dirname( __FILE__ ) );
 			<p><span class="dashicons dashicons-calendar"></span> <?php echo esc_html( ( new DateTime( $event_start_date ) )->format( 'l, F j, Y' ) ); ?></p>
 			<p><span class="dashicons dashicons-clock"></span> 13:00 - 15:00</p>
 		</div>
-		<div class="event-details-join">
-			<button class="button is-primary" id="join-event">Attend Event</button>
-		</div>
+		<form class="event-details-attend" method="post" action="<?php echo esc_url( gp_url( "/events/attend/$event_id" ) )?>">
+			<?php if ( ! $user_is_attending ): ?>
+				<input type="submit" class="button is-primary" value="Attend Event"/>
+			<?php else: ?>
+				<input type="submit" class="button is-secondary" value="You're attending"/>
+			<?php endif ?>
+		</form>
 	</div>
 </div>
