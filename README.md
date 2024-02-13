@@ -30,3 +30,13 @@ If you are not using `wp-env`, you need to add the tables to the database of you
 ```shell
 wp db query < schema.sql
 ```
+
+### Tests
+
+You can run tests in `wp-env` with the following command:
+
+> Note that `wp-env` must be running.
+
+```shell
+composer dev:test
+```
