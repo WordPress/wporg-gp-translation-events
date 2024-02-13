@@ -197,6 +197,33 @@ class WPORG_GP_Translation_Events_Route extends GP_Route {
 	}
 
 	/**
+	 * Loads the 'events_user_created' template.
+	 *
+	 * @return void
+	 */
+	public function events_user_created() {
+		if ( ! is_user_logged_in() ) {
+			$this->die_with_error( 'You must be logged in to your events', 403 );
+		}
+		include ABSPATH . 'wp-admin/includes/post.php';
+
+		$user_id = get_current_user_id();
+		$_paged  = ( get_query_var( 'paged' ) ) ? get_query_var( 'paged' ) : 1;
+		$args    = array(
+			'post_type'      => 'event',
+			'posts_per_page' => 10,
+			'post_status'    => array( 'publish', 'draft' ),
+			'paged'          => $_paged,
+			'orderby'        => 'date',
+			'order'          => 'DESC',
+			'author'         => $user_id,
+
+		);
+		$query = new WP_Query( $args );
+		$this->tmpl( 'events-user-created', get_defined_vars() );
+	}
+
+	/**
 	 * Convert date time stored in UTC to a date time in a time zone.
 	 *
 	 * @param string $date_time The date time in UTC.

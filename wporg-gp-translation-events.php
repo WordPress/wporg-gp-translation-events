@@ -64,7 +64,7 @@ function register_event_post_type() {
 		'menu_icon'   => 'dashicons-calendar',
 		'supports'    => array( 'title', 'editor', 'thumbnail', 'revisions' ),
 		'rewrite'     => array( 'slug' => $slug ),
-		'show_ui'     => false,
+		'show_ui'     => true,
 	);
 
 	register_post_type( 'event', $args );
