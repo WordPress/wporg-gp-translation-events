@@ -21,7 +21,7 @@ if ( $query->have_posts() ) :
 			?>
 			<li class="event-list-item">
 				<span class="event-list-date"><time class="event-utc-time" datetime="<?php echo esc_attr( $event_start ); ?>"></span>
-				<a href="<?php echo esc_url( gp_url( wp_make_link_relative( $permalink ) ) ); ?>"><?php the_title(); ?></a> by <span><?php the_author(); ?></span>
+				<a href="<?php echo esc_url( gp_url( wp_make_link_relative( $permalink ) ) ); ?>"><?php the_title(); ?></a>
 				<p><?php the_excerpt(); ?></p>
 			</li>
 			<?php
