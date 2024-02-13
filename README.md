@@ -3,6 +3,12 @@
 ## Development environment
 First follow [instructions to install `wp-env`](https://developer.wordpress.org/block-editor/reference-guides/packages/packages-env/#prerequisites).
 
+Then install dependencies:
+
+```shell
+composer install
+```
+
 Then you can run a local WordPress instance with the plugin installed:
 
 ```shell
@@ -21,6 +27,6 @@ WordPress is now running at http://localhost:8888, user: `admin`, password: `pas
 
 If you are not using `wp-env`, you need to add the tables to the database of your local environment. To do this, you can run this command from the plugin folder:
 
-```
+```shell
 wp db query < schema.sql
 ```
