@@ -19,7 +19,7 @@ WordPress is now running at http://localhost:8888, user: `admin`, password: `pas
 
 ### Local environment
 
-If you are using a local environment, you need to add the tables to the local database. To do this, you can run this command from the plugin folder:
+If you are not using `wp-env`, you need to add the tables to the database of your local environment. To do this, you can run this command from the plugin folder:
 
 ```
 wp db query < schema.sql
