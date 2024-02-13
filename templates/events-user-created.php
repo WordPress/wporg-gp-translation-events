@@ -15,11 +15,13 @@ if ( $query->have_posts() ) :
 		<?php
 		while ( $query->have_posts() ) :
 			$query->the_post();
-			$event_start = get_post_meta( get_the_ID(), '_event_start', true );
+			$event_start                   = get_post_meta( get_the_ID(), '_event_start', true );
+			list( $permalink, $post_name ) = get_sample_permalink( get_the_ID() );
+			$permalink                     = str_replace( '%pagename%', $post_name, $permalink );
 			?>
 			<li class="event-list-item">
 				<span class="event-list-date"><time class="event-utc-time" datetime="<?php echo esc_attr( $event_start ); ?>"></span>
-				<a href="<?php echo esc_url( gp_url( wp_make_link_relative( get_the_permalink() ) ) ); ?>"><?php the_title(); ?></a> by <span><?php the_author(); ?></span>
+				<a href="<?php echo esc_url( gp_url( wp_make_link_relative( $permalink ) ) ); ?>"><?php the_title(); ?></a> by <span><?php the_author(); ?></span>
 				<p><?php the_excerpt(); ?></p>
 			</li>
 			<?php
