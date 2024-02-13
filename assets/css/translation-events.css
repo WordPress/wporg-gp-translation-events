@@ -114,3 +114,7 @@ h2.event_page_title {
     background-color: var(--gp-color-btn-primary-bg) !important;
     color: #fff !important;
 }
+span.event-list-status {
+    color: var(--gp-color-dark-orange);
+    font-weight: 500;
+}
