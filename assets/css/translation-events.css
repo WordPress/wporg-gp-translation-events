@@ -117,17 +117,22 @@ h2.event_page_title {
 span.event-list-status {
     font-weight: 500;
     float: left;
-    padding: 0.2em 0.4em;
     color: #fff;
     font-size: .7em;
-    border-radius: 4px;
     margin-right: 0.3em;
     width: 6em;
     text-align: center;
+    padding: 0.2em 0.5em;
+    border-radius: 1em;
 }
 span.event-list-status.draft {
-    background-color: #B0C4DE;
+    color:#c05621;
+    border: 1px solid #c05621;
 }
 span.event-list-status.publish {
-    background-color: #00d084;
+    border: 1px solid #468d11;
+    color: #468d11 ;
+}
+.event-list-item div {
+    margin-bottom: 2px;
 }
