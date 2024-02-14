@@ -22,11 +22,7 @@ if ( $query->have_posts() ) :
 			$event_status                  = ( 'publish' === get_post_status( $event_id ) ) ? 'published' : get_post_status( $event_id );
 			?>
 			<li class="event-list-item">
-				<div>
-					<span class="event-list-status <?php echo esc_attr( $event_status ); ?>"><?php echo esc_html( $event_status ); ?></span>
-					<span class="event-list-date"><time class="event-utc-time" datetime="<?php echo esc_attr( $event_start ); ?>"></span>
-				</div>
-				<a href="<?php echo esc_url( gp_url( wp_make_link_relative( $permalink ) ) ); ?>"><?php the_title(); ?></a>
+				<a class="event-status-<?php echo esc_attr( $event_status ); ?>" href="<?php echo esc_url( gp_url( wp_make_link_relative( $permalink ) ) ); ?>"><?php echo ( ( 'draft' === $event_status ) ? esc_html( ucfirst( $event_status ) ) . ' - ' : '' ) . the_title( '', '', false ); ?></a>
 				<a href="<?php echo esc_url( gp_url( 'events/edit/' . $event_id ) ); ?>" class="button is-small action edit">Edit</a>
 				<p><?php the_excerpt(); ?></p>
 			</li>
