@@ -115,6 +115,19 @@ h2.event_page_title {
     color: #fff !important;
 }
 span.event-list-status {
-    color: var(--gp-color-dark-orange);
     font-weight: 500;
+    float: left;
+    padding: 0.2em 0.4em;
+    color: #fff;
+    font-size: .7em;
+    border-radius: 4px;
+    margin-right: 0.3em;
+    width: 6em;
+    text-align: center;
+}
+span.event-list-status.draft {
+    background-color: #B0C4DE;
+}
+span.event-list-status.publish {
+    background-color: #00d084;
 }

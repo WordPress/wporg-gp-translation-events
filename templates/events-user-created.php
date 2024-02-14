@@ -20,11 +20,13 @@ if ( $query->have_posts() ) :
 			$permalink                     = str_replace( '%pagename%', $post_name, $permalink );
 			?>
 			<li class="event-list-item">
-				<span class="event-list-date"><time class="event-utc-time" datetime="<?php echo esc_attr( $event_start ); ?>"></span>
+				<div>
+					<span class="event-list-status <?php echo esc_attr( get_post_status( get_the_ID() ) ); ?>"><?php echo esc_html( get_post_status( get_the_ID() ) ); ?></span>
+					<span class="event-list-date"><time class="event-utc-time" datetime="<?php echo esc_attr( $event_start ); ?>"></span>
+				</div>
 				<a href="<?php echo esc_url( gp_url( wp_make_link_relative( $permalink ) ) ); ?>"><?php the_title(); ?></a>
-				<span class="event-list-status"><?php echo 'draft' === get_post_status( get_the_ID() ) ? esc_html( '[' . get_post_status( get_the_ID() ) . ']' ) : ''; ?></span>
 				<a href="<?php echo esc_url( gp_url( 'events/edit/' . get_the_ID() ) ); ?>" class="button is-small action edit">Edit</a>
-				<a href="" class="button is-small action edit">Delete</a><p><?php the_excerpt(); ?></p>
+				<p><?php the_excerpt(); ?></p>
 			</li>
 			<?php
 		endwhile;
