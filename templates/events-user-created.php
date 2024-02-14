@@ -1,5 +1,5 @@
 <?php
-gp_title( __( 'Translation Events' ) . ' - ' . esc_html( 'My Events' ) );
+gp_title( __( 'Translation Events' ) . ' - ' . esc_html__( 'My Events' ) );
 gp_tmpl_header();
 gp_tmpl_load( 'events-header', get_defined_vars(), dirname( __FILE__ ) );
 ?>
