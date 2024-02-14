@@ -13,6 +13,7 @@
     <file>./includes/class-wporg-gp-translation-events-active-events-cache.php</file>
     <file>./includes/class-wporg-gp-translation-events-event.php</file>
     <file>./includes/class-wporg-gp-translation-events-stats-calculator.php</file>
+    <file>./includes/class-wporg-gp-translation-events-translation-listener.php</file>
     <file>./wporg-gp-translation-events.php</file>
 
     <rule ref="WordPress">
