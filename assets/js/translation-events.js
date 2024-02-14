@@ -50,7 +50,29 @@ jQuery(document).ready(function($) {
         });
     });
 
-    function validateEventDates() {
+		$('.delete-event').on('click', function(e) {
+			console.log('delete event');
+			e.preventDefault();
+			if ( ! confirm( 'Are you sure you want to delete this event?' ) ) {
+				return;
+			}
+			var $form = $('.translation-event-form');
+			$('#event-form-action').val('delete');
+			$.ajax({
+				type: 'POST',
+				url: $translation_event.url,
+				data:$form.serialize(),
+				success: function(response) {
+					if ( response.data.success ) {
+						window.location.href = response.data.redirectUrl;
+					}
+				},
+				error: function(error) {
+					$gp.notices.error(response.data.message);
+				}
+			});
+		});
+	function validateEventDates() {
         var startDateTimeInput = $('#event-start');
         var endDateTimeInput = $('#event-end');
         if ( ! startDateTimeInput.length || ! endDateTimeInput.length ) {
@@ -65,7 +87,7 @@ jQuery(document).ready(function($) {
         });
     }
     function selectUserTimezone() {
-        document.querySelector(`#event-timezone option[value="${Intl.DateTimeFormat().resolvedOptions().timeZone}"]`).selected = true 
+        document.querySelector(`#event-timezone option[value="${Intl.DateTimeFormat().resolvedOptions().timeZone}"]`).selected = true
     }
 
     function convertToUserLocalTime() {
@@ -80,11 +102,11 @@ jQuery(document).ready(function($) {
             var userLocalDateTime = new Date(eventDateObj.getTime() - userTimezoneOffsetMs);
 
             var options = { weekday: 'short', year: 'numeric', month: 'long', day: 'numeric', hour: 'numeric', minute: 'numeric', hour12: true, timeZoneName: 'short' };
-    
+
             timeEl.textContent = userLocalDateTime.toLocaleString('en-US', options);
         });
     }
-    
+
 });
 }( jQuery, $gp )
 );

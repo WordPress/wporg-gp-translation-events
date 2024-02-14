@@ -3,6 +3,22 @@ gp_title( __( 'Translation Events' ) . ' - ' . esc_html( $event_form_title . ' -
 gp_tmpl_header();
 gp_tmpl_load( 'events-header', get_defined_vars(), dirname( __FILE__ ) );
 
+$show_delete_button = false;
+if ('Edit Event' === $event_form_title) {
+	$event = get_post( $event_id );
+	$stats_calculator = new WPORG_GP_Translation_Events_Stats_Calculator();
+	try {
+		$event_stats = $stats_calculator->for_event($event);
+	} catch ( Exception $e ) {
+		$this->die_with_error( 'Failed to calculate event stats' );
+	}
+	if ( empty( $event_stats->rows() ) ) {
+		$current_user = wp_get_current_user();
+		if ( $current_user->ID === $event->post_author || current_user_can( 'manage_options' ) ) {
+			$show_delete_button = true;
+		}
+	}
+}
 ?>
 
 <h2  class="event-page-title"><?php echo esc_html( $event_form_title ); ?></h2>
@@ -62,5 +78,9 @@ gp_tmpl_load( 'events-header', get_defined_vars(), dirname( __FILE__ ) );
 		<button class="button is-primary save-draft submit-event" type="submit" data-event-status="draft">Save Draft</button>
 		<button class="button is-primary submit-event" type="submit"  data-event-status="publish">Publish Event</button>
 	<?php endif; ?>
+	<?php if ( $show_delete_button ) : ?>
+		<button class="button is-destructive delete-event" type="submit" name="submit" value="Delete" id="submit">Delete Event</button>
+	<?php endif; ?>
 	</div>
 </form>
+
