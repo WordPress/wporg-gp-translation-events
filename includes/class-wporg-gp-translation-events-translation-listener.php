@@ -128,7 +128,7 @@ class WPORG_GP_Translation_Events_Translation_Listener {
 			$events = [];
 			foreach ( $event_ids as $event_id ) {
 				$meta = get_post_meta( $event_id );
-				$events[] = WPORG_GP_Translation_Events_Event::fromPostMeta($event_id, $meta);
+				$events[] = WPORG_GP_Translation_Events_Event::from_post_meta($event_id, $meta);
 			}
 
 			$this->active_events_cache->cache( $events );
