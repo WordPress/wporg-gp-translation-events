@@ -53,8 +53,6 @@ class WPORG_GP_Translation_Events_Event_Stats {
 }
 
 class WPORG_GP_Translation_Events_Stats_Calculator {
-	private string $actions_table_name = WPORG_GP_Translation_Events_Translation_Listener::ACTIONS_TABLE_NAME;
-
 	/**
 	 * Get stats for an event.
 	 *
@@ -70,7 +68,7 @@ class WPORG_GP_Translation_Events_Stats_Calculator {
 					   sum(action = 'create') as created,
 					   count(*) as total,
 					   count(distinct user_id) as users
-				from $this->actions_table_name
+				from wp_wporg_gp_translation_events_actions
 				where event_id = %d
 				group by locale with rollup
 			",
