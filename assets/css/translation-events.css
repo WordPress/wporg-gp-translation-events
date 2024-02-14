@@ -124,12 +124,13 @@ span.event-list-status {
     text-align: center;
     padding: 0.2em 0.5em;
     border-radius: 1em;
+    text-transform: capitalize;
 }
 span.event-list-status.draft {
     color:#c05621;
     border: 1px solid #c05621;
 }
-span.event-list-status.publish {
+span.event-list-status.published {
     border: 1px solid #468d11;
     color: #468d11 ;
 }
