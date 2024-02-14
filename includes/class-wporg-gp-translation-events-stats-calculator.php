@@ -62,8 +62,13 @@ class WPORG_GP_Translation_Events_Stats_Calculator {
 		$stats = new WPORG_GP_Translation_Events_Event_Stats();
 		global $wpdb;
 
-		$query = $wpdb->prepare(
-			"
+		// phpcs:disable WordPress.DB.DirectDatabaseQuery.DirectQuery
+		// phpcs:disable WordPress.DB.DirectDatabaseQuery.NoCaching
+		// phpcs thinks we're doing a schema change but we aren't.
+		// phpcs:disable WordPress.DB.DirectDatabaseQuery.SchemaChange
+		$rows = $wpdb->get_results(
+			$wpdb->prepare(
+				"
 				select locale,
 					   sum(action = 'create') as created,
 					   count(*) as total,
@@ -72,12 +77,13 @@ class WPORG_GP_Translation_Events_Stats_Calculator {
 				where event_id = %d
 				group by locale with rollup
 			",
-			array(
-				$event->ID,
+				array(
+					$event->ID,
+				)
 			)
 		);
+		// phpcs:enable
 
-		$rows = $wpdb->get_results( $query );
 		foreach ( $rows as $index => $row ) {
 			$is_totals = null === $row->locale;
 			if ( $is_totals && array_key_last( $rows ) !== $index ) {
