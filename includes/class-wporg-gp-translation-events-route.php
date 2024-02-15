@@ -82,6 +82,9 @@ class WPORG_GP_Translation_Events_Route extends GP_Route {
 		if ( ! $event || 'event' !== $event->post_type || ! ( current_user_can( 'edit_post', $event->ID ) || intval( $event->post_author ) === get_current_user_id() ) ) {
 			$this->die_with_error( 'Event does not exist, or you do not have permission to edit it.', 403 );
 		}
+		if ( 'trash' === $event->post_status ) {
+			$this->die_with_error( 'You cannot edit a trashed event', 403 );
+		}
 
 		include ABSPATH . 'wp-admin/includes/post.php';
 		$event_form_title              = 'Edit Event';
@@ -95,6 +98,22 @@ class WPORG_GP_Translation_Events_Route extends GP_Route {
 		$event_status                  = $event->post_status;
 		list( $permalink, $post_name ) = get_sample_permalink( $event_id );
 		$permalink                     = str_replace( '%pagename%', $post_name, $permalink );
+		$show_delete_button = false;
+		if ('Edit Event' === $event_form_title) {
+			$event = get_post( $event_id );
+			$stats_calculator = new WPORG_GP_Translation_Events_Stats_Calculator();
+			try {
+				$event_stats = $stats_calculator->for_event($event);
+			} catch ( Exception $e ) {
+				$this->die_with_error( 'Failed to calculate event stats' );
+			}
+			if ( empty( $event_stats->rows() ) ) {
+				$current_user = wp_get_current_user();
+				if ( $current_user->ID === $event->post_author || current_user_can( 'manage_options' ) ) {
+					$show_delete_button = true;
+				}
+			}
+		}
 		$this->tmpl( 'events-form', get_defined_vars() );
 	}
 
