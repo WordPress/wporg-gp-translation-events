@@ -38,9 +38,15 @@ if ( $query->have_posts() ) :
 	echo paginate_links(
 		array(
 			'total'     => $query->max_num_pages,
-			'current'   => max( 1, get_query_var( 'paged' ) ),
+			'current'   => max( 1, get_query_var( 'page' ) ),
 			'prev_text' => '&laquo; Previous',
 			'next_text' => 'Next &raquo;',
+			'format'    => '?page=%#%',
+
+
+			// 'current'   => max( 1, $current_events_query->query_vars['current_events_paged'] ),
+			// 'prev_text' => '&laquo; Previous',
+			// 'next_text' => 'Next &raquo;',
 		)
 	);
 
