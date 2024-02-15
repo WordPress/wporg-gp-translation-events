@@ -37,13 +37,15 @@ gp_tmpl_load( 'events-header', get_defined_vars(), __DIR__ );
 	</ul>
 
 	<?php
-	echo paginate_links(
-		array(
-			'total'     => $query->max_num_pages,
-			'current'   => max( 1, get_query_var( 'page' ) ),
-			'prev_text' => '&laquo; Previous',
-			'next_text' => 'Next &raquo;',
-			'format'    => '?page=%#%',
+	echo wp_kses_post(
+		paginate_links(
+			array(
+				'total'     => $query->max_num_pages,
+				'current'   => max( 1, get_query_var( 'page' ) ),
+				'prev_text' => '&laquo; Previous',
+				'next_text' => 'Next &raquo;',
+				'format'    => '?page=%#%',
+			)
 		)
 	);
 
