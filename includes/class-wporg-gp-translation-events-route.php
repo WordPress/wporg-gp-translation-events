@@ -120,7 +120,7 @@ class WPORG_GP_Translation_Events_Route extends GP_Route {
 	 *
 	 * @return void
 	 */
-	public function events_edit( $event_id ) {
+	public function events_edit( int $event_id ) {
 		if ( ! is_user_logged_in() ) {
 			$this->die_with_error( 'You must be logged in to edit an event', 403 );
 		}
@@ -151,7 +151,7 @@ class WPORG_GP_Translation_Events_Route extends GP_Route {
 	 *
 	 * @return void
 	 */
-	public function events_details( $event_slug ) {
+	public function events_details( string $event_slug ) {
 		$user  = wp_get_current_user();
 		$event = get_page_by_path( $event_slug, OBJECT, 'event' );
 		if ( ! $event ) {
@@ -247,8 +247,9 @@ class WPORG_GP_Translation_Events_Route extends GP_Route {
 	 * @param string $time_zone The time zone.
 	 *
 	 * @return string The date time in the time zone.
+	 * @throws Exception When date is invalid.
 	 */
-	public static function convertToTimezone( $date_time, $time_zone ) {
+	public static function convertToTimezone( string $date_time, string $time_zone ): string {
 		return ( new DateTime( $date_time, new DateTimeZone( 'UTC' ) ) )->setTimezone( new DateTimeZone( $time_zone ) )->format( 'Y-m-d H:i:s' );
 	}
 }
