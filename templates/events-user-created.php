@@ -19,12 +19,15 @@ if ( $query->have_posts() ) :
 			$event_start                   = get_post_meta( $event_id, '_event_start', true );
 			list( $permalink, $post_name ) = get_sample_permalink( $event_id );
 			$permalink                     = str_replace( '%pagename%', $post_name, $permalink );
-			$event_status                  = ( 'publish' === get_post_status( $event_id ) ) ? 'published' : get_post_status( $event_id );
+			$event_status                  = get_post_status( $event_id );
 			?>
 			<li class="event-list-item">
-				<a class="event-status-<?php echo esc_attr( $event_status ); ?>" href="<?php echo esc_url( gp_url( wp_make_link_relative( $permalink ) ) ); ?>"><?php echo ( ( 'draft' === $event_status ) ? esc_html( ucfirst( $event_status ) ) . ' - ' : '' ) . the_title( '', '', false ); ?></a>
+				<a class="event-link-<?php echo esc_attr( $event_status ); ?>" href="<?php echo esc_url( gp_url( wp_make_link_relative( $permalink ) ) ); ?>"><?php the_title(); ?></a>
 				<a href="<?php echo esc_url( gp_url( 'events/edit/' . $event_id ) ); ?>" class="button is-small action edit">Edit</a>
-				<p><?php the_excerpt(); ?></p>
+				<?php if ( 'draft' === $event_status ) : ?>
+					<span class="event-label-<?php echo esc_attr( $event_status ); ?>"><?php echo esc_html( $event_status ); ?></span>
+				<?php endif; ?>
+					<p><?php the_excerpt(); ?></p>
 			</li>
 			<?php
 		endwhile;
