@@ -16,6 +16,7 @@
     <file>./includes/class-wporg-gp-translation-events-stats-calculator.php</file>
     <file>./includes/class-wporg-gp-translation-events-translation-listener.php</file>
     <file>./templates/event.php</file>
+    <file>./templates/events-form.php</file>
     <file>./wporg-gp-translation-events.php</file>
 
     <rule ref="WordPress">

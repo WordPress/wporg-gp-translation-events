@@ -1,8 +1,7 @@
 <?php
 gp_title( __( 'Translation Events' ) . ' - ' . esc_html( $event_form_title . ' - ' . $event_title ) );
 gp_tmpl_header();
-gp_tmpl_load( 'events-header', get_defined_vars(), dirname( __FILE__ ) );
-
+gp_tmpl_load( 'events-header', get_defined_vars(), __DIR__ );
 ?>
 
 <h2  class="event-page-title"><?php echo esc_html( $event_form_title ); ?></h2>
@@ -18,7 +17,7 @@ gp_tmpl_load( 'events-header', get_defined_vars(), dirname( __FILE__ ) );
 	</div>
 	<div id="event-url" class="<?php echo esc_attr( $css_show_url ); ?>">
 		<label for="event-permalink">Event URL</label>
-		<a id="event-permalink" class="event-permalink" href="<?php echo esc_url( gp_url( wp_make_link_relative( $permalink ) ) ) ?>" target="_blank"><?php echo esc_url( get_site_url() . gp_url( wp_make_link_relative( $permalink ) ) ) ?></a>
+		<a id="event-permalink" class="event-permalink" href="<?php echo esc_url( gp_url( wp_make_link_relative( $permalink ) ) ); ?>" target="_blank"><?php echo esc_url( get_site_url() . gp_url( wp_make_link_relative( $permalink ) ) ); ?></a>
 	</div>
 	<div>
 		<label for="event-description">Event Description</label>
