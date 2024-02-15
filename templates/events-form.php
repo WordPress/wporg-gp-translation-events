@@ -77,7 +77,7 @@ gp_tmpl_load( 'events-header', get_defined_vars(), __DIR__ );
 		<button class="button is-primary submit-event" type="submit"  data-event-status="publish">Publish Event</button>
 	<?php endif; ?>
 	<?php if ( isset( $create_delete_button ) && $create_delete_button ) : ?>
-		<button id="delete-button" class="button is-destructive delete-event" type="submit" name="submit" value="Delete" style="display: <?php echo $visibility_delete_button; ?>">Delete Event</button>
+		<button id="delete-button" class="button is-destructive delete-event" type="submit" name="submit" value="Delete" style="display: <?php echo esc_attr( $visibility_delete_button ); ?>">Delete Event</button>
 	<?php endif; ?>
 	</div>
 </form>

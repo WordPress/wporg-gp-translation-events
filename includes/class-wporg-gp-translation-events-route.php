@@ -108,18 +108,18 @@ class WPORG_GP_Translation_Events_Route extends GP_Route {
 		if ( ! is_user_logged_in() ) {
 			$this->die_with_error( 'You must be logged in to create an event', 403 );
 		}
-		$event_form_title           = 'Create Event';
-		$event_form_name            = 'create_event';
-		$css_show_url               = 'hide-event-url';
-		$event_id                   = null;
-		$event_title                = '';
-		$event_description          = '';
-		$event_timezone             = '';
-		$event_start                = '';
-		$event_end                  = '';
-    $event_url                  = '';
-		$create_delete_button       = true;
-		$visibility_delete_button   = 'none';
+		$event_form_title         = 'Create Event';
+		$event_form_name          = 'create_event';
+		$css_show_url             = 'hide-event-url';
+		$event_id                 = null;
+		$event_title              = '';
+		$event_description        = '';
+		$event_timezone           = '';
+		$event_start              = '';
+		$event_end                = '';
+		$event_url                = '';
+		$create_delete_button     = true;
+		$visibility_delete_button = 'none';
 
 		$this->tmpl( 'events-form', get_defined_vars() );
 	}
@@ -156,14 +156,14 @@ class WPORG_GP_Translation_Events_Route extends GP_Route {
 		$event_timezone                = get_post_meta( $event_id, '_event_timezone', true ) ?: '';
 		$create_delete_button          = false;
 		$visibility_delete_button      = 'inline-flex';
-    
+
 		$stats_calculator = new WPORG_GP_Translation_Events_Stats_Calculator();
 		if ( ! $stats_calculator->event_has_stats( $event ) ) {
 			$current_user = wp_get_current_user();
 			if ( $current_user->ID === $event->post_author || current_user_can( 'manage_options' ) ) {
 				$create_delete_button = true;
 			}
-    }
+		}
 
 		try {
 			$event_start = self::convertToTimezone( get_post_meta( $event_id, '_event_start', true ), $event_timezone );
