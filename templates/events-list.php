@@ -22,10 +22,11 @@ if ( $current_events_query->have_posts() ) :
 		while ( $current_events_query->have_posts() ) :
 			$current_events_query->the_post();
 			$event_start = ( new DateTime( get_post_meta( get_the_ID(), '_event_start', true ) ) )->format( 'l, F j, Y' );
+			$event_url   = gp_url( wp_make_link_relative( get_the_permalink() ) );
 			?>
 			<li class="event-list-item">
 				<span class="event-list-date"><?php echo esc_html( $event_start ); ?></span>
-				<a href="<?php echo esc_url( gp_url( wp_make_link_relative( get_the_permalink() ) ) ); ?>"><?php the_title(); ?></a> by <span><?php the_author(); ?></span>
+				<a href="<?php echo esc_url( $event_url ); ?>"><?php the_title(); ?></a> by <span><?php the_author(); ?></span>
 				<p><?php the_excerpt(); ?></p>
 			</li>
 			<?php
