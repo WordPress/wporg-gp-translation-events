@@ -18,6 +18,7 @@
     <file>./templates/event.php</file>
     <file>./templates/events-form.php</file>
     <file>./templates/events-header.php</file>
+    <file>./templates/events-list.php</file>
     <file>./templates/events-user-created.php</file>
     <file>./wporg-gp-translation-events.php</file>
 
