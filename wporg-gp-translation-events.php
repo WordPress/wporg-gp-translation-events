@@ -317,6 +317,26 @@ function gp_event_nav_menu_items( array $items ): array {
 // Add the events link to the GlotPress main menu.
 add_filter( 'gp_nav_menu_items', 'gp_event_nav_menu_items' );
 
+/**
+ * Generate a slug for the event post type when we save a draft event.
+ *
+ * Generate a slug based on the event title if it's not provided.
+ *
+ * @param array $data    An array of slashed post data.
+ * @return array The modified post data.
+ */
+function generate_event_slug( $data ) {
+	if ( 'event' === $data['post_type'] && 'draft' === $data['post_status'] ) {
+		if ( empty( $data['post_name'] ) ) {
+			$data['post_name'] = sanitize_title( $data['post_title'] );
+		}
+	}
+
+	return $data;
+}
+
+add_filter( 'wp_insert_post_data', 'generate_event_slug', 10, 1 );
+
 add_action(
 	'gp_init',
 	function () {
@@ -324,6 +344,8 @@ add_action(
 		GP::$router->add( '/events?', array( 'WPORG_GP_Translation_Events_Route', 'events_list' ) );
 		GP::$router->add( '/events/new', array( 'WPORG_GP_Translation_Events_Route', 'events_create' ) );
 		GP::$router->add( '/events/edit/(\d+)', array( 'WPORG_GP_Translation_Events_Route', 'events_edit' ) );
+		GP::$router->add( '/events/attend/(\d+)', array( 'WPORG_GP_Translation_Events_Route', 'events_attend' ) );
+		GP::$router->add( '/events/my-events', array( 'WPORG_GP_Translation_Events_Route', 'events_user_created' ), 'get' );
 		GP::$router->add( '/events/([a-z0-9_-]+)', array( 'WPORG_GP_Translation_Events_Route', 'events_details' ) );
 
 		require_once __DIR__ . '/includes/class-wporg-gp-translation-events-event.php';
