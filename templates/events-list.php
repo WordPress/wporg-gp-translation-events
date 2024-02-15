@@ -44,7 +44,7 @@ if ( $current_events_query->have_posts() ) :
 				'prev_text' => '&laquo; Previous',
 				'next_text' => 'Next &raquo;',
 			)
-		)
+		) ?? ''
 	);
 
 	wp_reset_postdata();
@@ -78,7 +78,7 @@ if ( $upcoming_events_query->have_posts() ) :
 				'prev_text' => '&laquo; Previous',
 				'next_text' => 'Next &raquo;',
 			)
-		)
+		) ?? ''
 	);
 
 	wp_reset_postdata();

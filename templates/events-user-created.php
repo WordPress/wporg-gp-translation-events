@@ -46,7 +46,7 @@ gp_tmpl_load( 'events-header', get_defined_vars(), __DIR__ );
 				'next_text' => 'Next &raquo;',
 				'format'    => '?page=%#%',
 			)
-		)
+		) ?? ''
 	);
 
 	wp_reset_postdata();
