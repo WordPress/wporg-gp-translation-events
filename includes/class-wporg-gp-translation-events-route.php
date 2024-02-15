@@ -117,6 +117,7 @@ class WPORG_GP_Translation_Events_Route extends GP_Route {
 		$event_timezone    = '';
 		$event_start       = '';
 		$event_end         = '';
+		$event_url         = '';
 
 		$this->tmpl( 'events-form', get_defined_vars() );
 	}
@@ -146,6 +147,7 @@ class WPORG_GP_Translation_Events_Route extends GP_Route {
 		$event_status                  = $event->post_status;
 		list( $permalink, $post_name ) = get_sample_permalink( $event_id );
 		$permalink                     = str_replace( '%pagename%', $post_name, $permalink );
+		$event_url                     = get_site_url() . gp_url( wp_make_link_relative( $permalink ) );
 		$event_timezone                = get_post_meta( $event_id, '_event_timezone', true ) ?: '';
 
 		try {
