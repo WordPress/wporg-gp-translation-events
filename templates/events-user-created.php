@@ -1,4 +1,10 @@
 <?php
+/**
+ * Template for My Events.
+ */
+
+/** @var WP_Query $query */
+
 gp_title( __( 'Translation Events' ) . ' - ' . esc_html__( 'My Events' ) );
 gp_tmpl_header();
 gp_tmpl_load( 'events-header', get_defined_vars(), __DIR__ );
