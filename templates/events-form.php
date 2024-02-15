@@ -20,7 +20,7 @@ gp_title( __( 'Translation Events' ) . ' - ' . esc_html( $event_form_title . ' -
 gp_tmpl_header();
 gp_tmpl_load( 'events-header', get_defined_vars(), __DIR__ );
 ?>
-
+<div class="event-page-wrapper">
 <h2  class="event-page-title"><?php echo esc_html( $event_form_title ); ?></h2>
 <form class="translation-event-form" action="" method="post">
 	<?php wp_nonce_field( '_event_nonce', '_event_nonce' ); ?>
@@ -84,3 +84,4 @@ gp_tmpl_load( 'events-header', get_defined_vars(), __DIR__ );
 	</div>
 </form>
 
+</div>
