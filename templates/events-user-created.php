@@ -5,13 +5,12 @@ gp_tmpl_load( 'events-header', get_defined_vars(), dirname( __FILE__ ) );
 ?>
 
 
-
-<h2 class="event_page_title">My Events</h2>
-<div>
+<div class="event-page-wrapper">
+	<h2 class="event_page_title">My Events</h2>
 <?php
 if ( $query->have_posts() ) :
 	?>
-	<ul>
+	<ul class="event-list">
 		<?php
 		while ( $query->have_posts() ) :
 			$query->the_post();
