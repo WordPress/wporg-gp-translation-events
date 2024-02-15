@@ -214,14 +214,17 @@ function submit_event_ajax() {
 		$response_message = 'Event updated successfully!';
 	}
 	if ( 'delete_event' === $_POST['form_name'] ) {
-		$event_id = $_POST['event_id'];
+		$event_id = sanitize_text_field( wp_unslash( $_POST['event_id'] ) );
 		$event    = get_post( $event_id );
-		if ( ! $event || 'event' !== $event->post_type || ! ( current_user_can( 'delete_post', $event->ID ) || $event->post_author === get_current_user_id() ) ) {
+		if ( ! $event || 'event' !== $event->post_type ) {
 			wp_send_json_error( 'Event does not exist' );
+		}
+		if ( ! ( current_user_can( 'delete_post', $event->ID ) || get_current_user_id() === $event->post_author ) ) {
+			wp_send_json_error( 'You do not have permission to delete this event' );
 		}
 		$stats_calculator = new WPORG_GP_Translation_Events_Stats_Calculator();
 		try {
-			$event_stats = $stats_calculator->for_event($event);
+			$event_stats = $stats_calculator->for_event( $event );
 		} catch ( Exception $e ) {
 			wp_send_json_error( 'Failed to calculate event stats' );
 		}
@@ -235,15 +238,15 @@ function submit_event_ajax() {
 		wp_send_json_error( 'Event could not be created or updated' );
 	}
 	if ( 'delete_event' !== $_POST['form_name'] ) {
-  	try {
-	  	update_post_meta( $event_id, '_event_start', convert_to_utc( $event_start, $event_timezone ) );
-		  update_post_meta( $event_id, '_event_end', convert_to_utc( $event_end, $event_timezone ) );
-	  } catch ( Exception $e ) {
-		  wp_send_json_error( 'Invalid start or end' );
-	  }
+		try {
+			update_post_meta( $event_id, '_event_start', convert_to_utc( $event_start, $event_timezone ) );
+			update_post_meta( $event_id, '_event_end', convert_to_utc( $event_end, $event_timezone ) );
+		} catch ( Exception $e ) {
+			wp_send_json_error( 'Invalid start or end' );
+		}
 
-  	update_post_meta( $event_id, '_event_timezone', $event_timezone );
-  }
+		update_post_meta( $event_id, '_event_timezone', $event_timezone );
+	}
 	try {
 		WPORG_GP_Translation_Events_Active_Events_Cache::invalidate();
 	} catch ( Exception $e ) {
