@@ -22,7 +22,7 @@ gp_tmpl_load( 'events-header', get_defined_vars(), __DIR__ );
 	<div class="event-details-head">
 		<h1>
 			<?php echo esc_html( $event_title ); ?>
-			<?php if ( 'draft' === $event->post_status ): ?>
+			<?php if ( 'draft' === $event->post_status ) : ?>
 				<span class="event-label-draft"><?php echo esc_html( $event->post_status ); ?></span>
 			<?php endif; ?>
 		</h1>
