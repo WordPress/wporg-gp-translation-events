@@ -13,7 +13,7 @@ gp_tmpl_load( 'events-header', get_defined_vars(), dirname( __FILE__ ) );
 
 ?>
 
-<div class="event-details-page">
+<div class="event-page-wrapper">
 	<div class="event-details-head">
 		<h1>
 			<?php echo esc_html( $event_title ); ?>

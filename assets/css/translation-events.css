@@ -87,21 +87,28 @@ h2.event_page_title {
     font-weight: bold;
 }
 .event-list-top-bar {
-    float: right;
+    display: block;
+    width: 80%;
+    margin: 0 auto;
+    text-align: right;
 }
 .event-list-nav li {
     display: inline;
-    margin-right: 1em;
+    margin-left: 1em;
+}
+.event-list-nav li a {
+    text-decoration: none;
+    font-weight: bold;
 }
 .event-left-col {
-    width: 70%;
+    width: 75%;
     float: left;
+    border-right: var(--gp-color-secondary-400) thin solid;
 }
 .event-right-col {
     width: 25%;
     float: left;
-    padding: 1em;
-    border-left: var(--wp--preset--color--cyan-bluish-gray) thin solid;
+    padding-left: 1em;
 }
 .event-attending-list {
     list-style-type: none;
@@ -129,4 +136,11 @@ span.event-label-draft {
     border-radius: 1em;
     text-transform: capitalize;
 }
-
+.event-page-wrapper {
+    margin: 0 auto;
+    width: 80%; 
+}
+.event-list {
+    margin: 0;
+    padding: 0;
+}
