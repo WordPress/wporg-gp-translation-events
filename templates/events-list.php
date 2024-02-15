@@ -1,4 +1,11 @@
 <?php
+/**
+ * Events list page.
+ */
+
+/** @var WP_Query $current_events_query */
+/** @var WP_Query $upcoming_events_query */
+
 gp_title( __( 'Translation Events' ) );
 gp_tmpl_header();
 gp_tmpl_load( 'events-header', get_defined_vars(), __DIR__ );
