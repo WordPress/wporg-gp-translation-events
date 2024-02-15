@@ -258,11 +258,12 @@ function submit_event_ajax() {
 	$permalink                     = str_replace( '%pagename%', $post_name, $permalink );
 	wp_send_json_success(
 		array(
-			'message'      => $response_message,
-			'eventId'      => $event_id,
-			'eventUrl'     => str_replace( '%pagename%', $post_name, $permalink ),
-			'eventStatus'  => $event_status,
-			'eventEditUrl' => esc_url( gp_url( '/events/edit/' . $event_id ) ),
+			'message'        => $response_message,
+			'eventId'        => $event_id,
+			'eventUrl'       => str_replace( '%pagename%', $post_name, $permalink ),
+			'eventStatus'    => $event_status,
+			'eventEditUrl'   => esc_url( gp_url( '/events/edit/' . $event_id ) ),
+			'eventDeleteUrl' => esc_url( gp_url( '/events/my-events/' ) ),
 		)
 	);
 }

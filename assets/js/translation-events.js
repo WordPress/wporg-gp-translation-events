@@ -22,6 +22,7 @@ jQuery(document).ready(function($) {
         }
         $('#event-form-action').val( btnClicked );
         var $form = $('.translation-event-form');
+       var $is_creation = $('#form-name').val() == 'create_event' ? true : false;
 
         $.ajax({
             type: 'POST',
@@ -41,6 +42,9 @@ jQuery(document).ready(function($) {
                         $('button[data-event-status="draft"]').text('Update Draft');
                     }
                     $('#event-url').removeClass('hide-event-url').find('a').attr('href', response.data.eventUrl).text(response.data.eventUrl);
+                    if ( $is_creation ) {
+                        $('#delete-button').toggle();
+                    }
                     $gp.notices.success(response.data.message);
                 }
             },
@@ -63,9 +67,7 @@ jQuery(document).ready(function($) {
 				url: $translation_event.url,
 				data:$form.serialize(),
 				success: function(response) {
-					if ( response.data.eventId ) {
-						history.back();
-					}
+					window.location = response.data.eventDeleteUrl;
 				},
 				error: function(error) {
 					$gp.notices.error(response.data.message);
