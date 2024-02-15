@@ -4,9 +4,12 @@
  */
 
 /** @var WP_Post $event */
+/** @var int $event_id */
 /** @var string $event_title */
 /** @var string $event_description */
-/** @var string $event_start_date */
+/** @var string $event_start */
+/** @var string $event_end */
+/** @var bool $user_is_attending */
 /** @var WPORG_GP_Translation_Events_Event_Stats $event_stats */
 
 /* translators: %s: Event title. */
