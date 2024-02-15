@@ -42,11 +42,6 @@ if ( $query->have_posts() ) :
 			'prev_text' => '&laquo; Previous',
 			'next_text' => 'Next &raquo;',
 			'format'    => '?page=%#%',
-
-
-			// 'current'   => max( 1, $current_events_query->query_vars['current_events_paged'] ),
-			// 'prev_text' => '&laquo; Previous',
-			// 'next_text' => 'Next &raquo;',
 		)
 	);
 
