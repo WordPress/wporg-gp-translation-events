@@ -132,12 +132,7 @@ class WPORG_GP_Translation_Events_Route extends GP_Route {
 		$visibility_delete_button      = 'inline-flex';
 
 		$stats_calculator = new WPORG_GP_Translation_Events_Stats_Calculator();
-		try {
-			$event_stats = $stats_calculator->for_event($event);
-		} catch ( Exception $e ) {
-			$this->die_with_error( 'Failed to calculate event stats' );
-		}
-		if ( empty( $event_stats->rows() ) ) {
+		if ( ! $stats_calculator->event_has_stats( $event ) ) {
 			$current_user = wp_get_current_user();
 			if ( $current_user->ID === $event->post_author || current_user_can( 'manage_options' ) ) {
 				$create_delete_button = true;
