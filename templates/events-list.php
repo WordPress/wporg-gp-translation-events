@@ -58,7 +58,7 @@ endif;
 if ( $upcoming_events_query->have_posts() ) :
 	?>
 	<h3>Upcoming events</h3>
-	<ul>
+	<ul class="event-list">
 		<?php
 		while ( $upcoming_events_query->have_posts() ) :
 			$upcoming_events_query->the_post();

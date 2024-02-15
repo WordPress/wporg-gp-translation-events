@@ -148,3 +148,23 @@ span.event-label-draft, span.event-details-join-expired {
 	margin: 0;
 	padding: 0;
 }
+.event-details-head {
+    border-bottom: var(--gp-color-secondary-400) thin solid;
+}
+input[type="submit"].attend-btn {
+    width: 100%;
+    text-align: center;
+    display: inline;
+    margin-top: 1em;
+    padding-top: 0.9em;
+    padding-bottom: 0.9em;
+    font-weight: bold;
+}
+.event-details-date {
+    background: #f4f4f4;
+    color: #606161;
+    padding: 1em;
+    font-size: .9em;
+    line-height: 1.8em;
+    font-weight: 500;
+}
