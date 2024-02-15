@@ -51,25 +51,25 @@ jQuery(document).ready(function($) {
     });
 
 		$('.delete-event').on('click', function(e) {
-			console.log('delete event');
 			e.preventDefault();
 			if ( ! confirm( 'Are you sure you want to delete this event?' ) ) {
 				return;
 			}
 			var $form = $('.translation-event-form');
-			$('#event-form-action').val('delete');
+			$('#form-name').val('delete_event');
+			$('#event-form-action').val( 'delete' );
 			$.ajax({
 				type: 'POST',
 				url: $translation_event.url,
 				data:$form.serialize(),
 				success: function(response) {
-					if ( response.data.success ) {
-						window.location.href = response.data.redirectUrl;
+					if ( response.data.eventId ) {
+						history.back();
 					}
 				},
 				error: function(error) {
 					$gp.notices.error(response.data.message);
-				}
+				},
 			});
 		});
 	function validateEventDates() {
