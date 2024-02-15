@@ -14,7 +14,8 @@ class WPORG_GP_Translation_Events_Route extends GP_Route {
 	 * @since 0.0.1
 	 */
 	public function __construct() {
-		$this->template_path = dirname( __FILE__ ) . '/../templates/';
+		parent::__construct();
+		$this->template_path = __DIR__ . '/../templates/';
 	}
 
 	/**
@@ -33,6 +34,7 @@ class WPORG_GP_Translation_Events_Route extends GP_Route {
 			'current_events_paged' => $_current_events_paged,
 			'paged'                => $_current_events_paged,
 			'post_status'          => 'publish',
+			// phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_query
 			'meta_query'           => array(
 				array(
 					'key'     => '_event_start',
@@ -58,6 +60,7 @@ class WPORG_GP_Translation_Events_Route extends GP_Route {
 			'upcoming_events_paged' => $_upcoming_events_paged,
 			'paged'                 => $_upcoming_events_paged,
 			'post_status'           => 'publish',
+			// phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_query
 			'meta_query'            => array(
 				array(
 					'key'     => '_event_start',
@@ -152,6 +155,7 @@ class WPORG_GP_Translation_Events_Route extends GP_Route {
 		try {
 			$event_stats = $stats_calculator->for_event( $event );
 		} catch ( Exception $e ) {
+			// phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_error_log
 			error_log( $e );
 			$this->die_with_error( 'Failed to calculate event stats' );
 		}
@@ -163,8 +167,6 @@ class WPORG_GP_Translation_Events_Route extends GP_Route {
 	 * Toggle whether the current user is attending an event.
 	 * If the user is not currently marked as attending, they will be marked as attending.
 	 * If the user is currently marked as attending, they will be marked as not attending.
-	 *
-	 * @param int $event_id
 	 */
 	public function events_attend( int $event_id ) {
 		$user = wp_get_current_user();
