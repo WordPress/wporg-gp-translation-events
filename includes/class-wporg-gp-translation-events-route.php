@@ -25,8 +25,23 @@ class WPORG_GP_Translation_Events_Route extends GP_Route {
 	 */
 	public function events_list() {
 		$current_datetime_utc   = ( new DateTime( 'now', new DateTimeZone( 'UTC' ) ) )->format( 'Y-m-d H:i:s' );
-		$_current_events_paged  = isset( $_GET['current_events_paged'] ) && is_numeric( $_GET['current_events_paged'] ) ? $_GET['current_events_paged'] : 1;
-		$_upcoming_events_paged = isset( $_GET['upcoming_events_paged'] ) && is_numeric( $_GET['upcoming_events_paged'] ) ? $_GET['upcoming_events_paged'] : 1;
+		$_current_events_paged  = 1;
+		$_upcoming_events_paged = 1;
+
+		// phpcs:disable WordPress.Security.NonceVerification.Recommended
+		if ( isset( $_GET['current_events_paged'] ) ) {
+			$value = sanitize_text_field( wp_unslash( $_GET['current_events_paged'] ) );
+			if ( is_numeric( $value ) ) {
+				$_current_events_paged = (int) $value;
+			}
+		}
+		if ( isset( $_GET['upcoming_events_paged'] ) ) {
+			$value = sanitize_text_field( wp_unslash( $_GET['upcoming_events_paged'] ) );
+			if ( is_numeric( $value ) ) {
+				$_upcoming_events_paged = (int) $value;
+			}
+		}
+		// phpcs:enable
 
 		$current_events_args  = array(
 			'post_type'            => 'event',
