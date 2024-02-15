@@ -24,7 +24,15 @@ class WPORG_GP_Translation_Events_Route extends GP_Route {
 	 * @return void
 	 */
 	public function events_list() {
-		$current_datetime_utc   = ( new DateTime( 'now', new DateTimeZone( 'UTC' ) ) )->format( 'Y-m-d H:i:s' );
+		$current_datetime_utc = null;
+		try {
+			$current_datetime_utc = ( new DateTime( 'now', new DateTimeZone( 'UTC' ) ) )->format( 'Y-m-d H:i:s' );
+		} catch ( Exception $e ) {
+			// phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_error_log
+			error_log( $e );
+			$this->die_with_error( 'Something is wrong.' );
+		}
+
 		$_current_events_paged  = 1;
 		$_upcoming_events_paged = 1;
 
@@ -135,12 +143,20 @@ class WPORG_GP_Translation_Events_Route extends GP_Route {
 		$css_show_url                  = '';
 		$event_title                   = $event->post_title;
 		$event_description             = $event->post_content;
-		$event_timezone                = get_post_meta( $event_id, '_event_timezone', true ) ?: '';
-		$event_start                   = self::convertToTimezone( get_post_meta( $event_id, '_event_start', true ), $event_timezone ) ?? '';
-		$event_end                     = self::convertToTimezone( get_post_meta( $event_id, '_event_end', true ), $event_timezone ) ?? '';
 		$event_status                  = $event->post_status;
 		list( $permalink, $post_name ) = get_sample_permalink( $event_id );
 		$permalink                     = str_replace( '%pagename%', $post_name, $permalink );
+		$event_timezone                = get_post_meta( $event_id, '_event_timezone', true ) ?: '';
+
+		try {
+			$event_start = self::convertToTimezone( get_post_meta( $event_id, '_event_start', true ), $event_timezone ) ?? '';
+			$event_end   = self::convertToTimezone( get_post_meta( $event_id, '_event_end', true ), $event_timezone ) ?? '';
+		} catch ( Exception $e ) {
+			// phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_error_log
+			error_log( $e );
+			$this->die_with_error( 'Something is wrong.' );
+		}
+
 		$this->tmpl( 'events-form', get_defined_vars() );
 	}
 
