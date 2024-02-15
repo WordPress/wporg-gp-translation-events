@@ -127,21 +127,20 @@ class WPORG_GP_Translation_Events_Route extends GP_Route {
 		list( $permalink, $post_name ) = get_sample_permalink( $event_id );
 		$permalink                     = str_replace( '%pagename%', $post_name, $permalink );
 		$show_delete_button = false;
-		if ('Edit Event' === $event_form_title) {
-			$event = get_post( $event_id );
-			$stats_calculator = new WPORG_GP_Translation_Events_Stats_Calculator();
-			try {
-				$event_stats = $stats_calculator->for_event($event);
-			} catch ( Exception $e ) {
-				$this->die_with_error( 'Failed to calculate event stats' );
-			}
-			if ( empty( $event_stats->rows() ) ) {
-				$current_user = wp_get_current_user();
-				if ( $current_user->ID === $event->post_author || current_user_can( 'manage_options' ) ) {
-					$show_delete_button = true;
-				}
+
+		$stats_calculator = new WPORG_GP_Translation_Events_Stats_Calculator();
+		try {
+			$event_stats = $stats_calculator->for_event($event);
+		} catch ( Exception $e ) {
+			$this->die_with_error( 'Failed to calculate event stats' );
+		}
+		if ( empty( $event_stats->rows() ) ) {
+			$current_user = wp_get_current_user();
+			if ( $current_user->ID === $event->post_author || current_user_can( 'manage_options' ) ) {
+				$show_delete_button = true;
 			}
 		}
+
 		$this->tmpl( 'events-form', get_defined_vars() );
 	}
 
