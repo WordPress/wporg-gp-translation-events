@@ -179,7 +179,7 @@ function submit_event_ajax() {
 		wp_send_json_error( 'Form name must be set' );
 	}
 	$action = sanitize_text_field( wp_unslash( $_POST['form_name'] ) );
-	if ( ! in_array( $action, array( 'create_event', 'edit_event' ), true ) ) {
+	if ( ! in_array( $action, array( 'create_event', 'edit_event', 'delete_event' ), true ) ) {
 		wp_send_json_error( 'Invalid form name' );
 	}
 
