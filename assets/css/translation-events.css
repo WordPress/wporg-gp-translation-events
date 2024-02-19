@@ -160,6 +160,14 @@ input[type="submit"].attend-btn {
 	padding-bottom: 0.9em;
 	font-weight: bold;
 }
+input[type="submit"].attending-btn {
+	width: 100%;
+	text-align: center;
+	display: block;
+	margin-top: 1em;
+	padding-top: 0.9em;
+	padding-bottom: 0.9em;
+}
 .event-details-date {
 	background: #f4f4f4;
 	color: #606161;
