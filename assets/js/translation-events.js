@@ -14,7 +14,7 @@
 					'click',
 					function ( e ) {
 						e.preventDefault();
-						let eventStatus = $(this).data('event-status');
+						let eventStatus = $( this ).data( 'event-status' );
 						handleSubmit( eventStatus );
 					}
 				);
