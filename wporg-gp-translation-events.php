@@ -342,8 +342,6 @@ add_action( 'add_meta_boxes', 'Wporg\TranslationEvents\event_meta_boxes' );
 add_action( 'save_post', 'Wporg\TranslationEvents\save_event_meta_boxes' );
 add_action( 'transition_post_status', 'Wporg\TranslationEvents\event_status_transition', 10, 3 );
 
-
-
 /**
  * Add the events link to the GlotPress main menu.
  *
