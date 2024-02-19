@@ -186,3 +186,7 @@ input[type="submit"].attending-btn {
 	line-height: 1.8em;
 	font-weight: 500;
 }
+.event-page-edit-link {
+    float: right;
+    text-decoration: none;
+}
