@@ -80,8 +80,8 @@ gp_tmpl_load( 'events-header', get_defined_vars(), __DIR__ );
 			</tr>
 			</thead>
 			<tbody>
-		<?php /** @var $row Stats_Row */ ?>
-		<?php foreach ( $event_stats->rows() as $locale_ => $row ) : ?>
+			<?php /** @var $row Stats_Row */ ?>
+			<?php foreach ( $event_stats->rows() as $locale_ => $row ) : ?>
 			<tr>
 				<td><?php echo esc_html( $locale_ ); ?></td>
 				<td><?php echo esc_html( $row->created ); ?></td>
