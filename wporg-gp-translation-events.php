@@ -151,7 +151,6 @@ function validate_event_dates( string $event_start, string $event_end ): bool {
  */
 function submit_event_ajax() {
 	$event_id         = null;
-	$previous_status  = null;
 	$response_message = '';
 	$form_actions     = array( 'draft', 'publish', 'delete' );
 
@@ -211,9 +210,8 @@ function submit_event_ajax() {
 		if ( ! isset( $_POST['event_id'] ) ) {
 			wp_send_json_error( 'Event id is required' );
 		}
-		$previous_status = get_post_status( sanitize_text_field( wp_unslash( $_POST['event_id'] ) ) );
-		$event_id        = sanitize_text_field( wp_unslash( $_POST['event_id'] ) );
-		$event           = get_post( $event_id );
+		$event_id = sanitize_text_field( wp_unslash( $_POST['event_id'] ) );
+		$event    = get_post( $event_id );
 		if ( ! $event || 'event' !== $event->post_type || ! ( current_user_can( 'edit_post', $event->ID ) || intval( $event->post_author ) === get_current_user_id() ) ) {
 			wp_send_json_error( 'Event does not exist' );
 		}
@@ -226,17 +224,6 @@ function submit_event_ajax() {
 			)
 		);
 		$response_message = 'Event updated successfully!';
-	}
-	// The user who creates the event will assist to it when it's published.
-	if ( ( 'create_event' === $action && 'publish' === $event_status ) || ( 'edit_event' === $action && 'publish' === $event_status && 'draft' === $previous_status ) ) {
-		$user_attending_events   = get_user_meta( get_current_user_id(), Route::USER_META_KEY_ATTENDING, true ) ?: array();
-		$is_user_attending_event = in_array( $event_id, $user_attending_events, true );
-
-		if ( ! $is_user_attending_event ) {
-			$new_user_attending_events              = $user_attending_events;
-			$new_user_attending_events[ $event_id ] = true;
-			update_user_meta( get_current_user_id(), Route::USER_META_KEY_ATTENDING, $new_user_attending_events, $user_attending_events );
-		}
 	}
 
 	if ( 'delete_event' === $action ) {
@@ -326,10 +313,37 @@ function register_translation_event_js() {
 	);
 }
 
+/**
+ * Handle the event status transition.
+ *
+ * The user who creates the event will assist to it when it's published.
+ *
+ * @param string  $new_status The new post status.
+ * @param string  $old_status The old post status.
+ * @param WP_Post $post       The post object.
+ */
+function event_status_transition( string $new_status, string $old_status, WP_Post $post ): void {
+	if ( 'event' !== $post->post_type ) {
+		return;
+	}
+	if ( 'publish' === $new_status && ( 'new' === $old_status || 'draft' === $old_status ) ) {
+		$current_user_id         = get_current_user_id();
+		$user_attending_events   = get_user_meta( $current_user_id, Route::USER_META_KEY_ATTENDING, true ) ?: array();
+		$is_user_attending_event = in_array( $post->ID, $user_attending_events, true );
+		if ( ! $is_user_attending_event ) {
+			$new_user_attending_events              = $user_attending_events;
+			$new_user_attending_events[ $post->ID ] = true;
+			update_user_meta( $current_user_id, Route::USER_META_KEY_ATTENDING, $new_user_attending_events, $user_attending_events );
+		}
+	}
+}
 add_action( 'wp_enqueue_scripts', 'Wporg\TranslationEvents\register_translation_event_js' );
 add_action( 'init', 'Wporg\TranslationEvents\register_event_post_type' );
 add_action( 'add_meta_boxes', 'Wporg\TranslationEvents\event_meta_boxes' );
 add_action( 'save_post', 'Wporg\TranslationEvents\save_event_meta_boxes' );
+add_action( 'transition_post_status', 'Wporg\TranslationEvents\event_status_transition', 10, 3 );
+
+
 
 /**
  * Add the events link to the GlotPress main menu.
