@@ -320,12 +320,15 @@ add_action( 'save_post', 'Wporg\TranslationEvents\save_event_meta_boxes' );
  * @param array $items The menu items.
  * @return array The modified menu items.
  */
-function gp_event_nav_menu_items( array $items ): array {
+function gp_event_nav_menu_items( array $items, string $location ): array {
+	if ( 'main' !== $location ) {
+		return $items;
+	}
 	$new[ esc_url( gp_url( '/events/' ) ) ] = esc_html__( 'Events', 'gp-translation-events' );
 	return array_merge( $items, $new );
 }
 // Add the events link to the GlotPress main menu.
-add_filter( 'gp_nav_menu_items', 'Wporg\TranslationEvents\gp_event_nav_menu_items' );
+add_filter( 'gp_nav_menu_items', 'Wporg\TranslationEvents\gp_event_nav_menu_items', 10, 2 );
 
 /**
  * Generate a slug for the event post type when we save a draft event.
