@@ -146,8 +146,12 @@ function validate_event_dates( string $event_start, string $event_end ): bool {
 	return false;
 }
 
+/**
+ * Handle the event form submission for the creation, editing, and deletion of events. This function is called via AJAX.
+ */
 function submit_event_ajax() {
 	$event_id         = null;
+	$previous_status  = null;
 	$response_message = '';
 	$form_actions     = array( 'draft', 'publish', 'delete' );
 
@@ -207,8 +211,9 @@ function submit_event_ajax() {
 		if ( ! isset( $_POST['event_id'] ) ) {
 			wp_send_json_error( 'Event id is required' );
 		}
-		$event_id = sanitize_text_field( wp_unslash( $_POST['event_id'] ) );
-		$event    = get_post( $event_id );
+		$previous_status = get_post_status( sanitize_text_field( wp_unslash( $_POST['event_id'] ) ) );
+		$event_id        = sanitize_text_field( wp_unslash( $_POST['event_id'] ) );
+		$event           = get_post( $event_id );
 		if ( ! $event || 'event' !== $event->post_type || ! ( current_user_can( 'edit_post', $event->ID ) || intval( $event->post_author ) === get_current_user_id() ) ) {
 			wp_send_json_error( 'Event does not exist' );
 		}
@@ -222,6 +227,18 @@ function submit_event_ajax() {
 		);
 		$response_message = 'Event updated successfully!';
 	}
+	// The user who creates the event will assist to it when it's published.
+	if ( ( 'create_event' === $action && 'publish' === $event_status ) || ( 'edit_event' === $action && 'publish' === $event_status && 'draft' === $previous_status ) ) {
+		$user_attending_events   = get_user_meta( get_current_user_id(), Route::USER_META_KEY_ATTENDING, true ) ?: array();
+		$is_user_attending_event = in_array( $event_id, $user_attending_events, true );
+
+		if ( ! $is_user_attending_event ) {
+			$new_user_attending_events              = $user_attending_events;
+			$new_user_attending_events[ $event_id ] = true;
+			update_user_meta( get_current_user_id(), Route::USER_META_KEY_ATTENDING, $new_user_attending_events, $user_attending_events );
+		}
+	}
+
 	if ( 'delete_event' === $action ) {
 		$event_id = sanitize_text_field( wp_unslash( $_POST['event_id'] ) );
 		$event    = get_post( $event_id );
