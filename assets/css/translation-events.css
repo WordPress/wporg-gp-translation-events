@@ -197,6 +197,12 @@ input[type="submit"].attending-btn {
 	background: #f8f8f8;
 	padding: 0.4em;
 	cursor: pointer;
+	color: var(--gp-color-primary-400);
+	font-weight: 500;
+	font-size: .9em;
+}
+.event-stats-summary:hover {
+	border: thin solid #e0dcdc;
 }
 .event-stats-summary p.event-stats-text {
 	margin: 0;
@@ -204,4 +210,5 @@ input[type="submit"].attending-btn {
 	padding: 0.8em;
 	font-size: .9em;
 	border-top: thin solid #e0e0e0;
+	font-family: monospace;
 }
