@@ -39,7 +39,10 @@ gp_tmpl_load( 'events-header', get_defined_vars(), __DIR__ );
 	</div>
 	<div class="event-details-left">
 		<div class="event-page-content">
-			<?php echo esc_html( $event_description ); ?>
+			<?php
+			// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+			echo make_clickable( wp_kses_post( $event_description ) );
+			?>
 		</div>
 		<?php if ( ! empty( $event_stats->rows() ) ) : ?>
 	<div class="event-details-stats">
