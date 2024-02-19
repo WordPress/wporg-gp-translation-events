@@ -45,9 +45,19 @@
 	clear: both;
 	margin: 1em;
 }
-.event-details-stats table, .event-details-stats table td, .event-details-stats table th {
-	border: 0.2em solid var(--gp-color-primary);
+.event-details-stats table {
+    width: 100%;
+    table-layout: fixed;
+}
+.event-details-stats table th, .event-details-stats table td{
 	padding: 1em;
+    text-align: center;
+}
+.event-details-stats table tr {
+    border-bottom: thin solid #f0f0f0;
+}
+.event-details-stats table th {
+    background-color: #e9e9e9;
 }
 .event-details-stats-totals {
 	font-weight: bold;

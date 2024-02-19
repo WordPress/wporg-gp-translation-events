@@ -94,4 +94,21 @@ gp_tmpl_load( 'events-header', get_defined_vars(), __DIR__ );
 		</table>
 	</div>
 <?php endif ?>
+	</div>
+	<div class="event-details-right">
+		<div class="event-details-date">
+			<p><span class="dashicons dashicons-clock"></span> <time class="event-utc-time" datetime="<?php echo esc_attr( $event_start ); ?>"></time> - <time class="event-utc-time" datetime="<?php echo esc_attr( $event_end ); ?>"></time></p>
+		</div>
+		<?php if ( is_user_logged_in() ) : ?>
+		<div class="event-details-join">
+			<form class="event-details-attend" method="post" action="<?php echo esc_url( gp_url( "/events/attend/$event_id" ) ); ?>">
+				<?php if ( ! $user_is_attending ) : ?>
+					<input type="submit" class="button is-primary attend-btn" value="Attend Event"/>
+				<?php else : ?>
+					<input type="submit" class="button is-secondary attending-btn" value="You're attending"/>
+				<?php endif ?>
+			</form>
+		</div>
+		<?php endif; ?>
+	</div>
 </div>
