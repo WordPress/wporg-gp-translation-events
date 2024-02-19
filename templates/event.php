@@ -98,13 +98,11 @@ gp_tmpl_load( 'events-header', get_defined_vars(), __DIR__ );
 			</tbody>
 		</table>
 	</div>
-<?php endif ?>
-<div>
 	<details class="event-stats-summary">
 		<summary>View stats summary in text </summary>
 		<p class="event-stats-text"><?php echo esc_html( sprintf( 'At the %s event, %d people contributed in %d languages (%s), translated %d strings and reviewed %d strings.', esc_html( $event_title ), esc_html( $event_stats->totals()->users ), count( $event_stats->rows() ), esc_html( implode( ',', array_keys( $event_stats->rows() ) ) ), esc_html( $event_stats->totals()->created ), esc_html( $event_stats->totals()->reviewed ) ) ); ?></p>
 	</details>
-</div>
+<?php endif ?>
 	</div>
 	<div class="event-details-right">
 		<div class="event-details-date">
