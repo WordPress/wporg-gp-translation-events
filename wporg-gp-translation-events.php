@@ -225,7 +225,6 @@ function submit_event_ajax() {
 		);
 		$response_message = 'Event updated successfully!';
 	}
-
 	if ( 'delete_event' === $action ) {
 		$event_id = sanitize_text_field( wp_unslash( $_POST['event_id'] ) );
 		$event    = get_post( $event_id );
