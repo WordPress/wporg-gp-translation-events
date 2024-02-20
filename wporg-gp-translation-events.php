@@ -163,16 +163,15 @@ function submit_event_ajax() {
 		wp_send_json_error( 'Nonce verification failed', 403 );
 	}
 	// This is a list of slugs that are not allowed, as they conflict with the event URLs.
-	$invalid_slugs = array( 'new', 'edit', 'attend', 'my-events' );
-	if ( isset( $_POST['event_title'] ) && in_array( sanitize_title( wp_unslash( $_POST['event_title'] ) ), $invalid_slugs, true ) ) {
-		wp_send_json_error( 'Invalid slug', 403 );
-	}
-
+	$invalid_slugs  = array( 'new', 'edit', 'attend', 'my-events' );
 	$title          = isset( $_POST['event_title'] ) ? sanitize_text_field( wp_unslash( $_POST['event_title'] ) ) : '';
 	$description    = isset( $_POST['event_description'] ) ? sanitize_text_field( wp_unslash( $_POST['event_description'] ) ) : '';
 	$event_start    = isset( $_POST['event_start'] ) ? sanitize_text_field( wp_unslash( $_POST['event_start'] ) ) : '';
 	$event_end      = isset( $_POST['event_end'] ) ? sanitize_text_field( wp_unslash( $_POST['event_end'] ) ) : '';
 	$event_timezone = isset( $_POST['event_timezone'] ) ? sanitize_text_field( wp_unslash( $_POST['event_timezone'] ) ) : '';
+	if ( isset( $title ) && in_array( sanitize_title( $title ), $invalid_slugs, true ) ) {
+		wp_send_json_error( 'Invalid slug', 403 );
+	}
 
 	$is_valid_event_date = false;
 	try {
