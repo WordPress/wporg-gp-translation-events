@@ -121,10 +121,10 @@ h2.event_page_title {
 a.event-link-draft {
 	color:#80807f;
 }
-span.event-label-draft {
+span.event-label-draft, span.active-events-before-translation-table {
 	font-weight: 500;
-	color:#c05621;
-	border: 1px solid #c05621;
+	color: var( --gp-color-bubble-inactive-project-text );
+	border: 1px solid var( --gp-color-bubble-inactive-project-text );
 	font-size: .7em;
 	margin-right: 0.3em;
 	width: 6em;
@@ -132,4 +132,11 @@ span.event-label-draft {
 	padding: 0.2em 0.5em;
 	border-radius: 1em;
 	text-transform: capitalize;
+}
+.active-events-before-translation-table {
+	width: 100%;
+	border: 1px solid var( --gp-color-btn-active-border );
+	background: var( --gp-color-attention-emphasis );
+	margin: 1rem 0;
+	padding: 0.3rem 0.8rem;
 }
