@@ -425,7 +425,8 @@ function add_active_events_current_user(): void {
 		}
 
 		$remaining_events = $number_of_events - 2;
- 		$content         .= '<span class="remaining-events">' . sprintf(esc_html__(' and %d more events.', 'gp-translation-events'), $remaining_events) . '</span>';
+		/* translators: %d: Number of remaining events */
+		$content .= '<span class="remaining-events">' . sprintf( esc_html__( ' and %d more events.', 'gp-translation-events' ), $remaining_events ) . '</span>';
 
 	} else {
 		while ( $user_attending_events_query->have_posts() ) {
