@@ -106,7 +106,10 @@ gp_tmpl_load( 'events-header', get_defined_vars(), __DIR__ );
 	</div>
 	<div class="event-details-right">
 		<div class="event-details-date">
-			<p><span class="dashicons dashicons-clock"></span> <time class="event-utc-time" datetime="<?php echo esc_attr( $event_start ); ?>"></time> - <time class="event-utc-time" datetime="<?php echo esc_attr( $event_end ); ?>"></time></p>
+			<p>
+				<span class="event-details-date-label">Starts:</span> <time class="event-utc-time" datetime="<?php echo esc_attr( $event_start ); ?>"></time>
+				<span class="event-details-date-label">Ends:</span><time class="event-utc-time" datetime="<?php echo esc_attr( $event_end ); ?>"></time>
+			</p>
 		</div>
 		<?php if ( is_user_logged_in() ) : ?>
 		<div class="event-details-join">

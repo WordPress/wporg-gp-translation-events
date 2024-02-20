@@ -201,9 +201,6 @@ input[type="submit"].attending-btn {
 	font-weight: 500;
 	font-size: .9em;
 }
-.event-stats-summary:hover {
-	border: thin solid #e0dcdc;
-}
 .event-stats-summary p.event-stats-text {
 	margin: 0;
 	background: #f8f8f8;
@@ -211,4 +208,18 @@ input[type="submit"].attending-btn {
 	font-size: .9em;
 	border-top: thin solid #e0e0e0;
 	font-family: monospace;
+}
+time.event-utc-time {
+	display: block;
+	font-size: .95em;
+}
+.event-utc-time:first-of-type{
+	border-bottom: #cdcdcd thin solid;
+	padding-bottom: 0.5em;
+	margin-bottom: 0.5em;
+}
+span.event-details-date-label {
+	font-weight: bold;
+	color: #5a5a5a;
+	display: block;
 }
