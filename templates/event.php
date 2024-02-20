@@ -41,33 +41,7 @@ gp_tmpl_load( 'events-header', get_defined_vars(), __DIR__ );
 		<div class="event-page-content">
 			<?php echo esc_html( $event_description ); ?>
 		</div>
-	</div>
-	<div class="event-details-right">
-		<div class="event-details-date">
-			<p><span class="dashicons dashicons-clock"></span> <time class="event-utc-time" datetime="<?php echo esc_attr( $event_start ); ?>"></time> - <time class="event-utc-time" datetime="<?php echo esc_attr( $event_end ); ?>"></time></p>
-		</div>
-		<?php if ( is_user_logged_in() ) : ?>
-		<div class="event-details-join">
-			<?php
-			$current_time = gmdate( 'Y-m-d H:i:s' );
-			if ( strtotime( $current_time ) > strtotime( $event_end ) ) :
-				?>
-				<?php if ( $user_is_attending ) : ?>
-					<span class="event-details-join-expired"><?php esc_html_e( 'You attended', 'gp-translation-events' ); ?></span>
-				<?php endif ?>
-			<?php else : ?>
-				<form class="event-details-attend" method="post" action="<?php echo esc_url( gp_url( "/events/attend/$event_id" ) ); ?>">
-					<?php if ( ! $user_is_attending ) : ?>
-						<input type="submit" class="button is-primary" value="Attend Event"/>
-					<?php else : ?>
-						<input type="submit" class="button is-secondary" value="You're attending"/>
-					<?php endif ?>
-				</form>
-			<?php endif ?>
-		</div>
-		<?php endif; ?>
-	</div>
-<?php if ( ! empty( $event_stats->rows() ) ) : ?>
+		<?php if ( ! empty( $event_stats->rows() ) ) : ?>
 	<div class="event-details-stats">
 		<h2>Stats</h2>
 		<table>
@@ -113,13 +87,22 @@ gp_tmpl_load( 'events-header', get_defined_vars(), __DIR__ );
 		</div>
 		<?php if ( is_user_logged_in() ) : ?>
 		<div class="event-details-join">
-			<form class="event-details-attend" method="post" action="<?php echo esc_url( gp_url( "/events/attend/$event_id" ) ); ?>">
-				<?php if ( ! $user_is_attending ) : ?>
-					<input type="submit" class="button is-primary attend-btn" value="Attend Event"/>
-				<?php else : ?>
-					<input type="submit" class="button is-secondary attending-btn" value="You're attending"/>
+			<?php
+			$current_time = gmdate( 'Y-m-d H:i:s' );
+			if ( strtotime( $current_time ) > strtotime( $event_end ) ) :
+				?>
+				<?php if ( $user_is_attending ) : ?>
+					<span class="event-details-join-expired"><?php esc_html_e( 'You attended', 'gp-translation-events' ); ?></span>
 				<?php endif ?>
-			</form>
+			<?php else : ?>
+				<form class="event-details-attend" method="post" action="<?php echo esc_url( gp_url( "/events/attend/$event_id" ) ); ?>">
+					<?php if ( ! $user_is_attending ) : ?>
+						<input type="submit" class="button is-primary attend-btn" value="Attend Event"/>
+					<?php else : ?>
+						<input type="submit" class="button is-secondary attending-btn" value="You're attending"/>
+					<?php endif ?>
+				</form>
+			<?php endif ?>
 		</div>
 		<?php endif; ?>
 	</div>
