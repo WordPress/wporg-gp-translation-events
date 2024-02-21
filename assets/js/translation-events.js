@@ -144,7 +144,7 @@
 					const userTimezoneOffsetMs = userTimezoneOffset * 60 * 1000;
 					const userLocalDateTime    = new Date( eventDateObj.getTime() - userTimezoneOffsetMs );
 
-					const options = {
+					const options      = {
 						weekday: 'short',
 						year: 'numeric',
 						month: 'short',
