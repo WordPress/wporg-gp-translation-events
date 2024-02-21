@@ -139,3 +139,5 @@ endif;
 	</div>
 <?php endif; ?>
 </div>
+<div class="clear"></div>
+<?php gp_tmpl_footer(); ?>
