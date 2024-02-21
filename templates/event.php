@@ -106,4 +106,5 @@ gp_tmpl_load( 'events-header', get_defined_vars(), __DIR__ );
 		</div>
 		<?php endif; ?>
 	</div>
-</div>
+<div class="clear"></div>
+<?php gp_tmpl_footer(); ?>
