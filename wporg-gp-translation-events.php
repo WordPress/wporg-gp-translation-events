@@ -452,18 +452,21 @@ function add_active_events_current_user(): void {
 		$counter = 0;
 		while ( $user_attending_events_query->have_posts() && $counter < 2 ) {
 			$user_attending_events_query->the_post();
-			$content .= '<span class="active-events-before-translation-table">' . get_the_title() . '</span>';
+			$url      = esc_url( gp_url( '/events/' . get_post_field( 'post_name', get_post() ) ) );
+			$content .= '<span class="active-events-before-translation-table"><a href="' . $url . '" target="_blank">' . get_the_title() . '</a></span>';
 			++$counter;
 		}
 
 		$remaining_events = $number_of_events - 2;
+		$url              = esc_url( gp_url( '/events/' ) );
 		/* translators: %d: Number of remaining events */
-		$content .= '<span class="remaining-events">' . sprintf( esc_html__( ' and %d more events.', 'gp-translation-events' ), $remaining_events ) . '</span>';
+		$content .= '<span class="remaining-events"><a href="' . $url . '" target="_blank">' . sprintf( esc_html__( ' and %d more events.', 'gp-translation-events' ), $remaining_events ) . '</a></span>';
 
 	} else {
 		while ( $user_attending_events_query->have_posts() ) {
 			$user_attending_events_query->the_post();
-			$content .= '<span class="active-events-before-translation-table">' . get_the_title() . '</span>';
+			$url      = esc_url( gp_url( '/events/' . get_post_field( 'post_name', get_post() ) ) );
+			$content .= '<span class="active-events-before-translation-table"><a href="' . $url . '" target="_blank">' . get_the_title() . '</a></span>';
 		}
 	}
 	$content .= '</div>';
@@ -477,6 +480,10 @@ function add_active_events_current_user(): void {
 			),
 			'span' => array(
 				'class' => array(),
+			),
+			'a'    => array(
+				'href'   => array(),
+				'target' => array(),
 			),
 		)
 	);
