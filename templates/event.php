@@ -40,7 +40,7 @@ gp_tmpl_load( 'events-header', get_defined_vars(), __DIR__ );
 	<div class="event-details-left">
 		<div class="event-page-content">
 			<?php
-				echo wp_kses_post( nl2br( make_clickable( $event_description ) ) );
+				echo wp_kses_post( wpautop( make_clickable( $event_description ) ) );
 			?>
 		</div>
 		<?php if ( ! empty( $event_stats->rows() ) ) : ?>
