@@ -151,11 +151,9 @@
 						day: 'numeric',
 						hour: 'numeric',
 						minute: 'numeric',
-						hour12: true,
 						timeZoneName: 'short'
 					};
-
-					timeEl.textContent = userLocalDateTime.toLocaleString( 'en-US', options );
+					timeEl.textContent = userLocalDateTime.toLocaleTimeString( navigator.language, options );
 				}
 			);
 		}
