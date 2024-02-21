@@ -147,6 +147,9 @@ function validate_event_dates( string $event_start, string $event_end ): bool {
 	return false;
 }
 
+/**
+ * Handle the event form submission for the creation, editing, and deletion of events. This function is called via AJAX.
+ */
 function submit_event_ajax() {
 	$event_id         = null;
 	$response_message = '';
@@ -161,14 +164,18 @@ function submit_event_ajax() {
 		}
 	}
 	if ( ! $is_nonce_valid ) {
-		wp_send_json_error( 'Nonce verification failed' );
+		wp_send_json_error( 'Nonce verification failed', 403 );
 	}
-
+	// This is a list of slugs that are not allowed, as they conflict with the event URLs.
+	$invalid_slugs  = array( 'new', 'edit', 'attend', 'my-events' );
 	$title          = isset( $_POST['event_title'] ) ? sanitize_text_field( wp_unslash( $_POST['event_title'] ) ) : '';
 	$description    = isset( $_POST['event_description'] ) ? sanitize_text_field( wp_unslash( $_POST['event_description'] ) ) : '';
 	$event_start    = isset( $_POST['event_start'] ) ? sanitize_text_field( wp_unslash( $_POST['event_start'] ) ) : '';
 	$event_end      = isset( $_POST['event_end'] ) ? sanitize_text_field( wp_unslash( $_POST['event_end'] ) ) : '';
 	$event_timezone = isset( $_POST['event_timezone'] ) ? sanitize_text_field( wp_unslash( $_POST['event_timezone'] ) ) : '';
+	if ( isset( $title ) && in_array( sanitize_title( $title ), $invalid_slugs, true ) ) {
+		wp_send_json_error( 'Invalid slug', 403 );
+	}
 
 	$is_valid_event_date = false;
 	try {
@@ -310,10 +317,35 @@ function register_translation_event_js() {
 	);
 }
 
+/**
+ * Handle the event status transition.
+ *
+ * The user who creates the event will assist to it when it's published.
+ *
+ * @param string  $new_status The new post status.
+ * @param string  $old_status The old post status.
+ * @param WP_Post $post       The post object.
+ */
+function event_status_transition( string $new_status, string $old_status, WP_Post $post ): void {
+	if ( 'event' !== $post->post_type ) {
+		return;
+	}
+	if ( 'publish' === $new_status && ( 'new' === $old_status || 'draft' === $old_status ) ) {
+		$current_user_id         = get_current_user_id();
+		$user_attending_events   = get_user_meta( $current_user_id, Route::USER_META_KEY_ATTENDING, true ) ?: array();
+		$is_user_attending_event = in_array( $post->ID, $user_attending_events, true );
+		if ( ! $is_user_attending_event ) {
+			$new_user_attending_events              = $user_attending_events;
+			$new_user_attending_events[ $post->ID ] = true;
+			update_user_meta( $current_user_id, Route::USER_META_KEY_ATTENDING, $new_user_attending_events, $user_attending_events );
+		}
+	}
+}
 add_action( 'wp_enqueue_scripts', 'Wporg\TranslationEvents\register_translation_event_js' );
 add_action( 'init', 'Wporg\TranslationEvents\register_event_post_type' );
 add_action( 'add_meta_boxes', 'Wporg\TranslationEvents\event_meta_boxes' );
 add_action( 'save_post', 'Wporg\TranslationEvents\save_event_meta_boxes' );
+add_action( 'transition_post_status', 'Wporg\TranslationEvents\event_status_transition', 10, 3 );
 
 /**
  * Add the events link to the GlotPress main menu.
@@ -337,10 +369,10 @@ add_filter( 'gp_nav_menu_items', 'Wporg\TranslationEvents\gp_event_nav_menu_item
  *
  * Generate a slug based on the event title if it's not provided.
  *
- * @param array $data    An array of slashed post data.
+ * @param array $data An array of slashed post data.
  * @return array The modified post data.
  */
-function generate_event_slug( $data ) {
+function generate_event_slug( array $data ): array {
 	if ( 'event' === $data['post_type'] && 'draft' === $data['post_status'] ) {
 		if ( empty( $data['post_name'] ) ) {
 			$data['post_name'] = sanitize_title( $data['post_title'] );
