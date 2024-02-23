@@ -303,9 +303,8 @@ class Route extends GP_Route {
 				$_events_i_attended_paged = (int) $value;
 			}
 		}
+		// phpcs:enable
 
-		$user_id              = get_current_user_id();
-		$_paged               = ( get_query_var( 'page' ) ) ? get_query_var( 'page' ) : 1;
 		$user_id              = get_current_user_id();
 		$events               = get_user_meta( $user_id, self::USER_META_KEY_ATTENDING, true ) ?: array();
 		$events               = array_keys( $events );
