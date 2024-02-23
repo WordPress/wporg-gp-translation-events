@@ -58,7 +58,7 @@ class Route extends GP_Route {
 
 		$current_events_args  = array(
 			'post_type'            => 'event',
-			'posts_per_page'       => 3,
+			'posts_per_page'       => 10,
 			'current_events_paged' => $_current_events_paged,
 			'paged'                => $_current_events_paged,
 			'post_status'          => 'publish',
@@ -84,7 +84,7 @@ class Route extends GP_Route {
 
 		$upcoming_events_args  = array(
 			'post_type'             => 'event',
-			'posts_per_page'        => 4,
+			'posts_per_page'        => 10,
 			'upcoming_events_paged' => $_upcoming_events_paged,
 			'paged'                 => $_upcoming_events_paged,
 			'post_status'           => 'publish',
@@ -312,7 +312,7 @@ class Route extends GP_Route {
 		$current_datetime_utc = ( new DateTime( 'now', new DateTimeZone( 'UTC' ) ) )->format( 'Y-m-d H:i:s' );
 		$args                 = array(
 			'post_type'              => 'event',
-			'posts_per_page'         => 2,
+			'posts_per_page'         => 10,
 			'events_i_created_paged' => $_events_i_created_paged,
 			'paged'                  => $_events_i_created_paged,
 			'post_status'            => array( 'publish', 'draft' ),
@@ -326,7 +326,7 @@ class Route extends GP_Route {
 
 		$args = array(
 			'post_type'               => 'event',
-			'posts_per_page'          => 1,
+			'posts_per_page'          => 10,
 			'events_i_attended_paged' => $_events_i_attended_paged,
 			'paged'                   => $_events_i_attended_paged,
 			'post_status'             => 'publish',
