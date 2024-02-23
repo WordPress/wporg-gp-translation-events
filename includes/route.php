@@ -163,8 +163,10 @@ class Route extends GP_Route {
 	 * @return void
 	 */
 	public function events_edit( int $event_id ) {
+		global $wp;
 		if ( ! is_user_logged_in() ) {
-			$this->die_with_error( 'You must be logged in to edit an event', 403 );
+			wp_safe_redirect( wp_login_url( home_url( $wp->request ) ) );
+			exit;
 		}
 		$event = get_post( $event_id );
 		if ( ! $event || 'event' !== $event->post_type || ! ( current_user_can( 'edit_post', $event->ID ) || intval( $event->post_author ) === get_current_user_id() ) ) {
