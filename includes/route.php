@@ -58,7 +58,7 @@ class Route extends GP_Route {
 
 		$current_events_args  = array(
 			'post_type'            => 'event',
-			'posts_per_page'       => 10,
+			'posts_per_page'       => 3,
 			'current_events_paged' => $_current_events_paged,
 			'paged'                => $_current_events_paged,
 			'post_status'          => 'publish',
@@ -84,7 +84,7 @@ class Route extends GP_Route {
 
 		$upcoming_events_args  = array(
 			'post_type'             => 'event',
-			'posts_per_page'        => 10,
+			'posts_per_page'        => 4,
 			'upcoming_events_paged' => $_upcoming_events_paged,
 			'paged'                 => $_upcoming_events_paged,
 			'post_status'           => 'publish',
@@ -281,27 +281,73 @@ class Route extends GP_Route {
 	 *
 	 * @return void
 	 */
-	public function events_user_created() {
+	public function my_events() {
 		if ( ! is_user_logged_in() ) {
 			$this->die_with_error( 'You must be logged in to your events', 403 );
 		}
 		include ABSPATH . 'wp-admin/includes/post.php';
 
-		$user_id = get_current_user_id();
-		$_paged  = ( get_query_var( 'page' ) ) ? get_query_var( 'page' ) : 1;
-		$args    = array(
-			'post_type'      => 'event',
-			'posts_per_page' => 10,
-			'post_status'    => array( 'publish', 'draft' ),
-			'paged'          => $_paged,
-			'author'         => $user_id,
+		$_events_i_created_paged  = 1;
+		$_events_i_attended_paged = 1;
+
+		// phpcs:disable WordPress.Security.NonceVerification.Recommended
+		if ( isset( $_GET['events_i_created_paged'] ) ) {
+			$value = sanitize_text_field( wp_unslash( $_GET['events_i_created_paged'] ) );
+			if ( is_numeric( $value ) ) {
+				$_events_i_created_paged = (int) $value;
+			}
+		}
+		if ( isset( $_GET['events_i_attended_paged'] ) ) {
+			$value = sanitize_text_field( wp_unslash( $_GET['events_i_attended_paged'] ) );
+			if ( is_numeric( $value ) ) {
+				$_events_i_attended_paged = (int) $value;
+			}
+		}
+
+		$user_id              = get_current_user_id();
+		$_paged               = ( get_query_var( 'page' ) ) ? get_query_var( 'page' ) : 1;
+		$user_id              = get_current_user_id();
+		$events               = get_user_meta( $user_id, self::USER_META_KEY_ATTENDING, true ) ?: array();
+		$events               = array_keys( $events );
+		$current_datetime_utc = ( new DateTime( 'now', new DateTimeZone( 'UTC' ) ) )->format( 'Y-m-d H:i:s' );
+		$args                 = array(
+			'post_type'              => 'event',
+			'posts_per_page'         => 2,
+			'events_i_created_paged' => $_events_i_created_paged,
+			'paged'                  => $_events_i_created_paged,
+			'post_status'            => array( 'publish', 'draft' ),
+			'author'                 => $user_id,
 			// phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_key
-			'meta_key'       => '_event_start',
-			'orderby'        => 'meta_value',
-			'order'          => 'DESC',
+			'meta_key'               => '_event_start',
+			'orderby'                => 'meta_value',
+			'order'                  => 'DESC',
 		);
-		$query = new WP_Query( $args );
-		$this->tmpl( 'events-user-created', get_defined_vars() );
+		$events_i_created_query = new WP_Query( $args );
+
+		$args = array(
+			'post_type'               => 'event',
+			'posts_per_page'          => 1,
+			'events_i_attended_paged' => $_events_i_attended_paged,
+			'paged'                   => $_events_i_attended_paged,
+			'post_status'             => 'publish',
+			'post__in'                => $events,
+			// phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_query
+			'meta_query'              => array(
+				array(
+					'key'     => '_event_end',
+					'value'   => $current_datetime_utc,
+					'compare' => '<',
+					'type'    => 'DATETIME',
+				),
+			),
+			// phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_key
+			'meta_key'                => '_event_end',
+			'orderby'                 => 'meta_value',
+			'order'                   => 'DESC',
+		);
+		$events_i_attended_query = new WP_Query( $args );
+
+		$this->tmpl( 'events-my-events', get_defined_vars() );
 	}
 
 	/**
@@ -320,7 +366,6 @@ class Route extends GP_Route {
 		$events               = array_keys( $events );
 		$_paged               = ( get_query_var( 'page' ) ) ? get_query_var( 'page' ) : 1;
 		$current_datetime_utc = ( new DateTime( 'now', new DateTimeZone( 'UTC' ) ) )->format( 'Y-m-d H:i:s' );
-		$template_title       = esc_html__( 'Events I Attended', 'gp-translation-events' );
 		$args                 = array(
 			'post_type'      => 'event',
 			'posts_per_page' => 10,
