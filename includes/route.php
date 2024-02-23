@@ -285,8 +285,10 @@ class Route extends GP_Route {
 	 * @return void
 	 */
 	public function events_user_created() {
+		global $wp;
 		if ( ! is_user_logged_in() ) {
-			$this->die_with_error( 'You must be logged in to your events', 403 );
+			wp_safe_redirect( wp_login_url( home_url( $wp->request ) ) );
+			exit;
 		}
 		include ABSPATH . 'wp-admin/includes/post.php';
 
