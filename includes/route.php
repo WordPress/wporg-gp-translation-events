@@ -250,8 +250,7 @@ class Route extends GP_Route {
 	 * If the user is currently marked as attending, they will be marked as not attending.
 	 */
 	public function events_attend( int $event_id ) {
-		$user = wp_get_current_user();
-		if ( ! $user ) {
+		if ( ! is_user_logged_in() ) {
 			$this->die_with_error( 'Only logged-in users can attend events', 403 );
 		}
 
