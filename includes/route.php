@@ -134,8 +134,10 @@ class Route extends GP_Route {
 	 * @return void
 	 */
 	public function events_create() {
+		global $wp;
 		if ( ! is_user_logged_in() ) {
-			$this->die_with_error( 'You must be logged in to create an event', 403 );
+			wp_safe_redirect( wp_login_url( home_url( $wp->request ) ) );
+			exit;
 		}
 		$event_form_title         = 'Create Event';
 		$event_form_name          = 'create_event';
