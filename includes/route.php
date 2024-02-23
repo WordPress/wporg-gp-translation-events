@@ -305,6 +305,47 @@ class Route extends GP_Route {
 	}
 
 	/**
+	 * Loads the 'events_i_attended' template.
+	 *
+	 * @return void
+	 */
+	public function events_i_attended(): void {
+		if ( ! is_user_logged_in() ) {
+			$this->die_with_error( 'You must be logged in to view events you attended.', 403 );
+		}
+		include ABSPATH . 'wp-admin/includes/post.php';
+
+		$user_id              = get_current_user_id();
+		$events               = get_user_meta( $user_id, self::USER_META_KEY_ATTENDING, true ) ?: array();
+		$events               = array_keys( $events );
+		$_paged               = ( get_query_var( 'page' ) ) ? get_query_var( 'page' ) : 1;
+		$current_datetime_utc = ( new DateTime( 'now', new DateTimeZone( 'UTC' ) ) )->format( 'Y-m-d H:i:s' );
+		$template_title       = esc_html__( 'Events I Attended', 'gp-translation-events' );
+		$args                 = array(
+			'post_type'      => 'event',
+			'posts_per_page' => 10,
+			'post_status'    => 'publish',
+			'paged'          => $_paged,
+			'post__in'       => $events,
+			// phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_query
+			'meta_query'     => array(
+				array(
+					'key'     => '_event_end',
+					'value'   => $current_datetime_utc,
+					'compare' => '<',
+					'type'    => 'DATETIME',
+				),
+			),
+			// phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_key
+			'meta_key'       => '_event_end',
+			'orderby'        => 'meta_value',
+			'order'          => 'DESC',
+		);
+		$query = new WP_Query( $args );
+		$this->tmpl( 'events-i-attended', get_defined_vars() );
+	}
+
+	/**
 	 * Convert date time stored in UTC to a date time in a time zone.
 	 *
 	 * @param string $date_time The date time in UTC.
