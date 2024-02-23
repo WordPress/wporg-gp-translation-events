@@ -46,7 +46,7 @@ if ( $current_events_query->have_posts() ) :
 		paginate_links(
 			array(
 				'total'     => $current_events_query->max_num_pages,
-				'current'   => max( 1, $current_events_query->query_vars['current_events_paged'] ),
+				'current'   => max( 1, $current_events_query->query_vars['paged'] ),
 				'format'    => '?current_events_paged=%#%',
 				'prev_text' => '&laquo; Previous',
 				'next_text' => 'Next &raquo;',
@@ -80,7 +80,7 @@ if ( $upcoming_events_query->have_posts() ) :
 		paginate_links(
 			array(
 				'total'     => $upcoming_events_query->max_num_pages,
-				'current'   => max( 1, $upcoming_events_query->query_vars['upcoming_events_paged'] ),
+				'current'   => max( 1, $upcoming_events_query->query_vars['paged'] ),
 				'format'    => '?upcoming_events_paged=%#%',
 				'prev_text' => '&laquo; Previous',
 				'next_text' => 'Next &raquo;',
@@ -119,7 +119,7 @@ if ( $past_events_query->have_posts() ) :
 		paginate_links(
 			array(
 				'total'     => $past_events_query->max_num_pages,
-				'current'   => max( 1, $past_events_query->query_vars['past_events_paged'] ),
+				'current'   => max( 1, $past_events_query->query_vars['paged'] ),
 				'format'    => '?past_events_paged=%#%',
 				'prev_text' => '&laquo; Previous',
 				'next_text' => 'Next &raquo;',
@@ -165,7 +165,7 @@ endif;
 					paginate_links(
 						array(
 							'total'     => $user_attending_events_query->max_num_pages,
-							'current'   => max( 1, $user_attending_events_query->query_vars['user_attending_events_paged'] ),
+							'current'   => max( 1, $user_attending_events_query->query_vars['paged'] ),
 							'format'    => '?user_attending_events_paged=%#%',
 							'prev_text' => '&laquo; Previous',
 							'next_text' => 'Next &raquo;',
