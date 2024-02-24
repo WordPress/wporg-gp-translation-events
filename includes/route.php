@@ -33,6 +33,7 @@ class Route extends GP_Route {
 
 		$_current_events_paged        = 1;
 		$_upcoming_events_paged       = 1;
+		$_past_events_paged           = 1;
 		$_user_attending_events_paged = 1;
 
 		// phpcs:disable WordPress.Security.NonceVerification.Recommended
@@ -48,6 +49,12 @@ class Route extends GP_Route {
 				$_upcoming_events_paged = (int) $value;
 			}
 		}
+		if ( isset( $_GET['past_events_paged'] ) ) {
+			$value = sanitize_text_field( wp_unslash( $_GET['past_events_paged'] ) );
+			if ( is_numeric( $value ) ) {
+				$_past_events_paged = (int) $value;
+			}
+		}
 		if ( isset( $_GET['user_attending_events_paged'] ) ) {
 			$value = sanitize_text_field( wp_unslash( $_GET['user_attending_events_paged'] ) );
 			if ( is_numeric( $value ) ) {
@@ -57,13 +64,12 @@ class Route extends GP_Route {
 		// phpcs:enable
 
 		$current_events_args  = array(
-			'post_type'            => 'event',
-			'posts_per_page'       => 10,
-			'current_events_paged' => $_current_events_paged,
-			'paged'                => $_current_events_paged,
-			'post_status'          => 'publish',
+			'post_type'      => 'event',
+			'posts_per_page' => 10,
+			'paged'          => $_current_events_paged,
+			'post_status'    => 'publish',
 			// phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_query
-			'meta_query'           => array(
+			'meta_query'     => array(
 				array(
 					'key'     => '_event_start',
 					'value'   => $current_datetime_utc,
@@ -77,19 +83,18 @@ class Route extends GP_Route {
 					'type'    => 'DATETIME',
 				),
 			),
-			'orderby'              => 'meta_value',
-			'order'                => 'ASC',
+			'orderby'        => 'meta_value',
+			'order'          => 'ASC',
 		);
 		$current_events_query = new WP_Query( $current_events_args );
 
 		$upcoming_events_args  = array(
-			'post_type'             => 'event',
-			'posts_per_page'        => 10,
-			'upcoming_events_paged' => $_upcoming_events_paged,
-			'paged'                 => $_upcoming_events_paged,
-			'post_status'           => 'publish',
+			'post_type'      => 'event',
+			'posts_per_page' => 10,
+			'paged'          => $_upcoming_events_paged,
+			'post_status'    => 'publish',
 			// phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_query
-			'meta_query'            => array(
+			'meta_query'     => array(
 				array(
 					'key'     => '_event_start',
 					'value'   => $current_datetime_utc,
@@ -97,21 +102,39 @@ class Route extends GP_Route {
 					'type'    => 'DATETIME',
 				),
 			),
-			'orderby'               => 'meta_value',
-			'order'                 => 'ASC',
+			'orderby'        => 'meta_value',
+			'order'          => 'ASC',
 		);
 		$upcoming_events_query = new WP_Query( $upcoming_events_args );
 
+		$past_events_args  = array(
+			'post_type'      => 'event',
+			'posts_per_page' => 10,
+			'paged'          => $_past_events_paged,
+			'post_status'    => 'publish',
+			// phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_query
+			'meta_query'     => array(
+				array(
+					'key'     => '_event_end',
+					'value'   => $current_datetime_utc,
+					'compare' => '<',
+					'type'    => 'DATETIME',
+				),
+			),
+			'orderby'        => 'meta_value',
+			'order'          => 'ASC',
+		);
+		$past_events_query = new WP_Query( $past_events_args );
+
 		$user_attending_events      = get_user_meta( get_current_user_id(), self::USER_META_KEY_ATTENDING, true ) ?: array();
 		$user_attending_events_args = array(
-			'post_type'                   => 'event',
-			'post__in'                    => array_keys( $user_attending_events ),
-			'posts_per_page'              => 10,
-			'user_attending_events_paged' => $_user_attending_events_paged,
-			'paged'                       => $_user_attending_events_paged,
-			'post_status'                 => 'publish',
+			'post_type'      => 'event',
+			'post__in'       => array_keys( $user_attending_events ),
+			'posts_per_page' => 10,
+			'paged'          => $_user_attending_events_paged,
+			'post_status'    => 'publish',
 			// phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_query
-			'meta_query'                  => array(
+			'meta_query'     => array(
 				array(
 					'key'     => '_event_end',
 					'value'   => $current_datetime_utc,
@@ -120,11 +143,12 @@ class Route extends GP_Route {
 				),
 			),
 			// phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_key
-			'meta_key'                    => '_event_start',
-			'orderby'                     => 'meta_value',
-			'order'                       => 'ASC',
+			'meta_key'       => '_event_start',
+			'orderby'        => 'meta_value',
+			'order'          => 'ASC',
 		);
 		$user_attending_events_query = new WP_Query( $user_attending_events_args );
+
 		$this->tmpl( 'events-list', get_defined_vars() );
 	}
 
@@ -285,7 +309,7 @@ class Route extends GP_Route {
 	 *
 	 * @return void
 	 */
-	public function events_user_created() {
+	public function my_events() {
 		global $wp;
 		if ( ! is_user_logged_in() ) {
 			wp_safe_redirect( wp_login_url( home_url( $wp->request ) ) );
@@ -293,21 +317,66 @@ class Route extends GP_Route {
 		}
 		include ABSPATH . 'wp-admin/includes/post.php';
 
-		$user_id = get_current_user_id();
-		$_paged  = ( get_query_var( 'page' ) ) ? get_query_var( 'page' ) : 1;
-		$args    = array(
-			'post_type'      => 'event',
-			'posts_per_page' => 10,
-			'post_status'    => array( 'publish', 'draft' ),
-			'paged'          => $_paged,
-			'author'         => $user_id,
+		$_events_i_created_paged  = 1;
+		$_events_i_attended_paged = 1;
+
+		// phpcs:disable WordPress.Security.NonceVerification.Recommended
+		if ( isset( $_GET['events_i_created_paged'] ) ) {
+			$value = sanitize_text_field( wp_unslash( $_GET['events_i_created_paged'] ) );
+			if ( is_numeric( $value ) ) {
+				$_events_i_created_paged = (int) $value;
+			}
+		}
+		if ( isset( $_GET['events_i_attended_paged'] ) ) {
+			$value = sanitize_text_field( wp_unslash( $_GET['events_i_attended_paged'] ) );
+			if ( is_numeric( $value ) ) {
+				$_events_i_attended_paged = (int) $value;
+			}
+		}
+		// phpcs:enable
+
+		$user_id              = get_current_user_id();
+		$events               = get_user_meta( $user_id, self::USER_META_KEY_ATTENDING, true ) ?: array();
+		$events               = array_keys( $events );
+		$current_datetime_utc = ( new DateTime( 'now', new DateTimeZone( 'UTC' ) ) )->format( 'Y-m-d H:i:s' );
+		$args                 = array(
+			'post_type'              => 'event',
+			'posts_per_page'         => 10,
+			'events_i_created_paged' => $_events_i_created_paged,
+			'paged'                  => $_events_i_created_paged,
+			'post_status'            => array( 'publish', 'draft' ),
+			'author'                 => $user_id,
 			// phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_key
-			'meta_key'       => '_event_start',
-			'orderby'        => 'meta_value',
-			'order'          => 'DESC',
+			'meta_key'               => '_event_start',
+			'orderby'                => 'meta_value',
+			'order'                  => 'DESC',
 		);
-		$query = new WP_Query( $args );
-		$this->tmpl( 'events-user-created', get_defined_vars() );
+		$events_i_created_query = new WP_Query( $args );
+
+		$args = array(
+			'post_type'               => 'event',
+			'posts_per_page'          => 10,
+			'events_i_attended_paged' => $_events_i_attended_paged,
+			'paged'                   => $_events_i_attended_paged,
+			'post_status'             => 'publish',
+			'post__in'                => $events,
+			// phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_query
+			'meta_query'              => array(
+				array(
+					'key'     => '_event_end',
+					'value'   => $current_datetime_utc,
+					'compare' => '<',
+					'type'    => 'DATETIME',
+				),
+			),
+			// phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_key
+			'meta_key'                => '_event_end',
+			'orderby'                 => 'meta_value',
+			'order'                   => 'DESC',
+		);
+		$events_i_attended_query = new WP_Query( $args );
+
+		$this->tmpl( 'events-my-events', get_defined_vars() );
 	}
 
 	/**
