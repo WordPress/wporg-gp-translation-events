@@ -36,7 +36,7 @@ class Event_Repository_Test extends WP_UnitTestCase {
 		$start    = $now->modify( '-1 hours' );
 		$end      = $now->modify( '+1 hours' );
 
-		$event_id = $this->event_factory->create_event( $start, $end, array() );
+		$event_id = $this->event_factory->create_event( $start, $end, $timezone, array() );
 		$event    = $this->repository->get_event( $event_id );
 
 		$this->assertEquals( $start->getTimestamp(), $event->start()->getTimestamp() );
