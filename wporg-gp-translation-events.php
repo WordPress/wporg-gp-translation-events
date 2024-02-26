@@ -169,6 +169,7 @@ function submit_event_ajax() {
 	if ( ! $is_nonce_valid ) {
 		wp_send_json_error( 'Nonce verification failed', 403 );
 	}
+
 	// This is a list of slugs that are not allowed, as they conflict with the event URLs.
 	$invalid_slugs = array( 'new', 'edit', 'attend', 'my-events' );
 	$title         = isset( $_POST['event_title'] ) ? sanitize_text_field( wp_unslash( $_POST['event_title'] ) ) : '';
@@ -404,8 +405,9 @@ add_filter( 'wp_insert_post_data', 'Wporg\TranslationEvents\generate_event_slug'
 add_action(
 	'gp_init',
 	function () {
-		require_once __DIR__ . '/includes/active-events-cache.php';
 		require_once __DIR__ . '/includes/event/event.php';
+		require_once __DIR__ . '/includes/event/event-repository.php';
+		require_once __DIR__ . '/includes/active-events-cache.php';
 		require_once __DIR__ . '/includes/route.php';
 		require_once __DIR__ . '/includes/stats-calculator.php';
 		require_once __DIR__ . '/includes/stats-listener.php';
