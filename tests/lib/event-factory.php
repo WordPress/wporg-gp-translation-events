@@ -36,7 +36,7 @@ class Event_Factory extends WP_UnitTest_Factory_For_Post {
 		return $event_id;
 	}
 
-	public function create_active( array $attendee_ids = array() ): int {
+	public function create_active( array $attendee_ids = array(), $now = 'now' ): int {
 		$now = new DateTimeImmutable( 'now', new DateTimeZone( 'UTC' ) );
 
 		return $this->create_event(
@@ -66,7 +66,7 @@ class Event_Factory extends WP_UnitTest_Factory_For_Post {
 		);
 	}
 
-	private function create_event( DateTimeImmutable $start, DateTimeImmutable $end, array $attendee_ids ): int {
+	public function create_event( DateTimeImmutable $start, DateTimeImmutable $end, array $attendee_ids ): int {
 		$event_id = $this->create();
 		$meta_key = Route::USER_META_KEY_ATTENDING;
 

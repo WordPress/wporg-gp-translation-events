@@ -14,11 +14,18 @@ class EventNotFound extends Exception {
 	}
 }
 
+class InvalidTimezone extends Exception {
+	public function __construct( Throwable $previous = null ) {
+		parent::__construct( 'Invalid timezone', 0, $previous );
+	}
+}
+
 class Event_Repository {
 	/**
 	 * @throws EventNotFound
+	 * @throws InvalidTimezone
 	 */
-	public static function get_event( int $id ): ?Event {
+	public function get_event( int $id ): Event {
 		if ( 0 === $id ) {
 			throw new EventNotFound();
 		}
@@ -32,7 +39,26 @@ class Event_Repository {
 			throw new EventNotFound();
 		}
 
-		// TODO: return an actual event.
-		return null;
+		$meta  = get_post_meta( $post->ID );
+		$start = self::parse_utc_datetime( $meta['_event_start'][0] );
+		$end   = self::parse_utc_datetime( $meta['_event_end'][0] );
+
+		try {
+			$timezone = new DateTimeZone( $meta['_event_timezone'][0] );
+		} catch ( Exception $e ) {
+			// phpcs:ignore WordPress.Security.EscapeOutput.ExceptionNotEscaped
+			throw new InvalidTimezone( $e );
+		}
+
+		return new Event(
+			$post->ID,
+			$start,
+			$end,
+			$timezone,
+		);
+	}
+
+	private static function parse_utc_datetime( string $datetime ): DateTimeImmutable {
+		return DateTimeImmutable::createFromFormat( 'Y-m-d H:i:s', $datetime, new DateTimeZone( 'UTC' ) );
 	}
 }

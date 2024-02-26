@@ -2,6 +2,8 @@
 
 namespace Wporg\Tests\Event;
 
+use DateTimeImmutable;
+use DateTimeZone;
 use WP_UnitTestCase;
 use Wporg\TranslationEvents\Event\Event_Repository;
 use Wporg\TranslationEvents\Event\EventNotFound;
@@ -26,5 +28,19 @@ class Event_Repository_Test extends WP_UnitTestCase {
 		$post_id = $this->factory()->post->create();
 		$this->expectException( EventNotFound::class );
 		$this->repository->get_event( $post_id );
+	}
+
+	public function test_get_event() {
+		$timezone = new DateTimeZone( 'Europe/Lisbon' );
+		$now      = new DateTimeImmutable( 'now', $timezone );
+		$start    = $now->modify( '-1 hours' );
+		$end      = $now->modify( '+1 hours' );
+
+		$event_id = $this->event_factory->create_event( $start, $end, array() );
+		$event    = $this->repository->get_event( $event_id );
+
+		$this->assertEquals( $start->getTimestamp(), $event->start()->getTimestamp() );
+		$this->assertEquals( $end->getTimestamp(), $event->end()->getTimestamp() );
+		$this->assertEquals( $timezone, $event->timezone() );
 	}
 }
