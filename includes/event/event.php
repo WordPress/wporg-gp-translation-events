@@ -30,7 +30,7 @@ class Event {
 		);
 	}
 
-	private function __construct( int $id, DateTimeImmutable $start, DateTimeImmutable $end, DateTimeZone $timezone ) {
+	public function __construct( int $id, DateTimeImmutable $start, DateTimeImmutable $end, DateTimeZone $timezone ) {
 		$this->id       = $id;
 		$this->start    = $start;
 		$this->end      = $end;
