@@ -384,8 +384,10 @@ function generate_event_slug( array $data, array $postarr ): array {
 		if ( 'publish' === $data['post_status'] ) {
 			if ( is_numeric( $postarr['ID'] ) && 0 !== $postarr['ID'] ) {
 				$post = get_post( $postarr['ID'] );
-				if ( 'draft' === $post->post_status ) {
-					$data['post_name'] = sanitize_title( $data['post_title'] );
+				if ( $post instanceof WP_Post ) {
+					if ( 'draft' === $post->post_status ) {
+						$data['post_name'] = sanitize_title( $data['post_title'] );
+					}
 				}
 			}
 		}
