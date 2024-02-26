@@ -382,7 +382,7 @@ function generate_event_slug( array $data, array $postarr ): array {
 			$data['post_name'] = sanitize_title( $data['post_title'] );
 		}
 		if ( 'publish' === $data['post_status'] ) {
-			if ( is_numeric( $postarr['ID'] ) ) {
+			if ( is_numeric( $postarr['ID'] ) && 0 !== $postarr['ID'] ) {
 				$post = get_post( $postarr['ID'] );
 				if ( 'draft' === $post->post_status ) {
 					$data['post_name'] = sanitize_title( $data['post_title'] );
