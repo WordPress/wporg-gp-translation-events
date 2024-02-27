@@ -5,6 +5,7 @@ namespace Wporg\Tests\Event;
 use DateTimeImmutable;
 use DateTimeZone;
 use WP_UnitTestCase;
+use Wporg\TranslationEvents\Event\Event;
 use Wporg\TranslationEvents\Event\Event_Repository;
 use Wporg\TranslationEvents\Event\EventNotFound;
 use Wporg\TranslationEvents\Tests\Event_Factory;
@@ -46,5 +47,40 @@ class Event_Repository_Test extends WP_UnitTestCase {
 		$this->assertEquals( 'publish', $event->status() );
 		$this->assertStringStartsWith( 'Event title', $event->title() );
 		$this->assertStringStartsWith( 'Event content', $event->description() );
+	}
+
+	public function test_creates_event() {
+		$timezone    = new DateTimeZone( 'Europe/Lisbon' );
+		$now         = new DateTimeImmutable( 'now', $timezone );
+		$start       = $now->modify( '-1 hours' );
+		$end         = $now->modify( '+1 hours' );
+		$slug        = 'foo-slug';
+		$status      = 'publish';
+		$title       = 'Foo title';
+		$description = 'Foo Description';
+
+		$event = new Event(
+			0,
+			$start,
+			$end,
+			$timezone,
+			$slug,
+			$status,
+			$title,
+			$description,
+		);
+
+		$this->repository->create_event( $event );
+		$this->assertGreaterThan( 0, $event->id() );
+
+		$created_event = $this->repository->get_event( $event->id() );
+
+		$this->assertEquals( $start->getTimestamp(), $created_event->start()->getTimestamp() );
+		$this->assertEquals( $end->getTimestamp(), $created_event->end()->getTimestamp() );
+		$this->assertEquals( $timezone, $created_event->timezone() );
+		$this->assertEquals( $slug, $created_event->slug() );
+		$this->assertEquals( $status, $created_event->status() );
+		$this->assertEquals( $title, $created_event->title() );
+		$this->assertEquals( $description, $created_event->description() );
 	}
 }

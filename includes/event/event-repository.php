@@ -6,6 +6,7 @@ use DateTimeImmutable;
 use DateTimeZone;
 use Exception;
 use Throwable;
+use WP_Error;
 use WP_Post;
 
 class EventNotFound extends Exception {
@@ -20,7 +21,36 @@ class InvalidTimezone extends Exception {
 	}
 }
 
+class CreateEventFailed extends Exception {}
+
 class Event_Repository {
+	/**
+	 * @throws CreateEventFailed
+	 */
+	public function create_event( Event $event ) {
+		$event_id = wp_insert_post(
+			array(
+				'post_type'    => 'event',
+				'post_name'    => $event->slug(),
+				'post_title'   => $event->title(),
+				'post_content' => $event->description(),
+				'post_status'  => $event->status(),
+			)
+		);
+
+		if ( $event_id instanceof WP_Error ) {
+			$error = $event_id;
+			// phpcs:ignore WordPress.Security.EscapeOutput.ExceptionNotEscaped
+			throw new CreateEventFailed( $error->get_error_message(), $error->get_error_code() );
+		}
+
+		update_post_meta( $event_id, '_event_start', self::serialize_datetime( $event->start() ) );
+		update_post_meta( $event_id, '_event_end', self::serialize_datetime( $event->end() ) );
+		update_post_meta( $event_id, '_event_timezone', $event->timezone()->getName() );
+
+		$event->set_id( $event_id );
+	}
+
 	/**
 	 * @throws EventNotFound
 	 * @throws InvalidTimezone
@@ -70,5 +100,10 @@ class Event_Repository {
 
 	private static function parse_utc_datetime( string $datetime ): DateTimeImmutable {
 		return DateTimeImmutable::createFromFormat( 'Y-m-d H:i:s', $datetime, new DateTimeZone( 'UTC' ) );
+	}
+
+	private static function serialize_datetime( DateTimeImmutable $value ): string {
+		$value->setTimezone( new DateTimeZone( 'UTC' ) );
+		return $value->format( 'Y-m-d H:i:s' );
 	}
 }

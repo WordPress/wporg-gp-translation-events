@@ -106,6 +106,10 @@ class Event {
 		return $this->id;
 	}
 
+	public function set_id( int $id ): void {
+		$this->id = $id;
+	}
+
 	public function start(): DateTimeImmutable {
 		return $this->start;
 	}
