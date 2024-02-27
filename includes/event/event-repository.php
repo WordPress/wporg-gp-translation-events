@@ -15,12 +15,6 @@ class EventNotFound extends Exception {
 	}
 }
 
-class InvalidTimezone extends Exception {
-	public function __construct( Throwable $previous = null ) {
-		parent::__construct( 'Invalid timezone', 0, $previous );
-	}
-}
-
 class CreateEventFailed extends Exception {}
 
 class Event_Repository {
@@ -53,7 +47,6 @@ class Event_Repository {
 
 	/**
 	 * @throws EventNotFound
-	 * @throws InvalidTimezone
 	 */
 	public function get_event( int $id ): Event {
 		if ( 0 === $id ) {
@@ -75,12 +68,6 @@ class Event_Repository {
 
 		try {
 			$timezone = new DateTimeZone( $meta['_event_timezone'][0] );
-		} catch ( Exception $e ) {
-			// phpcs:ignore WordPress.Security.EscapeOutput.ExceptionNotEscaped
-			throw new InvalidTimezone( $e );
-		}
-
-		try {
 			return new Event(
 				$post->ID,
 				$start,
