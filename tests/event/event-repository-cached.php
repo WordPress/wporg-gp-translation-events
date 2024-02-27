@@ -1,0 +1,39 @@
+<?php
+
+namespace Wporg\Tests\Event;
+
+use DateTimeImmutable;
+use DateTimeZone;
+use Exception;
+use WP_UnitTestCase;
+use Wporg\TranslationEvents\Event\Event_Repository_Cached;
+use Wporg\TranslationEvents\Event\Event;
+use Wporg\TranslationEvents\Event\Event_Repository;
+use Wporg\TranslationEvents\Event\EventNotFound;
+use Wporg\TranslationEvents\Tests\Event_Factory;
+
+class Event_Repository_Cached_Test extends WP_UnitTestCase {
+	private Event_Repository_Cached $repository;
+
+	public function setUp(): void {
+		parent::setUp();
+		$this->event_factory = new Event_Factory();
+		$this->repository    = new Event_Repository_Cached( new Event_Repository() );
+	}
+
+	public function test_get_active_events() {
+		$now       = new DateTimeImmutable( 'now', new DateTimeZone( 'UTC' ) );
+		$event1_id = $this->event_factory->create_active( array(), $now );
+		$event2_id = $this->event_factory->create_active( array(), $now->modify( '+1 minute' ) );
+		$this->event_factory->create_inactive_future();
+		$this->event_factory->create_inactive_past();
+
+		$events = $this->repository->get_active_events( $now, $now->modify( '+1 minute' ) );
+		$this->assertCount( 2, $events );
+		$this->assertEquals( $event1_id, $events[0]->id() );
+		$this->assertEquals( $event2_id, $events[1]->id() );
+
+		$events = $this->repository->get_active_events( $now->modify( '+10 years' ), $now->modify( '+11 years' ) );
+		$this->assertEmpty( $events );
+	}
+}
