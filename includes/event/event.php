@@ -65,9 +65,9 @@ class Event {
 
 	/**
 	 * @throws InvalidStartOrEnd
-	 * @throws InvalidTitle
-	 * @throws InvalidSlug
 	 * @throws InvalidStatus
+	 * @throws InvalidSlug
+	 * @throws InvalidTitle
 	 */
 	public function __construct(
 		int $id,
@@ -79,33 +79,16 @@ class Event {
 		string $title,
 		string $description
 	) {
-		if ( $end <= $start ) {
-			throw new InvalidStartOrEnd();
-		}
-		if ( ! $start->getTimezone() || 'UTC' !== $start->getTimezone()->getName() ) {
-			throw new InvalidStartOrEnd();
-		}
-		if ( ! $end->getTimezone() || 'UTC' !== $end->getTimezone()->getName() ) {
-			throw new InvalidStartOrEnd();
-		}
-		if ( ! $slug ) {
-			throw new InvalidSlug();
-		}
-		if ( ! $title ) {
-			throw new InvalidTitle();
-		}
-		if ( ! in_array( $status, array( 'draft', 'publish' ), true ) ) {
-			throw new InvalidStatus();
-		}
+		$this->validate_times( $start, $end );
 
-		$this->id          = $id;
-		$this->start       = $start;
-		$this->end         = $end;
-		$this->timezone    = $timezone;
-		$this->slug        = $slug;
-		$this->status      = $status;
-		$this->title       = $title;
-		$this->description = $description;
+		$this->set_id( $id );
+		$this->set_start( $start );
+		$this->set_end( $end );
+		$this->set_timezone( $timezone );
+		$this->set_slug( $slug );
+		$this->set_status( $status );
+		$this->set_title( $title );
+		$this->set_description( $description );
 	}
 
 	public function id(): int {
@@ -156,15 +139,33 @@ class Event {
 		$this->timezone = $timezone;
 	}
 
+	/**
+	 * @throws InvalidSlug
+	 */
 	public function set_slug( string $slug ): void {
+		if ( ! $slug ) {
+			throw new InvalidSlug();
+		}
 		$this->slug = $slug;
 	}
 
+	/**
+	 * @throws InvalidStatus
+	 */
 	public function set_status( string $status ): void {
+		if ( ! in_array( $status, array( 'draft', 'publish' ), true ) ) {
+			throw new InvalidStatus();
+		}
 		$this->status = $status;
 	}
 
+	/**
+	 * @throws InvalidTitle
+	 */
 	public function set_title( string $title ): void {
+		if ( ! $title ) {
+			throw new InvalidTitle();
+		}
 		$this->title = $title;
 	}
 
@@ -196,5 +197,20 @@ class Event {
 		}
 
 		return sprintf( 'until %s', $end_date_time->format( 'M j, Y' ) );
+	}
+
+	/**
+	 * @throws InvalidStartOrEnd
+	 */
+	private function validate_times( DateTimeImmutable $start, DateTimeImmutable $end ) {
+		if ( $end <= $start ) {
+			throw new InvalidStartOrEnd();
+		}
+		if ( ! $start->getTimezone() || 'UTC' !== $start->getTimezone()->getName() ) {
+			throw new InvalidStartOrEnd();
+		}
+		if ( ! $end->getTimezone() || 'UTC' !== $end->getTimezone()->getName() ) {
+			throw new InvalidStartOrEnd();
+		}
 	}
 }
