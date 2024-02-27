@@ -36,4 +36,31 @@ class Event_Repository_Cached_Test extends WP_UnitTestCase {
 		$events = $this->repository->get_active_events( $now->modify( '+10 years' ), $now->modify( '+11 years' ) );
 		$this->assertEmpty( $events );
 	}
+
+	public function test_invalidates_cache_when_events_are_created() {
+		$now   = new DateTimeImmutable( 'now', new DateTimeZone( 'UTC' ) );
+		$event = new Event(
+			0,
+			$now,
+			$now->modify( '+1 hour' ),
+			new DateTimeZone( 'Europe/Lisbon' ),
+			'foo',
+			'draft',
+			'Foo',
+			'Foo.'
+		);
+
+		wp_cache_set( 'translation-events-active-events', 'foo' );
+		$this->repository->create_event( $event );
+		$this->assertFalse( wp_cache_get( 'translation-events-active-events' ) );
+	}
+
+	public function test_invalidates_cache_when_events_are_updated() {
+		$event_id = $this->event_factory->create_active();
+		$event    = $this->repository->get_event( $event_id );
+
+		wp_cache_set( 'translation-events-active-events', 'foo' );
+		$this->repository->update_event( $event );
+		$this->assertFalse( wp_cache_get( 'translation-events-active-events' ) );
+	}
 }
