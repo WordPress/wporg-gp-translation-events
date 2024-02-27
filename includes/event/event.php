@@ -5,6 +5,13 @@ namespace Wporg\TranslationEvents\Event;
 use DateTimeImmutable;
 use DateTimeZone;
 use Exception;
+use Throwable;
+
+class InvalidStartOrEnd extends Exception {
+	public function __construct( Throwable $previous = null ) {
+		parent::__construct( 'Event end must be after start', 0, $previous );
+	}
+}
 
 class Event {
 	private int $id;
@@ -38,6 +45,9 @@ class Event {
 		);
 	}
 
+	/**
+	 * @throws InvalidStartOrEnd
+	 */
 	public function __construct(
 		int $id,
 		DateTimeImmutable $start,
@@ -48,6 +58,10 @@ class Event {
 		string $title,
 		string $description
 	) {
+		if ( $end <= $start ) {
+			throw new InvalidStartOrEnd();
+		}
+
 		$this->id          = $id;
 		$this->start       = $start;
 		$this->end         = $end;
