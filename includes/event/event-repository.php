@@ -55,6 +55,10 @@ class Event_Repository {
 			$start,
 			$end,
 			$timezone,
+			$post->post_name,
+			$post->post_status,
+			$post->post_title,
+			$post->post_content,
 		);
 	}
 

@@ -11,6 +11,10 @@ class Event {
 	private DateTimeImmutable $start;
 	private DateTimeImmutable $end;
 	private DateTimeZone $timezone;
+	private string $slug;
+	private string $status;
+	private string $title;
+	private string $description;
 
 	/**
 	 * Make an Event from post meta.
@@ -27,14 +31,31 @@ class Event {
 			DateTimeImmutable::createFromFormat( 'Y-m-d H:i:s', $meta['_event_start'][0], new DateTimeZone( 'UTC' ) ),
 			DateTimeImmutable::createFromFormat( 'Y-m-d H:i:s', $meta['_event_end'][0], new DateTimeZone( 'UTC' ) ),
 			new DateTimeZone( $meta['_event_timezone'][0] ),
+			'',
+			'',
+			'',
+			''
 		);
 	}
 
-	public function __construct( int $id, DateTimeImmutable $start, DateTimeImmutable $end, DateTimeZone $timezone ) {
-		$this->id       = $id;
-		$this->start    = $start;
-		$this->end      = $end;
-		$this->timezone = $timezone;
+	public function __construct(
+		int $id,
+		DateTimeImmutable $start,
+		DateTimeImmutable $end,
+		DateTimeZone $timezone,
+		string $slug,
+		string $status,
+		string $title,
+		string $description
+	) {
+		$this->id          = $id;
+		$this->start       = $start;
+		$this->end         = $end;
+		$this->timezone    = $timezone;
+		$this->slug        = $slug;
+		$this->status      = $status;
+		$this->title       = $title;
+		$this->description = $description;
 	}
 
 	public function id(): int {
@@ -51,6 +72,22 @@ class Event {
 
 	public function timezone(): DateTimeZone {
 		return $this->timezone;
+	}
+
+	public function slug(): string {
+		return $this->slug;
+	}
+
+	public function status(): string {
+		return $this->status;
+	}
+
+	public function title(): string {
+		return $this->title;
+	}
+
+	public function description(): string {
+		return $this->description;
 	}
 
 	/**
@@ -75,6 +112,7 @@ class Event {
 			/* translators: %s: Number of hours left. */
 			return sprintf( _n( 'ends in %s hour', 'ends in %s hours', $hours_left ), $hours_left );
 		}
+
 		return sprintf( 'until %s', $end_date_time->format( 'M j, Y' ) );
 	}
 }

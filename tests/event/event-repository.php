@@ -42,5 +42,9 @@ class Event_Repository_Test extends WP_UnitTestCase {
 		$this->assertEquals( $start->getTimestamp(), $event->start()->getTimestamp() );
 		$this->assertEquals( $end->getTimestamp(), $event->end()->getTimestamp() );
 		$this->assertEquals( $timezone, $event->timezone() );
+		$this->assertStringStartsWith( 'event-title-', $event->slug() );
+		$this->assertEquals( 'publish', $event->status() );
+		$this->assertStringStartsWith( 'Event title', $event->title() );
+		$this->assertStringStartsWith( 'Event content', $event->description() );
 	}
 }
