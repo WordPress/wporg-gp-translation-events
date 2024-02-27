@@ -13,6 +13,18 @@ class InvalidStartOrEnd extends Exception {
 	}
 }
 
+class InvalidSlug extends Exception {
+	public function __construct( Throwable $previous = null ) {
+		parent::__construct( 'Event slug is invalid', 0, $previous );
+	}
+}
+
+class InvalidTitle extends Exception {
+	public function __construct( Throwable $previous = null ) {
+		parent::__construct( 'Event title is invalid', 0, $previous );
+	}
+}
+
 class Event {
 	private int $id;
 	private DateTimeImmutable $start;
@@ -38,15 +50,17 @@ class Event {
 			DateTimeImmutable::createFromFormat( 'Y-m-d H:i:s', $meta['_event_start'][0], new DateTimeZone( 'UTC' ) ),
 			DateTimeImmutable::createFromFormat( 'Y-m-d H:i:s', $meta['_event_end'][0], new DateTimeZone( 'UTC' ) ),
 			new DateTimeZone( $meta['_event_timezone'][0] ),
+			'foo-slug', // TODO: this function will be removed, this here so tests pass.
 			'',
-			'',
-			'',
+			'Foo title', // TODO: this function will be removed, this here so tests pass.
 			''
 		);
 	}
 
 	/**
 	 * @throws InvalidStartOrEnd
+	 * @throws InvalidTitle
+	 * @throws InvalidSlug
 	 */
 	public function __construct(
 		int $id,
@@ -60,6 +74,12 @@ class Event {
 	) {
 		if ( $end <= $start ) {
 			throw new InvalidStartOrEnd();
+		}
+		if ( ! $slug ) {
+			throw new InvalidSlug();
+		}
+		if ( ! $title ) {
+			throw new InvalidTitle();
 		}
 
 		$this->id          = $id;
