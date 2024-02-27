@@ -90,8 +90,7 @@ class Event_Repository_Test extends WP_UnitTestCase {
 
 		$now = new DateTimeImmutable( 'now', new DateTimeZone( 'UTC' ) );
 		// phpcs:disable Squiz.PHP.DisallowMultipleAssignments.Found
-		$event->set_start( $updated_start = $now->modify( '+1 days' ) );
-		$event->set_end( $updated_end = $now->modify( '+2 days' ) );
+		$event->set_times( $updated_start = $now->modify( '+1 days' ), $updated_end = $now->modify( '+2 days' ) );
 		$event->set_timezone( $updated_timezone = new DateTimeZone( 'Europe/Madrid' ) );
 		$event->set_slug( $updated_slug = 'updated-slug' );
 		$event->set_status( $updated_status = 'draft' );
