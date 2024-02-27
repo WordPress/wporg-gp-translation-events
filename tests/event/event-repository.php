@@ -32,10 +32,10 @@ class Event_Repository_Test extends WP_UnitTestCase {
 	}
 
 	public function test_get_event() {
-		$timezone = new DateTimeZone( 'Europe/Lisbon' );
-		$now      = new DateTimeImmutable( 'now', $timezone );
+		$now      = new DateTimeImmutable( 'now', new DateTimeZone( 'UTC' ) );
 		$start    = $now->modify( '-1 hours' );
 		$end      = $now->modify( '+1 hours' );
+		$timezone = new DateTimeZone( 'Europe/Lisbon' );
 
 		$event_id = $this->event_factory->create_event( $start, $end, $timezone, array() );
 		$event    = $this->repository->get_event( $event_id );
@@ -50,10 +50,10 @@ class Event_Repository_Test extends WP_UnitTestCase {
 	}
 
 	public function test_creates_event() {
-		$timezone    = new DateTimeZone( 'Europe/Lisbon' );
-		$now         = new DateTimeImmutable( 'now', $timezone );
+		$now         = new DateTimeImmutable( 'now', new DateTimeZone( 'UTC' ) );
 		$start       = $now->modify( '-1 hours' );
 		$end         = $now->modify( '+1 hours' );
+		$timezone    = new DateTimeZone( 'Europe/Lisbon' );
 		$slug        = 'foo-slug';
 		$status      = 'publish';
 		$title       = 'Foo title';

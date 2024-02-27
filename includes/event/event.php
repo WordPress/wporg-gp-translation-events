@@ -9,7 +9,7 @@ use Throwable;
 
 class InvalidStartOrEnd extends Exception {
 	public function __construct( Throwable $previous = null ) {
-		parent::__construct( 'Event end must be after start', 0, $previous );
+		parent::__construct( 'Event start or end are invalid', 0, $previous );
 	}
 }
 
@@ -80,6 +80,12 @@ class Event {
 		string $description
 	) {
 		if ( $end <= $start ) {
+			throw new InvalidStartOrEnd();
+		}
+		if ( ! $start->getTimezone() || 'UTC' !== $start->getTimezone()->getName() ) {
+			throw new InvalidStartOrEnd();
+		}
+		if ( ! $end->getTimezone() || 'UTC' !== $end->getTimezone()->getName() ) {
 			throw new InvalidStartOrEnd();
 		}
 		if ( ! $slug ) {
