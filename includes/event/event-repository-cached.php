@@ -5,6 +5,9 @@ namespace Wporg\TranslationEvents\Event;
 use DateTimeImmutable;
 
 class Event_Repository_Cached implements Event_Repository_Interface {
+	private const CACHE_DURATION    = 60 * 60 * 24; // 24 hours.
+	private const ACTIVE_EVENTS_KEY = 'translation-events-active-events';
+
 	private Event_Repository $repository;
 
 	public function __construct( Event_Repository $repository ) {
@@ -12,10 +15,12 @@ class Event_Repository_Cached implements Event_Repository_Interface {
 	}
 
 	public function create_event( Event $event ): void {
+		$this->invalidate_cache();
 		$this->repository->create_event( $event );
 	}
 
 	public function update_event( Event $event ): void {
+		$this->invalidate_cache();
 		$this->repository->update_event( $event );
 	}
 
@@ -25,5 +30,9 @@ class Event_Repository_Cached implements Event_Repository_Interface {
 
 	public function get_active_events( DateTimeImmutable $boundary_start = null, DateTimeImmutable $boundary_end = null ): array {
 		return $this->repository->get_active_events( $boundary_start, $boundary_end );
+	}
+
+	private function invalidate_cache(): void {
+		wp_cache_delete( self::ACTIVE_EVENTS_KEY );
 	}
 }
