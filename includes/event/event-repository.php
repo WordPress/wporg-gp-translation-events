@@ -94,7 +94,18 @@ class Event_Repository {
 	 * @return Event[]
 	 * @throws Exception
 	 */
-	public function get_active_events( DateTimeImmutable $boundary_start, DateTimeImmutable $boundary_end ): array {
+	public function get_active_events( DateTimeImmutable $boundary_start = null, DateTimeImmutable $boundary_end = null ): array {
+		$now = new DateTimeImmutable( 'now', new DateTimeZone( 'UTC' ) );
+		if ( null === $boundary_start ) {
+			$boundary_start = $now;
+		}
+		if ( null === $boundary_end ) {
+			$boundary_end = $boundary_start;
+		}
+		if ( $boundary_end < $boundary_start ) {
+			throw new Exception( 'boundary end must be after boundary start' );
+		}
+
 		$ids = get_posts(
 			array(
 				'post_type'      => 'event',
@@ -133,6 +144,13 @@ class Event_Repository {
 				$post->post_content,
 			);
 		}
+
+		usort(
+			$events,
+			function ( Event $a, Event $b ) {
+				return $a->id() <=> $b->id();
+			}
+		);
 
 		return $events;
 	}
