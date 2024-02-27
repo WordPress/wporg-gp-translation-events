@@ -69,30 +69,15 @@ class Event_Repository {
 	 * @throws EventNotFound
 	 */
 	public function get_event( int $id ): Event {
-		if ( 0 === $id ) {
-			throw new EventNotFound();
-		}
-
-		$post = get_post( $id );
-		if ( ! ( $post instanceof WP_Post ) ) {
-			throw new EventNotFound();
-		}
-
-		if ( 'event' !== $post->post_type ) {
-			throw new EventNotFound();
-		}
-
-		$meta  = get_post_meta( $post->ID );
-		$start = self::parse_utc_datetime( $meta['_event_start'][0] );
-		$end   = self::parse_utc_datetime( $meta['_event_end'][0] );
+		$post = $this->get_event_post( $id );
 
 		try {
-			$timezone = new DateTimeZone( $meta['_event_timezone'][0] );
+			$meta = $this->get_event_post_meta( $id );
 			return new Event(
 				$post->ID,
-				$start,
-				$end,
-				$timezone,
+				$meta['start'],
+				$meta['end'],
+				$meta['timezone'],
 				$post->post_name,
 				$post->post_status,
 				$post->post_title,
@@ -103,6 +88,35 @@ class Event_Repository {
 			// So we consider an invalid event to be not found.
 			throw new EventNotFound();
 		}
+	}
+
+	/**
+	 * @throws EventNotFound
+	 */
+	private function get_event_post( int $event_id ): WP_Post {
+		if ( 0 === $event_id ) {
+			throw new EventNotFound();
+		}
+		$post = get_post( $event_id );
+		if ( ! ( $post instanceof WP_Post ) ) {
+			throw new EventNotFound();
+		}
+		if ( 'event' !== $post->post_type ) {
+			throw new EventNotFound();
+		}
+		return $post;
+	}
+
+	/**
+	 * @throws Exception
+	 */
+	private function get_event_post_meta( int $event_id ): array {
+		$meta = get_post_meta( $event_id );
+		return array(
+			'start'    => self::parse_utc_datetime( $meta['_event_start'][0] ),
+			'end'      => self::parse_utc_datetime( $meta['_event_end'][0] ),
+			'timezone' => new DateTimeZone( $meta['_event_timezone'][0] ),
+		);
 	}
 
 	private function update_event_meta( Event $event ) {
