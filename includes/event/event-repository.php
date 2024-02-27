@@ -50,16 +50,22 @@ class Event_Repository {
 			throw new InvalidTimezone( $e );
 		}
 
-		return new Event(
-			$post->ID,
-			$start,
-			$end,
-			$timezone,
-			$post->post_name,
-			$post->post_status,
-			$post->post_title,
-			$post->post_content,
-		);
+		try {
+			return new Event(
+				$post->ID,
+				$start,
+				$end,
+				$timezone,
+				$post->post_name,
+				$post->post_status,
+				$post->post_title,
+				$post->post_content,
+			);
+		} catch ( Exception $e ) {
+			// This should not be possible as it means data in the database is invalid.
+			// So we consider an invalid event to be not found.
+			throw new EventNotFound();
+		}
 	}
 
 	private static function parse_utc_datetime( string $datetime ): DateTimeImmutable {
