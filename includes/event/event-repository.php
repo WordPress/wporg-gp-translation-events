@@ -91,6 +91,53 @@ class Event_Repository {
 	}
 
 	/**
+	 * @return Event[]
+	 * @throws Exception
+	 */
+	public function get_active_events( DateTimeImmutable $boundary_start, DateTimeImmutable $boundary_end ): array {
+		$ids = get_posts(
+			array(
+				'post_type'      => 'event',
+				'post_status'    => 'publish',
+				'posts_per_page' => - 1,
+				'fields'         => 'ids',
+				'meta_query'     => array( // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_query
+					array(
+						'key'     => '_event_start',
+						'value'   => $boundary_end->format( 'Y-m-d H:i:s' ),
+						'compare' => '<',
+						'type'    => 'DATETIME',
+					),
+					array(
+						'key'     => '_event_end',
+						'value'   => $boundary_start->format( 'Y-m-d H:i:s' ),
+						'compare' => '>',
+						'type'    => 'DATETIME',
+					),
+				),
+			),
+		);
+
+		$events = array();
+		foreach ( $ids as $id ) {
+			$post     = $this->get_event_post( $id );
+			$meta     = $this->get_event_post_meta( $id );
+			$events[] = new Event(
+				$post->ID,
+				$meta['start'],
+				$meta['end'],
+				$meta['timezone'],
+				$post->post_name,
+				$post->post_status,
+				$post->post_title,
+				$post->post_content,
+			);
+		}
+
+		return $events;
+	}
+
+	/**
 	 * @throws EventNotFound
 	 */
 	private function get_event_post( int $event_id ): WP_Post {
