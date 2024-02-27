@@ -92,7 +92,6 @@ class Event_Repository_Test extends WP_UnitTestCase {
 		// phpcs:disable Squiz.PHP.DisallowMultipleAssignments.Found
 		$event->set_times( $updated_start = $now->modify( '+1 days' ), $updated_end = $now->modify( '+2 days' ) );
 		$event->set_timezone( $updated_timezone = new DateTimeZone( 'Europe/Madrid' ) );
-		$event->set_slug( $updated_slug = 'updated-slug' );
 		$event->set_status( $updated_status = 'draft' );
 		$event->set_title( $updated_title = 'Updated title' );
 		$event->set_description( $updated_description = 'Updated description' );
@@ -104,7 +103,6 @@ class Event_Repository_Test extends WP_UnitTestCase {
 		$this->assertEquals( $updated_start->getTimestamp(), $updated_event->start()->getTimestamp() );
 		$this->assertEquals( $updated_end->getTimestamp(), $updated_event->end()->getTimestamp() );
 		$this->assertEquals( $updated_timezone->getName(), $updated_event->timezone()->getName() );
-		$this->assertEquals( $updated_slug, $updated_event->slug() );
 		$this->assertEquals( $updated_status, $updated_event->status() );
 		$this->assertEquals( $updated_title, $updated_event->title() );
 		$this->assertEquals( $updated_description, $updated_event->description() );

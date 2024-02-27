@@ -13,12 +13,6 @@ class InvalidStartOrEnd extends Exception {
 	}
 }
 
-class InvalidSlug extends Exception {
-	public function __construct( Throwable $previous = null ) {
-		parent::__construct( 'Event slug is invalid', 0, $previous );
-	}
-}
-
 class InvalidTitle extends Exception {
 	public function __construct( Throwable $previous = null ) {
 		parent::__construct( 'Event title is invalid', 0, $previous );
@@ -66,7 +60,6 @@ class Event {
 	/**
 	 * @throws InvalidStartOrEnd
 	 * @throws InvalidStatus
-	 * @throws InvalidSlug
 	 * @throws InvalidTitle
 	 */
 	public function __construct(
@@ -79,10 +72,11 @@ class Event {
 		string $title,
 		string $description
 	) {
+		$this->slug = $slug;
+
 		$this->set_id( $id );
 		$this->set_times( $start, $end );
 		$this->set_timezone( $timezone );
-		$this->set_slug( $slug );
 		$this->set_status( $status );
 		$this->set_title( $title );
 		$this->set_description( $description );
@@ -135,16 +129,6 @@ class Event {
 
 	public function set_timezone( DateTimeZone $timezone ): void {
 		$this->timezone = $timezone;
-	}
-
-	/**
-	 * @throws InvalidSlug
-	 */
-	public function set_slug( string $slug ): void {
-		if ( ! $slug ) {
-			throw new InvalidSlug();
-		}
-		$this->slug = $slug;
 	}
 
 	/**
