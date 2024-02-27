@@ -408,6 +408,7 @@ add_action(
 		require_once __DIR__ . '/includes/event/event.php';
 		require_once __DIR__ . '/includes/event/event-repository-interface.php';
 		require_once __DIR__ . '/includes/event/event-repository.php';
+		require_once __DIR__ . '/includes/event/event-repository-cached.php';
 		require_once __DIR__ . '/includes/active-events-cache.php';
 		require_once __DIR__ . '/includes/route.php';
 		require_once __DIR__ . '/includes/stats-calculator.php';
