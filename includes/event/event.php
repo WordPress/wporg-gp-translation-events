@@ -79,11 +79,8 @@ class Event {
 		string $title,
 		string $description
 	) {
-		$this->validate_times( $start, $end );
-
 		$this->set_id( $id );
-		$this->set_start( $start );
-		$this->set_end( $end );
+		$this->set_times( $start, $end );
 		$this->set_timezone( $timezone );
 		$this->set_slug( $slug );
 		$this->set_status( $status );
@@ -127,12 +124,13 @@ class Event {
 		$this->id = $id;
 	}
 
-	public function set_start( DateTimeImmutable $start ): void {
+	/**
+	 * @throws InvalidStartOrEnd
+	 */
+	public function set_times( DateTimeImmutable $start, DateTimeImmutable $end ): void {
+		$this->validate_times( $start, $end );
 		$this->start = $start;
-	}
-
-	public function set_end( DateTimeImmutable $end ): void {
-		$this->end = $end;
+		$this->end   = $end;
 	}
 
 	public function set_timezone( DateTimeZone $timezone ): void {
