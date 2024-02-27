@@ -49,7 +49,7 @@ class Event_Repository_Test extends WP_UnitTestCase {
 		$this->assertStringStartsWith( 'Event content', $event->description() );
 	}
 
-	public function test_creates_event() {
+	public function test_create_event() {
 		$now         = new DateTimeImmutable( 'now', new DateTimeZone( 'UTC' ) );
 		$start       = $now->modify( '-1 hours' );
 		$end         = $now->modify( '+1 hours' );
@@ -82,5 +82,32 @@ class Event_Repository_Test extends WP_UnitTestCase {
 		$this->assertEquals( $status, $created_event->status() );
 		$this->assertEquals( $title, $created_event->title() );
 		$this->assertEquals( $description, $created_event->description() );
+	}
+
+	public function test_update_event() {
+		$event_id = $this->event_factory->create_active();
+		$event    = $this->repository->get_event( $event_id );
+
+		$now = new DateTimeImmutable( 'now', new DateTimeZone( 'UTC' ) );
+		// phpcs:disable Squiz.PHP.DisallowMultipleAssignments.Found
+		$event->set_start( $updated_start = $now->modify( '+1 days' ) );
+		$event->set_end( $updated_end = $now->modify( '+2 days' ) );
+		$event->set_timezone( $updated_timezone = new DateTimeZone( 'Europe/Madrid' ) );
+		$event->set_slug( $updated_slug = 'updated-slug' );
+		$event->set_status( $updated_status = 'draft' );
+		$event->set_title( $updated_title = 'Updated title' );
+		$event->set_description( $updated_description = 'Updated description' );
+		// phpcs:enable
+
+		$this->repository->update_event( $event );
+		$updated_event = $this->repository->get_event( $event_id );
+
+		$this->assertEquals( $updated_start->getTimestamp(), $updated_event->start()->getTimestamp() );
+		$this->assertEquals( $updated_end->getTimestamp(), $updated_event->end()->getTimestamp() );
+		$this->assertEquals( $updated_timezone->getName(), $updated_event->timezone()->getName() );
+		$this->assertEquals( $updated_slug, $updated_event->slug() );
+		$this->assertEquals( $updated_status, $updated_event->status() );
+		$this->assertEquals( $updated_title, $updated_event->title() );
+		$this->assertEquals( $updated_description, $updated_event->description() );
 	}
 }

@@ -16,6 +16,7 @@ class EventNotFound extends Exception {
 }
 
 class CreateEventFailed extends Exception {}
+class UpdateEventFailed extends Exception {}
 
 class Event_Repository {
 	/**
@@ -38,11 +39,30 @@ class Event_Repository {
 			throw new CreateEventFailed( $error->get_error_message(), $error->get_error_code() );
 		}
 
-		update_post_meta( $event_id, '_event_start', self::serialize_datetime( $event->start() ) );
-		update_post_meta( $event_id, '_event_end', self::serialize_datetime( $event->end() ) );
-		update_post_meta( $event_id, '_event_timezone', $event->timezone()->getName() );
-
 		$event->set_id( $event_id );
+		$this->update_event_meta( $event );
+	}
+
+	/**
+	 * @throws UpdateEventFailed
+	 */
+	public function update_event( Event $event ) {
+		$error = wp_update_post(
+			array(
+				'ID'           => $event->id(),
+				'post_name'    => $event->slug(),
+				'post_title'   => $event->title(),
+				'post_content' => $event->description(),
+				'post_status'  => $event->status(),
+			)
+		);
+
+		if ( $error instanceof WP_Error ) {
+			// phpcs:ignore WordPress.Security.EscapeOutput.ExceptionNotEscaped
+			throw new UpdateEventFailed( $error->get_error_message(), $error->get_error_code() );
+		}
+
+		$this->update_event_meta( $event );
 	}
 
 	/**
@@ -83,6 +103,12 @@ class Event_Repository {
 			// So we consider an invalid event to be not found.
 			throw new EventNotFound();
 		}
+	}
+
+	private function update_event_meta( Event $event ) {
+		update_post_meta( $event->id(), '_event_start', self::serialize_datetime( $event->start() ) );
+		update_post_meta( $event->id(), '_event_end', self::serialize_datetime( $event->end() ) );
+		update_post_meta( $event->id(), '_event_timezone', $event->timezone()->getName() );
 	}
 
 	private static function parse_utc_datetime( string $datetime ): DateTimeImmutable {

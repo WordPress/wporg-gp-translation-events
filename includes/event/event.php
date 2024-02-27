@@ -56,9 +56,9 @@ class Event {
 			DateTimeImmutable::createFromFormat( 'Y-m-d H:i:s', $meta['_event_start'][0], new DateTimeZone( 'UTC' ) ),
 			DateTimeImmutable::createFromFormat( 'Y-m-d H:i:s', $meta['_event_end'][0], new DateTimeZone( 'UTC' ) ),
 			new DateTimeZone( $meta['_event_timezone'][0] ),
-			'foo-slug',  // TODO: this function will be removed, this here so tests pass.
-			'publish',   // TODO: this function will be removed, this here so tests pass.
-			'Foo title', // TODO: this function will be removed, this here so tests pass.
+			'foo-slug',  // TODO: this function will be removed, this is here so tests pass.
+			'publish',   // TODO: this function will be removed, this is here so tests pass.
+			'Foo title', // TODO: this function will be removed, this is here so tests pass.
 			''
 		);
 	}
@@ -112,10 +112,6 @@ class Event {
 		return $this->id;
 	}
 
-	public function set_id( int $id ): void {
-		$this->id = $id;
-	}
-
 	public function start(): DateTimeImmutable {
 		return $this->start;
 	}
@@ -142,6 +138,38 @@ class Event {
 
 	public function description(): string {
 		return $this->description;
+	}
+
+	public function set_id( int $id ): void {
+		$this->id = $id;
+	}
+
+	public function set_start( DateTimeImmutable $start ): void {
+		$this->start = $start;
+	}
+
+	public function set_end( DateTimeImmutable $end ): void {
+		$this->end = $end;
+	}
+
+	public function set_timezone( DateTimeZone $timezone ): void {
+		$this->timezone = $timezone;
+	}
+
+	public function set_slug( string $slug ): void {
+		$this->slug = $slug;
+	}
+
+	public function set_status( string $status ): void {
+		$this->status = $status;
+	}
+
+	public function set_title( string $title ): void {
+		$this->title = $title;
+	}
+
+	public function set_description( string $description ): void {
+		$this->description = $description;
 	}
 
 	/**
