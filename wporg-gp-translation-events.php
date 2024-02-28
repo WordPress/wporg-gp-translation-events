@@ -24,7 +24,6 @@ use Exception;
 use GP;
 use WP_Post;
 use WP_Query;
-use function Symfony\Component\VarDumper\Dumper\esc;
 
 /**
  * Check if a slug is being used by another post type.
