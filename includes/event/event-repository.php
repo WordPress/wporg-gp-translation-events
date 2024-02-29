@@ -72,7 +72,7 @@ class Event_Repository implements Event_Repository_Interface {
 		}
 	}
 
-	public function get_active_events(): array {
+	public function get_current_events(): array {
 		$now = new DateTimeImmutable( 'now', new DateTimeZone( 'UTC' ) );
 		return $this->get_events_between( $now, $now );
 	}

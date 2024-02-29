@@ -20,7 +20,7 @@ class Event_Repository_Cached extends Event_Repository {
 		$this->invalidate_cache();
 	}
 
-	public function get_active_events(): array {
+	public function get_current_events(): array {
 		$cache_duration = self::CACHE_DURATION;
 		$now            = new DateTimeImmutable( 'now', new DateTimeZone( 'UTC' ) );
 		$boundary_start = $now;
