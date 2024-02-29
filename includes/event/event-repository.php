@@ -53,7 +53,7 @@ class Event_Repository implements Event_Repository_Interface {
 		$post = $this->get_event_post( $id );
 
 		try {
-			$meta = $this->get_event_post_meta( $id );
+			$meta = $this->get_event_meta( $id );
 			return new Event(
 				$post->ID,
 				$meta['start'],
@@ -109,7 +109,7 @@ class Event_Repository implements Event_Repository_Interface {
 		$events = array();
 		foreach ( $ids as $id ) {
 			$post     = $this->get_event_post( $id );
-			$meta     = $this->get_event_post_meta( $id );
+			$meta     = $this->get_event_meta( $id );
 			$events[] = new Event(
 				$post->ID,
 				$meta['start'],
@@ -152,7 +152,7 @@ class Event_Repository implements Event_Repository_Interface {
 	/**
 	 * @throws Exception
 	 */
-	private function get_event_post_meta( int $event_id ): array {
+	private function get_event_meta( int $event_id ): array {
 		$meta = get_post_meta( $event_id );
 		return array(
 			'start'    => self::parse_utc_datetime( $meta['_event_start'][0] ),
