@@ -36,4 +36,22 @@ interface Event_Repository_Interface {
 	 * @throws Exception
 	 */
 	public function get_current_events(): array;
+
+	/**
+	 * @return Event[]
+	 * @throws Exception
+	 */
+	public function get_current_events_for_user( int $user_id ): array;
+
+	/**
+	 * @return Event[]
+	 * @throws Exception
+	 */
+	public function get_past_events_for_user( int $user_id ): array;
+
+	/**
+	 * @return Event[]
+	 * @throws Exception
+	 */
+	public function get_events_created_by_user( int $user_id ): array;
 }
