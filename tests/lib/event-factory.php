@@ -38,12 +38,14 @@ class Event_Factory extends WP_UnitTest_Factory_For_Post {
 		return $event_id;
 	}
 
-	public function create_active( array $attendee_ids = array(), $now = 'now' ): int {
+	public function create_active( array $attendee_ids = array(), $now = null ): int {
 		$timezone = new DateTimeZone( 'Europe/Lisbon' );
-		$now      = new DateTimeImmutable( 'now', $timezone );
+		if ( null === $now ) {
+			$now = new DateTimeImmutable( 'now', $timezone );
+		}
 
 		return $this->create_event(
-			$now->modify( '-1 hours' ),
+			$now->modify( '-1 second' ),
 			$now->modify( '+1 hours' ),
 			$timezone,
 			$attendee_ids,
@@ -55,8 +57,8 @@ class Event_Factory extends WP_UnitTest_Factory_For_Post {
 		$now      = new DateTimeImmutable( 'now', $timezone );
 
 		return $this->create_event(
-			$now->modify( '-2 hours' ),
-			$now->modify( '-1 hours' ),
+			$now->modify( '-2 month' ),
+			$now->modify( '-1 month' ),
 			$timezone,
 			$attendee_ids,
 		);
@@ -67,8 +69,8 @@ class Event_Factory extends WP_UnitTest_Factory_For_Post {
 		$now      = new DateTimeImmutable( 'now', $timezone );
 
 		return $this->create_event(
-			$now->modify( '+1 hours' ),
-			$now->modify( '+2 hours' ),
+			$now->modify( '+1 month' ),
+			$now->modify( '+2 month' ),
 			$timezone,
 			$attendee_ids,
 		);
