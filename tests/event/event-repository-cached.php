@@ -28,13 +28,10 @@ class Event_Repository_Cached_Test extends WP_UnitTestCase {
 		$this->event_factory->create_inactive_future();
 		$this->event_factory->create_inactive_past();
 
-		$events = $this->repository->get_active_events( $now, $now->modify( '+1 minute' ) );
+		$events = $this->repository->get_active_events();
 		$this->assertCount( 2, $events );
 		$this->assertEquals( $event1_id, $events[0]->id() );
 		$this->assertEquals( $event2_id, $events[1]->id() );
-
-		$events = $this->repository->get_active_events( $now->modify( '+10 years' ), $now->modify( '+11 years' ) );
-		$this->assertEmpty( $events );
 	}
 
 	public function test_invalidates_cache_when_events_are_created() {

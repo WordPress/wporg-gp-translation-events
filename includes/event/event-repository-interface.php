@@ -35,5 +35,5 @@ interface Event_Repository_Interface {
 	 * @return Event[]
 	 * @throws Exception
 	 */
-	public function get_active_events( DateTimeImmutable $boundary_start = null, DateTimeImmutable $boundary_end = null ): array;
+	public function get_active_events(): array;
 }
