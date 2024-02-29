@@ -54,6 +54,7 @@ class Event_Repository implements Event_Repository_Interface {
 
 		try {
 			$meta = $this->get_event_meta( $id );
+
 			return new Event(
 				$post->ID,
 				$meta['start'],
@@ -76,10 +77,18 @@ class Event_Repository implements Event_Repository_Interface {
 		if ( null === $boundary_start ) {
 			$boundary_start = $now;
 		}
+
+		return $this->get_events_between( $boundary_start, $boundary_end );
+	}
+
+	/**
+	 * @return Event[]
+	 * @throws Exception
+	 */
+	protected function get_events_between( DateTimeImmutable $boundary_start, DateTimeImmutable $boundary_end = null ): array {
 		if ( null === $boundary_end ) {
 			$boundary_end = $boundary_start;
-		}
-		if ( $boundary_end < $boundary_start ) {
+		} elseif ( $boundary_end < $boundary_start ) {
 			throw new Exception( 'boundary end must be after boundary start' );
 		}
 
@@ -146,6 +155,7 @@ class Event_Repository implements Event_Repository_Interface {
 		if ( 'event' !== $post->post_type ) {
 			throw new EventNotFound();
 		}
+
 		return $post;
 	}
 
@@ -154,6 +164,7 @@ class Event_Repository implements Event_Repository_Interface {
 	 */
 	private function get_event_meta( int $event_id ): array {
 		$meta = get_post_meta( $event_id );
+
 		return array(
 			'start'    => self::parse_utc_datetime( $meta['_event_start'][0] ),
 			'end'      => self::parse_utc_datetime( $meta['_event_end'][0] ),
@@ -173,6 +184,7 @@ class Event_Repository implements Event_Repository_Interface {
 
 	private static function serialize_datetime( DateTimeImmutable $value ): string {
 		$value->setTimezone( new DateTimeZone( 'UTC' ) );
+
 		return $value->format( 'Y-m-d H:i:s' );
 	}
 }
