@@ -112,7 +112,8 @@ class Event_Repository_Test extends WP_UnitTestCase {
 	public function test_get_active_events() {
 		$now       = new DateTimeImmutable( 'now', new DateTimeZone( 'UTC' ) );
 		$event1_id = $this->event_factory->create_active( array(), $now );
-		$event2_id = $this->event_factory->create_active( array(), $now->modify( '+1 minute' ) );
+		$event2_id = $this->event_factory->create_active( array(), $now );
+		$this->event_factory->create_active( array(), $now->modify( '+2 hours' ) );
 		$this->event_factory->create_inactive_future();
 		$this->event_factory->create_inactive_past();
 
