@@ -120,27 +120,5 @@ class Event_Repository_Test extends WP_UnitTestCase {
 		$this->assertCount( 2, $events );
 		$this->assertEquals( $event1_id, $events[0]->id() );
 		$this->assertEquals( $event2_id, $events[1]->id() );
-
-		$events = $this->repository->get_active_events( $now );
-		$this->assertCount( 2, $events );
-		$this->assertEquals( $event1_id, $events[0]->id() );
-		$this->assertEquals( $event2_id, $events[1]->id() );
-
-		$events = $this->repository->get_active_events( null, $now->modify( '+1 minute' ) );
-		$this->assertCount( 2, $events );
-		$this->assertEquals( $event1_id, $events[0]->id() );
-		$this->assertEquals( $event2_id, $events[1]->id() );
-
-		$events = $this->repository->get_active_events( $now, $now->modify( '+1 minute' ) );
-		$this->assertCount( 2, $events );
-		$this->assertEquals( $event1_id, $events[0]->id() );
-		$this->assertEquals( $event2_id, $events[1]->id() );
-
-		$events = $this->repository->get_active_events( $now->modify( '+10 years' ), $now->modify( '+11 years' ) );
-		$this->assertEmpty( $events );
-
-		$this->expectException( Exception::class );
-		$this->expectExceptionMessage( 'boundary end must be after boundary start' );
-		$this->repository->get_active_events( $now, $now->modify( '-1 minute' ) );
 	}
 }

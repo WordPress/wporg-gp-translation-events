@@ -72,23 +72,17 @@ class Event_Repository implements Event_Repository_Interface {
 		}
 	}
 
-	public function get_active_events( DateTimeImmutable $boundary_start = null, DateTimeImmutable $boundary_end = null ): array {
+	public function get_active_events(): array {
 		$now = new DateTimeImmutable( 'now', new DateTimeZone( 'UTC' ) );
-		if ( null === $boundary_start ) {
-			$boundary_start = $now;
-		}
-
-		return $this->get_events_between( $boundary_start, $boundary_end );
+		return $this->get_events_between( $now, $now );
 	}
 
 	/**
 	 * @return Event[]
 	 * @throws Exception
 	 */
-	protected function get_events_between( DateTimeImmutable $boundary_start, DateTimeImmutable $boundary_end = null ): array {
-		if ( null === $boundary_end ) {
-			$boundary_end = $boundary_start;
-		} elseif ( $boundary_end < $boundary_start ) {
+	protected function get_events_between( DateTimeImmutable $boundary_start, DateTimeImmutable $boundary_end ): array {
+		if ( $boundary_end < $boundary_start ) {
 			throw new Exception( 'boundary end must be after boundary start' );
 		}
 
