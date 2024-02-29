@@ -35,5 +35,5 @@ interface Event_Repository_Interface {
 	 * @return Event[]
 	 * @throws Exception
 	 */
-	public function get_active_events(): array;
+	public function get_current_events(): array;
 }

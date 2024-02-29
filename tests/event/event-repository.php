@@ -117,7 +117,7 @@ class Event_Repository_Test extends WP_UnitTestCase {
 		$this->event_factory->create_inactive_future();
 		$this->event_factory->create_inactive_past();
 
-		$events = $this->repository->get_active_events();
+		$events = $this->repository->get_current_events();
 		$this->assertCount( 2, $events );
 		$this->assertEquals( $event1_id, $events[0]->id() );
 		$this->assertEquals( $event2_id, $events[1]->id() );
