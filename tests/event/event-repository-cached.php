@@ -18,7 +18,7 @@ class Event_Repository_Cached_Test extends WP_UnitTestCase {
 	public function setUp(): void {
 		parent::setUp();
 		$this->event_factory = new Event_Factory();
-		$this->repository    = new Event_Repository_Cached( new Event_Repository() );
+		$this->repository    = new Event_Repository_Cached();
 	}
 
 	public function test_get_active_events() {
