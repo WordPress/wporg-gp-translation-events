@@ -39,17 +39,17 @@ interface Event_Repository_Interface {
 	/**
 	 * @throws Exception
 	 */
-	public function get_current_events_for_user( int $user_id ): Event_Query_Result;
+	public function get_current_events_for_user( int $user_id, int $current_page = -1, int $page_size = -1 ): Event_Query_Result;
 
 	/**
 	 * @throws Exception
 	 */
-	public function get_past_events_for_user( int $user_id ): Event_Query_Result;
+	public function get_past_events_for_user( int $user_id, int $current_page = -1, int $page_size = -1 ): Event_Query_Result;
 
 	/**
 	 * @throws Exception
 	 */
-	public function get_events_created_by_user( int $user_id ): Event_Query_Result;
+	public function get_events_created_by_user( int $user_id, int $current_page = -1, int $page_size = -1 ): Event_Query_Result;
 }
 
 class Event_Query_Result {
