@@ -20,7 +20,7 @@ class Event_Repository_Cached extends Event_Repository {
 		$this->invalidate_cache();
 	}
 
-	public function get_current_events(): Event_Query_Result {
+	public function get_current_events( int $current_page = -1, int $page_size = -1 ): Event_Query_Result {
 		$cache_duration = self::CACHE_DURATION;
 		$now            = new DateTimeImmutable( 'now', new DateTimeZone( 'UTC' ) );
 		$boundary_start = $now;
@@ -43,6 +43,8 @@ class Event_Repository_Cached extends Event_Repository {
 				}
 			)
 		);
+
+		// TODO: paginate results.
 
 		return new Event_Query_Result( $events );
 	}

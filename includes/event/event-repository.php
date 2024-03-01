@@ -71,9 +71,9 @@ class Event_Repository implements Event_Repository_Interface {
 		}
 	}
 
-	public function get_current_events(): Event_Query_Result {
+	public function get_current_events( int $current_page = -1, int $page_size = -1 ): Event_Query_Result {
 		$now = new DateTimeImmutable( 'now', new DateTimeZone( 'UTC' ) );
-		return new Event_Query_Result( $this->get_events_between( $now, $now ) );
+		return new Event_Query_Result( $this->get_events_between( $now, $now, $current_page, $page_size ) );
 	}
 
 	public function get_current_events_for_user( int $user_id ): Event_Query_Result {
@@ -95,18 +95,26 @@ class Event_Repository implements Event_Repository_Interface {
 	 * @return Event[]
 	 * @throws Exception
 	 */
-	protected function get_events_between( DateTimeImmutable $boundary_start, DateTimeImmutable $boundary_end ): array {
+	protected function get_events_between(
+		DateTimeImmutable $boundary_start,
+		DateTimeImmutable $boundary_end,
+		int $current_page = -1,
+		int $page_size = -1
+	): array {
 		if ( $boundary_end < $boundary_start ) {
 			throw new Exception( 'boundary end must be after boundary start' );
 		}
 
+		// phpcs:disable WordPress.DB.SlowDBQuery.slow_db_query_meta_query
+		// phpcs:disable WordPress.DB.SlowDBQuery.slow_db_query_meta_key
 		$ids = get_posts(
 			array(
 				'post_type'      => 'event',
 				'post_status'    => 'publish',
-				'posts_per_page' => - 1,
+				'paged'          => $current_page,
+				'posts_per_page' => $page_size,
 				'fields'         => 'ids',
-				'meta_query'     => array( // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_query
+				'meta_query'     => array(
 					array(
 						'key'     => '_event_start',
 						'value'   => $boundary_end->format( 'Y-m-d H:i:s' ),
@@ -120,8 +128,11 @@ class Event_Repository implements Event_Repository_Interface {
 						'type'    => 'DATETIME',
 					),
 				),
+				'meta_key'       => '_event_start',
+				'orderby'        => 'meta_value',
 			),
 		);
+		// phpcs:enable
 
 		$events = array();
 		foreach ( $ids as $id ) {
@@ -138,13 +149,6 @@ class Event_Repository implements Event_Repository_Interface {
 				$post->post_content,
 			);
 		}
-
-		usort(
-			$events,
-			function ( Event $a, Event $b ) {
-				return $a->id() <=> $b->id();
-			}
-		);
 
 		return $events;
 	}
