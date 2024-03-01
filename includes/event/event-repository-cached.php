@@ -21,6 +21,8 @@ class Event_Repository_Cached extends Event_Repository {
 	}
 
 	public function get_current_events( int $current_page = -1, int $page_size = -1 ): Event_Query_Result {
+		$this->assert_pagination_arguments( $current_page, $page_size );
+
 		$cache_duration = self::CACHE_DURATION;
 		$now            = new DateTimeImmutable( 'now', new DateTimeZone( 'UTC' ) );
 		$boundary_start = $now;
