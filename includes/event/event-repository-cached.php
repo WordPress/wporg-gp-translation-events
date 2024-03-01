@@ -20,7 +20,7 @@ class Event_Repository_Cached extends Event_Repository {
 		$this->invalidate_cache();
 	}
 
-	public function get_current_events(): array {
+	public function get_current_events(): Event_Query_Result {
 		$cache_duration = self::CACHE_DURATION;
 		$now            = new DateTimeImmutable( 'now', new DateTimeZone( 'UTC' ) );
 		$boundary_start = $now;
@@ -35,7 +35,7 @@ class Event_Repository_Cached extends Event_Repository {
 		}
 
 		// Filter out events that aren't actually active at $at.
-		return array_values(
+		$events = array_values(
 			array_filter(
 				$events,
 				function ( $event ) use ( $now ) {
@@ -43,6 +43,8 @@ class Event_Repository_Cached extends Event_Repository {
 				}
 			)
 		);
+
+		return new Event_Query_Result( $events );
 	}
 
 	private function invalidate_cache(): void {
