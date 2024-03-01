@@ -32,26 +32,33 @@ interface Event_Repository_Interface {
 	public function get_event( int $id ): Event;
 
 	/**
-	 * @return Event[]
 	 * @throws Exception
 	 */
-	public function get_current_events(): array;
+	public function get_current_events(): Event_Query_Result;
 
 	/**
-	 * @return Event[]
 	 * @throws Exception
 	 */
-	public function get_current_events_for_user( int $user_id ): array;
+	public function get_current_events_for_user( int $user_id ): Event_Query_Result;
 
 	/**
-	 * @return Event[]
 	 * @throws Exception
 	 */
-	public function get_past_events_for_user( int $user_id ): array;
+	public function get_past_events_for_user( int $user_id ): Event_Query_Result;
 
 	/**
-	 * @return Event[]
 	 * @throws Exception
 	 */
-	public function get_events_created_by_user( int $user_id ): array;
+	public function get_events_created_by_user( int $user_id ): Event_Query_Result;
+}
+
+class Event_Query_Result {
+	/**
+	 * @var Event[]
+	 */
+	public array $events;
+
+	public function __construct( array $events ) {
+		$this->events = $events;
+	}
 }

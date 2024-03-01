@@ -54,7 +54,6 @@ class Event_Repository implements Event_Repository_Interface {
 
 		try {
 			$meta = $this->get_event_meta( $id );
-
 			return new Event(
 				$post->ID,
 				$meta['start'],
@@ -72,24 +71,24 @@ class Event_Repository implements Event_Repository_Interface {
 		}
 	}
 
-	public function get_current_events(): array {
+	public function get_current_events(): Event_Query_Result {
 		$now = new DateTimeImmutable( 'now', new DateTimeZone( 'UTC' ) );
-		return $this->get_events_between( $now, $now );
+		return new Event_Query_Result( $this->get_events_between( $now, $now ) );
 	}
 
-	public function get_current_events_for_user( int $user_id ): array {
+	public function get_current_events_for_user( int $user_id ): Event_Query_Result {
 		// TODO.
-		return array();
+		return new Event_Query_Result( array() );
 	}
 
-	public function get_past_events_for_user( int $user_id ): array {
+	public function get_past_events_for_user( int $user_id ): Event_Query_Result {
 		// TODO.
-		return array();
+		return new Event_Query_Result( array() );
 	}
 
-	public function get_events_created_by_user( int $user_id ): array {
+	public function get_events_created_by_user( int $user_id ): Event_Query_Result {
 		// TODO.
-		return array();
+		return new Event_Query_Result( array() );
 	}
 
 	/**
