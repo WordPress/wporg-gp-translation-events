@@ -7,6 +7,7 @@ use DateTimeZone;
 use Exception;
 use WP_Error;
 use WP_Post;
+use WP_Query;
 
 class Event_Repository implements Event_Repository_Interface {
 	public function create_event( Event $event ): void {
@@ -106,7 +107,7 @@ class Event_Repository implements Event_Repository_Interface {
 
 		// phpcs:disable WordPress.DB.SlowDBQuery.slow_db_query_meta_query
 		// phpcs:disable WordPress.DB.SlowDBQuery.slow_db_query_meta_key
-		$ids = get_posts(
+		$query = new WP_Query(
 			array(
 				'post_type'      => 'event',
 				'post_status'    => 'publish',
@@ -133,8 +134,10 @@ class Event_Repository implements Event_Repository_Interface {
 		);
 		// phpcs:enable
 
-		$events = array();
-		foreach ( $ids as $id ) {
+		$event_ids = $query->get_posts();
+		$events    = array();
+
+		foreach ( $event_ids as $id ) {
 			$post     = $this->get_event_post( $id );
 			$meta     = $this->get_event_meta( $id );
 			$events[] = new Event(
