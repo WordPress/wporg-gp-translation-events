@@ -46,7 +46,7 @@ class Event_Repository_Cached extends Event_Repository {
 
 		// TODO: paginate results.
 
-		return new Event_Query_Result( $events );
+		return new Event_Query_Result( $events, 1 );
 	}
 
 	private function invalidate_cache(): void {

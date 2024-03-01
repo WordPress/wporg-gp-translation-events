@@ -122,12 +122,16 @@ class Event_Repository_Test extends WP_UnitTestCase {
 		$this->assertEquals( $event1_id, $events[0]->id() );
 		$this->assertEquals( $event2_id, $events[1]->id() );
 
-		$events = $this->repository->get_current_events( 1, 1 )->events;
+		$result = $this->repository->get_current_events( 1, 1 );
+		$events = $result->events;
 		$this->assertCount( 1, $events );
+		$this->assertEquals( 2, $result->page_count );
 		$this->assertEquals( $event1_id, $events[0]->id() );
 
-		$events = $this->repository->get_current_events( 2, 1 )->events;
+		$result = $this->repository->get_current_events( 2, 1 );
+		$events = $result->events;
 		$this->assertCount( 1, $events );
+		$this->assertEquals( 2, $result->page_count );
 		$this->assertEquals( $event2_id, $events[0]->id() );
 	}
 }

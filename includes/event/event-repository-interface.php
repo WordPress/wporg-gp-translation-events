@@ -58,7 +58,10 @@ class Event_Query_Result {
 	 */
 	public array $events;
 
-	public function __construct( array $events ) {
-		$this->events = $events;
+	public int $page_count;
+
+	public function __construct( array $events, int $page_count ) {
+		$this->events     = $events;
+		$this->page_count = $page_count;
 	}
 }
