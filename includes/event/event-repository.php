@@ -8,8 +8,11 @@ use Exception;
 use WP_Error;
 use WP_Post;
 use WP_Query;
+use Wporg\TranslationEvents\Route;
 
 class Event_Repository implements Event_Repository_Interface {
+	private const USER_META_KEY_ATTENDING = Route::USER_META_KEY_ATTENDING;
+
 	public function create_event( Event $event ): void {
 		$event_id = wp_insert_post(
 			array(
@@ -75,13 +78,35 @@ class Event_Repository implements Event_Repository_Interface {
 	public function get_current_events( int $current_page = -1, int $page_size = -1 ): Event_Query_Result {
 		$this->assert_pagination_arguments( $current_page, $page_size );
 		$now = new DateTimeImmutable( 'now', new DateTimeZone( 'UTC' ) );
-		return $this->get_events_between( $now, $now, $current_page, $page_size );
+
+		return $this->get_events_between(
+			$now,
+			$now,
+			array(),
+			$current_page,
+			$page_size
+		);
 	}
 
 	public function get_current_events_for_user( int $user_id, int $current_page = -1, int $page_size = -1 ): Event_Query_Result {
 		$this->assert_pagination_arguments( $current_page, $page_size );
-		// TODO.
-		return new Event_Query_Result( array(), 1 );
+		$now = new DateTimeImmutable( 'now', new DateTimeZone( 'UTC' ) );
+
+		$attending_array = get_user_meta( $user_id, self::USER_META_KEY_ATTENDING, true );
+		if ( ! $attending_array ) {
+			$attending_array = array();
+		}
+
+		// $attending_array is an associative array with the event_id as key.
+		$event_ids_user_is_attending = array_keys( $attending_array );
+
+		return $this->get_events_between(
+			$now,
+			$now,
+			$event_ids_user_is_attending,
+			$current_page,
+			$page_size
+		);
 	}
 
 	public function get_past_events_for_user( int $user_id, int $current_page = -1, int $page_size = -1 ): Event_Query_Result {
@@ -102,6 +127,7 @@ class Event_Repository implements Event_Repository_Interface {
 	protected function get_events_between(
 		DateTimeImmutable $boundary_start,
 		DateTimeImmutable $boundary_end,
+		array $filter_by_ids = array(),
 		int $current_page = -1,
 		int $page_size = -1
 	): Event_Query_Result {
@@ -111,34 +137,37 @@ class Event_Repository implements Event_Repository_Interface {
 
 		// phpcs:disable WordPress.DB.SlowDBQuery.slow_db_query_meta_query
 		// phpcs:disable WordPress.DB.SlowDBQuery.slow_db_query_meta_key
-		$query = new WP_Query(
-			array(
-				'post_type'      => 'event',
-				'post_status'    => 'publish',
-				'paged'          => $current_page,
-				'posts_per_page' => $page_size,
-				'fields'         => 'ids',
-				'meta_query'     => array(
-					array(
-						'key'     => '_event_start',
-						'value'   => $boundary_end->format( 'Y-m-d H:i:s' ),
-						'compare' => '<',
-						'type'    => 'DATETIME',
-					),
-					array(
-						'key'     => '_event_end',
-						'value'   => $boundary_start->format( 'Y-m-d H:i:s' ),
-						'compare' => '>',
-						'type'    => 'DATETIME',
-					),
+		$query_args = array(
+			'post_type'      => 'event',
+			'post_status'    => 'publish',
+			'paged'          => $current_page,
+			'posts_per_page' => $page_size,
+			'fields'         => 'ids',
+			'meta_query'     => array(
+				array(
+					'key'     => '_event_start',
+					'value'   => $boundary_end->format( 'Y-m-d H:i:s' ),
+					'compare' => '<',
+					'type'    => 'DATETIME',
 				),
-				'meta_key'       => '_event_start',
-				'meta_type'      => 'DATETIME',
-				'orderby'        => array( 'meta_value', 'ID' ),
+				array(
+					'key'     => '_event_end',
+					'value'   => $boundary_start->format( 'Y-m-d H:i:s' ),
+					'compare' => '>',
+					'type'    => 'DATETIME',
+				),
 			),
+			'meta_key'       => '_event_start',
+			'meta_type'      => 'DATETIME',
+			'orderby'        => array( 'meta_value', 'ID' ),
 		);
 		// phpcs:enable
 
+		if ( ! empty( $filter_by_ids ) ) {
+			$query_args['post__in'] = $filter_by_ids;
+		}
+
+		$query     = new WP_Query( $query_args );
 		$event_ids = $query->get_posts();
 		$events    = array();
 
