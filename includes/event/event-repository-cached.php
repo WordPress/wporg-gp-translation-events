@@ -28,7 +28,7 @@ class Event_Repository_Cached extends Event_Repository {
 
 		$events = wp_cache_get( self::ACTIVE_EVENTS_KEY, '', false, $found );
 		if ( ! $found ) {
-			$events = $this->get_events_between( $boundary_start, $boundary_end );
+			$events = $this->get_events_between( $boundary_start, $boundary_end )->events;
 			wp_cache_set( self::ACTIVE_EVENTS_KEY, $events, '', self::CACHE_DURATION );
 		} elseif ( ! is_array( $events ) ) {
 			throw new Exception( 'Cached events is not an array, something is wrong' );

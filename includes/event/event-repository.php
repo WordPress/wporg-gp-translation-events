@@ -73,7 +73,7 @@ class Event_Repository implements Event_Repository_Interface {
 
 	public function get_current_events( int $current_page = -1, int $page_size = -1 ): Event_Query_Result {
 		$now = new DateTimeImmutable( 'now', new DateTimeZone( 'UTC' ) );
-		return new Event_Query_Result( $this->get_events_between( $now, $now, $current_page, $page_size ) );
+		return $this->get_events_between( $now, $now, $current_page, $page_size );
 	}
 
 	public function get_current_events_for_user( int $user_id ): Event_Query_Result {
@@ -92,7 +92,6 @@ class Event_Repository implements Event_Repository_Interface {
 	}
 
 	/**
-	 * @return Event[]
 	 * @throws Exception
 	 */
 	protected function get_events_between(
@@ -100,7 +99,7 @@ class Event_Repository implements Event_Repository_Interface {
 		DateTimeImmutable $boundary_end,
 		int $current_page = -1,
 		int $page_size = -1
-	): array {
+	): Event_Query_Result {
 		if ( $boundary_end < $boundary_start ) {
 			throw new Exception( 'boundary end must be after boundary start' );
 		}
@@ -150,7 +149,7 @@ class Event_Repository implements Event_Repository_Interface {
 			);
 		}
 
-		return $events;
+		return new Event_Query_Result( $events );
 	}
 
 	/**
