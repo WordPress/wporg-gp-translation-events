@@ -76,17 +76,17 @@ class Event_Repository implements Event_Repository_Interface {
 		return $this->get_events_between( $now, $now, $current_page, $page_size );
 	}
 
-	public function get_current_events_for_user( int $user_id ): Event_Query_Result {
+	public function get_current_events_for_user( int $user_id, int $current_page = -1, int $page_size = -1 ): Event_Query_Result {
 		// TODO.
 		return new Event_Query_Result( array() );
 	}
 
-	public function get_past_events_for_user( int $user_id ): Event_Query_Result {
+	public function get_past_events_for_user( int $user_id, int $current_page = -1, int $page_size = -1 ): Event_Query_Result {
 		// TODO.
 		return new Event_Query_Result( array() );
 	}
 
-	public function get_events_created_by_user( int $user_id ): Event_Query_Result {
+	public function get_events_created_by_user( int $user_id, int $current_page = -1, int $page_size = -1 ): Event_Query_Result {
 		// TODO.
 		return new Event_Query_Result( array() );
 	}
