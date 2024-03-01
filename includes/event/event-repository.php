@@ -73,21 +73,25 @@ class Event_Repository implements Event_Repository_Interface {
 	}
 
 	public function get_current_events( int $current_page = -1, int $page_size = -1 ): Event_Query_Result {
+		$this->assert_pagination_arguments( $current_page, $page_size );
 		$now = new DateTimeImmutable( 'now', new DateTimeZone( 'UTC' ) );
 		return $this->get_events_between( $now, $now, $current_page, $page_size );
 	}
 
 	public function get_current_events_for_user( int $user_id, int $current_page = -1, int $page_size = -1 ): Event_Query_Result {
+		$this->assert_pagination_arguments( $current_page, $page_size );
 		// TODO.
 		return new Event_Query_Result( array(), 1 );
 	}
 
 	public function get_past_events_for_user( int $user_id, int $current_page = -1, int $page_size = -1 ): Event_Query_Result {
+		$this->assert_pagination_arguments( $current_page, $page_size );
 		// TODO.
 		return new Event_Query_Result( array(), 1 );
 	}
 
 	public function get_events_created_by_user( int $user_id, int $current_page = -1, int $page_size = -1 ): Event_Query_Result {
+		$this->assert_pagination_arguments( $current_page, $page_size );
 		// TODO.
 		return new Event_Query_Result( array(), 1 );
 	}
@@ -153,6 +157,18 @@ class Event_Repository implements Event_Repository_Interface {
 		}
 
 		return new Event_Query_Result( $events, $query->max_num_pages );
+	}
+
+	/**
+	 * @throws Exception
+	 */
+	protected function assert_pagination_arguments( int $current_page, int $page_size ) {
+		if ( -1 !== $current_page && $current_page <= 0 ) {
+			throw new Exception( 'current page must be greater than 0' );
+		}
+		if ( -1 !== $page_size && $page_size <= 0 ) {
+			throw new Exception( 'page size must be greater than 0' );
+		}
 	}
 
 	/**
