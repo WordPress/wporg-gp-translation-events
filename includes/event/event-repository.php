@@ -161,8 +161,20 @@ class Event_Repository implements Event_Repository_Interface {
 
 	public function get_events_created_by_user( int $user_id, int $current_page = -1, int $page_size = -1 ): Events_Query_Result {
 		$this->assert_pagination_arguments( $current_page, $page_size );
-		// TODO.
-		return new Events_Query_Result( array(), 1 );
+		// phpcs:disable WordPress.DB.SlowDBQuery.slow_db_query_meta_query
+		// phpcs:disable WordPress.DB.SlowDBQuery.slow_db_query_meta_key
+		return $this->execute_events_query(
+			array(
+				'post_status'    => array( 'publish', 'draft' ),
+				'author'         => $user_id,
+				'paged'          => $current_page,
+				'posts_per_page' => $page_size,
+				'meta_key'       => '_event_start',
+				'orderby'        => array( 'meta_value', 'ID' ),
+				'order'          => 'DESC',
+			)
+		);
+		// phpcs:enable
 	}
 
 	/**
