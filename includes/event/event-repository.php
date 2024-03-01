@@ -122,17 +122,40 @@ class Event_Repository implements Event_Repository_Interface {
 
 		// We consider the start of time to be January 1st 2024,
 		// which is guaranteed to be earlier than when this plugin was created.
+		// It's not possible for there to be events before the plugin was created.
 		$boundary_start = new DateTimeImmutable( 'now', new DateTimeZone( 'UTC' ) );
 		$boundary_start = $boundary_start->setDate( 2024, 1, 1 )->setTime( 0, 0 );
 		$boundary_end   = new DateTimeImmutable( 'now', new DateTimeZone( 'UTC' ) );
 
-		return $this->get_events_active_between(
-			$boundary_start,
-			$boundary_end,
-			$event_ids_user_is_attending,
-			$current_page,
-			$page_size
+		// phpcs:disable WordPress.DB.SlowDBQuery.slow_db_query_meta_query
+		// phpcs:disable WordPress.DB.SlowDBQuery.slow_db_query_meta_key
+		return $this->execute_events_query(
+			array(
+				'post_status'    => 'publish',
+				'post__in'       => $event_ids_user_is_attending,
+				'paged'          => $current_page,
+				'posts_per_page' => $page_size,
+				'meta_query'     => array(
+					array(
+						'key'     => '_event_end',
+						'value'   => $boundary_start->format( 'Y-m-d H:i:s' ),
+						'compare' => '>=',
+						'type'    => 'DATETIME',
+					),
+					array(
+						'key'     => '_event_end',
+						'value'   => $boundary_end->format( 'Y-m-d H:i:s' ),
+						'compare' => '<',
+						'type'    => 'DATETIME',
+					),
+				),
+				'meta_key'       => '_event_end',
+				'meta_type'      => 'DATETIME',
+				'orderby'        => array( 'meta_value', 'ID' ),
+				'order'          => 'DESC',
+			)
 		);
+		// phpcs:enable
 	}
 
 	public function get_events_created_by_user( int $user_id, int $current_page = -1, int $page_size = -1 ): Events_Query_Result {
