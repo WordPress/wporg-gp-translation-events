@@ -152,8 +152,7 @@ class Event_Repository implements Event_Repository_Interface {
 			);
 		}
 
-		// The call to intval() is required because max_num_pages is sometimes a float, despite being type-hinted as int.
-		return new Event_Query_Result( $events, intval( $query->max_num_pages ) );
+		return new Event_Query_Result( $events, $query->max_num_pages );
 	}
 
 	/**
