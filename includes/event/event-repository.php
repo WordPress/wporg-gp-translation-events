@@ -79,7 +79,7 @@ class Event_Repository implements Event_Repository_Interface {
 		$this->assert_pagination_arguments( $current_page, $page_size );
 		$now = new DateTimeImmutable( 'now', new DateTimeZone( 'UTC' ) );
 
-		return $this->get_events_between(
+		return $this->get_events_active_between(
 			$now,
 			$now,
 			array(),
@@ -100,7 +100,7 @@ class Event_Repository implements Event_Repository_Interface {
 		$event_ids_user_is_attending = array_keys( $attending_array );
 
 		$now = new DateTimeImmutable( 'now', new DateTimeZone( 'UTC' ) );
-		return $this->get_events_between(
+		return $this->get_events_active_between(
 			$now,
 			$now,
 			$event_ids_user_is_attending,
@@ -126,7 +126,7 @@ class Event_Repository implements Event_Repository_Interface {
 		$boundary_start = $boundary_start->setDate( 2024, 1, 1 )->setTime( 0, 0 );
 		$boundary_end   = new DateTimeImmutable( 'now', new DateTimeZone( 'UTC' ) );
 
-		return $this->get_events_between(
+		return $this->get_events_active_between(
 			$boundary_start,
 			$boundary_end,
 			$event_ids_user_is_attending,
@@ -144,7 +144,7 @@ class Event_Repository implements Event_Repository_Interface {
 	/**
 	 * @throws Exception
 	 */
-	protected function get_events_between(
+	protected function get_events_active_between(
 		DateTimeImmutable $boundary_start,
 		DateTimeImmutable $boundary_end,
 		array $filter_by_ids = array(),
