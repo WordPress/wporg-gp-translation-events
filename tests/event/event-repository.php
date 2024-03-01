@@ -189,4 +189,25 @@ class Event_Repository_Test extends GP_UnitTestCase {
 		$this->assertEquals( 2, $result->page_count );
 		$this->assertEquals( $event2_id, $events[0]->id() );
 	}
+
+	public function test_get_events_created_by_user() {
+		$user_id   = $this->set_normal_user_as_current();
+		$event1_id = $this->event_factory->create_inactive_past();
+		$event2_id = $this->event_factory->create_active();
+		$event3_id = $this->event_factory->create_active();
+		$event4_id = $this->event_factory->create_inactive_future();
+
+		$this->set_admin_user_as_current();
+		$this->event_factory->create_inactive_past();
+		$this->event_factory->create_active();
+		$this->event_factory->create_inactive_future();
+
+		$events = $this->repository->get_events_created_by_user( $user_id )->events;
+
+		$this->assertCount( 4, $events );
+		$this->assertEquals( $event1_id, $events[0]->id() );
+		$this->assertEquals( $event2_id, $events[1]->id() );
+		$this->assertEquals( $event3_id, $events[2]->id() );
+		$this->assertEquals( $event4_id, $events[3]->id() );
+	}
 }
