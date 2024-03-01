@@ -158,11 +158,9 @@ class Event_Repository implements Event_Repository_Interface {
 		// phpcs:disable WordPress.DB.SlowDBQuery.slow_db_query_meta_query
 		// phpcs:disable WordPress.DB.SlowDBQuery.slow_db_query_meta_key
 		$query_args = array(
-			'post_type'      => 'event',
 			'post_status'    => 'publish',
 			'paged'          => $current_page,
 			'posts_per_page' => $page_size,
-			'fields'         => 'ids',
 			'meta_query'     => array(
 				array(
 					'key'     => '_event_start',
@@ -187,7 +185,40 @@ class Event_Repository implements Event_Repository_Interface {
 			$query_args['post__in'] = $filter_by_ids;
 		}
 
-		$query     = new WP_Query( $query_args );
+		return $this->execute_events_query( $query_args );
+	}
+
+	/**
+	 * @throws Exception
+	 */
+	protected function assert_pagination_arguments( int $current_page, int $page_size ) {
+		if ( -1 !== $current_page && $current_page <= 0 ) {
+			throw new Exception( 'current page must be greater than 0' );
+		}
+		if ( -1 !== $page_size && $page_size <= 0 ) {
+			throw new Exception( 'page size must be greater than 0' );
+		}
+		if ( $page_size > 0 && -1 === $current_page ) {
+			throw new Exception( 'if page size is specified, current page must also be' );
+		}
+	}
+
+	/**
+	 * @throws InvalidStartOrEnd
+	 * @throws InvalidTitle
+	 * @throws EventNotFound
+	 * @throws InvalidStatus
+	 */
+	private function execute_events_query( array $args ): Events_Query_Result {
+		$args = array_replace_recursive(
+			$args,
+			array(
+				'post_type' => 'event',
+				'fields'    => 'ids',
+			),
+		);
+
+		$query     = new WP_Query( $args );
 		$event_ids = $query->get_posts();
 		$events    = array();
 
@@ -206,22 +237,7 @@ class Event_Repository implements Event_Repository_Interface {
 			);
 		}
 
-		return new Event_Query_Result( $events, $query->max_num_pages );
-	}
-
-	/**
-	 * @throws Exception
-	 */
-	protected function assert_pagination_arguments( int $current_page, int $page_size ) {
-		if ( -1 !== $current_page && $current_page <= 0 ) {
-			throw new Exception( 'current page must be greater than 0' );
-		}
-		if ( -1 !== $page_size && $page_size <= 0 ) {
-			throw new Exception( 'page size must be greater than 0' );
-		}
-		if ( $page_size > 0 && -1 === $current_page ) {
-			throw new Exception( 'if page size is specified, current page must also be' );
-		}
+		return new Events_Query_Result( $events, $query->max_num_pages );
 	}
 
 	/**
