@@ -206,25 +206,23 @@ class Event_Repository implements Event_Repository_Interface {
 	/**
 	 * @throws InvalidStartOrEnd
 	 * @throws InvalidTitle
-	 * @throws EventNotFound
 	 * @throws InvalidStatus
+	 * @throws Exception
 	 */
 	private function execute_events_query( array $args ): Events_Query_Result {
 		$args = array_replace_recursive(
 			$args,
 			array(
 				'post_type' => 'event',
-				'fields'    => 'ids',
 			),
 		);
 
-		$query     = new WP_Query( $args );
-		$event_ids = $query->get_posts();
-		$events    = array();
+		$query  = new WP_Query( $args );
+		$posts  = $query->get_posts();
+		$events = array();
 
-		foreach ( $event_ids as $id ) {
-			$post     = $this->get_event_post( $id );
-			$meta     = $this->get_event_meta( $id );
+		foreach ( $posts as $post ) {
+			$meta     = $this->get_event_meta( $post->ID );
 			$events[] = new Event(
 				$post->ID,
 				$meta['start'],
