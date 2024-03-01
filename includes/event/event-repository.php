@@ -133,7 +133,8 @@ class Event_Repository implements Event_Repository_Interface {
 					),
 				),
 				'meta_key'       => '_event_start',
-				'orderby'        => 'meta_value',
+				'meta_type'      => 'DATETIME',
+				'orderby'        => array( 'meta_value', 'ID' ),
 			),
 		);
 		// phpcs:enable
