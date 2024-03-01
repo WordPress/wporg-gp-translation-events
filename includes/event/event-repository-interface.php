@@ -34,7 +34,7 @@ interface Event_Repository_Interface {
 	/**
 	 * @throws Exception
 	 */
-	public function get_current_events(): Event_Query_Result;
+	public function get_current_events( int $current_page = -1, int $page_size = -1 ): Event_Query_Result;
 
 	/**
 	 * @throws Exception
