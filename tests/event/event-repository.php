@@ -4,14 +4,13 @@ namespace Wporg\Tests\Event;
 
 use DateTimeImmutable;
 use DateTimeZone;
-use Exception;
-use WP_UnitTestCase;
+use GP_UnitTestCase;
 use Wporg\TranslationEvents\Event\Event;
 use Wporg\TranslationEvents\Event\Event_Repository;
 use Wporg\TranslationEvents\Event\EventNotFound;
 use Wporg\TranslationEvents\Tests\Event_Factory;
 
-class Event_Repository_Test extends WP_UnitTestCase {
+class Event_Repository_Test extends GP_UnitTestCase {
 	private Event_Factory $event_factory;
 	private Event_Repository $repository;
 
@@ -129,6 +128,34 @@ class Event_Repository_Test extends WP_UnitTestCase {
 		$this->assertEquals( $event1_id, $events[0]->id() );
 
 		$result = $this->repository->get_current_events( 2, 1 );
+		$events = $result->events;
+		$this->assertCount( 1, $events );
+		$this->assertEquals( 2, $result->page_count );
+		$this->assertEquals( $event2_id, $events[0]->id() );
+	}
+
+	public function test_get_current_events_for_user() {
+		$user_id   = $this->set_normal_user_as_current();
+		$now       = new DateTimeImmutable( 'now', new DateTimeZone( 'UTC' ) );
+		$event1_id = $this->event_factory->create_active( array( $user_id ), $now );
+		$event2_id = $this->event_factory->create_active( array( $user_id ), $now );
+		$this->event_factory->create_active( array(), $now );
+		$this->event_factory->create_active( array(), $now->modify( '+2 hours' ) );
+		$this->event_factory->create_inactive_future();
+		$this->event_factory->create_inactive_past();
+
+		$events = $this->repository->get_current_events_for_user( $user_id )->events;
+		$this->assertCount( 2, $events );
+		$this->assertEquals( $event1_id, $events[0]->id() );
+		$this->assertEquals( $event2_id, $events[1]->id() );
+
+		$result = $this->repository->get_current_events_for_user( $user_id, 1, 1 );
+		$events = $result->events;
+		$this->assertCount( 1, $events );
+		$this->assertEquals( 2, $result->page_count );
+		$this->assertEquals( $event1_id, $events[0]->id() );
+
+		$result = $this->repository->get_current_events_for_user( $user_id, 2, 1 );
 		$events = $result->events;
 		$this->assertCount( 1, $events );
 		$this->assertEquals( 2, $result->page_count );

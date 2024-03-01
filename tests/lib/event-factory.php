@@ -86,7 +86,7 @@ class Event_Factory extends WP_UnitTest_Factory_For_Post {
 			// the caller of this function. So we remove the current user as attendee.
 			$event_ids = get_user_meta( $user_id, $meta_key, true );
 			unset( $event_ids[ $event_id ] );
-			update_user_meta( $user_id, $meta_key, array() );
+			update_user_meta( $user_id, $meta_key, $event_ids );
 		}
 
 		update_post_meta( $event_id, '_event_start', $start->format( 'Y-m-d H:i:s' ) );
