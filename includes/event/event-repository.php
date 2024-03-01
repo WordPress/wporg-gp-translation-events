@@ -11,12 +11,13 @@ use WP_Query;
 use Wporg\TranslationEvents\Route;
 
 class Event_Repository implements Event_Repository_Interface {
+	private const POST_TYPE               = 'event';
 	private const USER_META_KEY_ATTENDING = Route::USER_META_KEY_ATTENDING;
 
 	public function create_event( Event $event ): void {
 		$event_id = wp_insert_post(
 			array(
-				'post_type'    => 'event',
+				'post_type'    => self::POST_TYPE,
 				'post_name'    => $event->slug(),
 				'post_title'   => $event->title(),
 				'post_content' => $event->description(),
@@ -236,7 +237,7 @@ class Event_Repository implements Event_Repository_Interface {
 		$args = array_replace_recursive(
 			$args,
 			array(
-				'post_type' => 'event',
+				'post_type' => self::POST_TYPE,
 			),
 		);
 
@@ -272,7 +273,7 @@ class Event_Repository implements Event_Repository_Interface {
 		if ( ! ( $post instanceof WP_Post ) ) {
 			throw new EventNotFound();
 		}
-		if ( 'event' !== $post->post_type ) {
+		if ( self::POST_TYPE !== $post->post_type ) {
 			throw new EventNotFound();
 		}
 
