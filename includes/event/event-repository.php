@@ -170,6 +170,9 @@ class Event_Repository implements Event_Repository_Interface {
 		if ( -1 !== $page_size && $page_size <= 0 ) {
 			throw new Exception( 'page size must be greater than 0' );
 		}
+		if ( $page_size > 0 && -1 === $current_page ) {
+			throw new Exception( 'if page size is specified, current page must also be' );
+		}
 	}
 
 	/**
