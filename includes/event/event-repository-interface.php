@@ -2,7 +2,6 @@
 
 namespace Wporg\TranslationEvents\Event;
 
-use DateTimeImmutable;
 use Exception;
 use Throwable;
 

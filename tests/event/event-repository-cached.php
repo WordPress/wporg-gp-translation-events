@@ -4,12 +4,9 @@ namespace Wporg\Tests\Event;
 
 use DateTimeImmutable;
 use DateTimeZone;
-use Exception;
 use WP_UnitTestCase;
 use Wporg\TranslationEvents\Event\Event_Repository_Cached;
 use Wporg\TranslationEvents\Event\Event;
-use Wporg\TranslationEvents\Event\Event_Repository;
-use Wporg\TranslationEvents\Event\EventNotFound;
 use Wporg\TranslationEvents\Tests\Event_Factory;
 
 class Event_Repository_Cached_Test extends WP_UnitTestCase {
