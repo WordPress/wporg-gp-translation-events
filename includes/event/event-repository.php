@@ -306,18 +306,16 @@ class Event_Repository implements Event_Repository_Interface {
 	}
 
 	private function update_event_meta( Event $event ) {
-		update_post_meta( $event->id(), '_event_start', self::serialize_datetime( $event->start() ) );
-		update_post_meta( $event->id(), '_event_end', self::serialize_datetime( $event->end() ) );
+		update_post_meta( $event->id(), '_event_start', $this->serialize_utc_datetime( $event->start() ) );
+		update_post_meta( $event->id(), '_event_end', $this->serialize_utc_datetime( $event->end() ) );
 		update_post_meta( $event->id(), '_event_timezone', $event->timezone()->getName() );
 	}
 
-	private static function parse_utc_datetime( string $datetime ): DateTimeImmutable {
+	private function parse_utc_datetime( string $datetime ): DateTimeImmutable {
 		return DateTimeImmutable::createFromFormat( 'Y-m-d H:i:s', $datetime, new DateTimeZone( 'UTC' ) );
 	}
 
-	private static function serialize_datetime( DateTimeImmutable $value ): string {
-		$value->setTimezone( new DateTimeZone( 'UTC' ) );
-
+	private function serialize_utc_datetime( DateTimeImmutable $value ): string {
 		return $value->format( 'Y-m-d H:i:s' );
 	}
 }
