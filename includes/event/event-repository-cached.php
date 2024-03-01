@@ -46,9 +46,16 @@ class Event_Repository_Cached extends Event_Repository {
 			)
 		);
 
-		// TODO: paginate results.
+		if ( $current_page > 0 && $page_size > 0 ) {
+			// Convert from 1-indexed to 0-indexed.
+			--$current_page;
+			$pages = array_chunk( $events, $page_size );
+		} else {
+			$current_page = 0;
+			$pages        = array( $events );
+		}
 
-		return new Event_Query_Result( $events, 1 );
+		return new Event_Query_Result( $pages[ $current_page ], count( $pages ) );
 	}
 
 	private function invalidate_cache(): void {
