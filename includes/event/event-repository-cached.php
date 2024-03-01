@@ -20,7 +20,7 @@ class Event_Repository_Cached extends Event_Repository {
 		$this->invalidate_cache();
 	}
 
-	public function get_current_events( int $current_page = -1, int $page_size = -1 ): Event_Query_Result {
+	public function get_current_events( int $current_page = -1, int $page_size = -1 ): Events_Query_Result {
 		$this->assert_pagination_arguments( $current_page, $page_size );
 
 		$cache_duration = self::CACHE_DURATION;
@@ -55,7 +55,7 @@ class Event_Repository_Cached extends Event_Repository {
 			$pages        = array( $events );
 		}
 
-		return new Event_Query_Result( $pages[ $current_page ], count( $pages ) );
+		return new Events_Query_Result( $pages[ $current_page ], count( $pages ) );
 	}
 
 	private function invalidate_cache(): void {

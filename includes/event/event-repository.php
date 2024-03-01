@@ -75,7 +75,7 @@ class Event_Repository implements Event_Repository_Interface {
 		}
 	}
 
-	public function get_current_events( int $current_page = -1, int $page_size = -1 ): Event_Query_Result {
+	public function get_current_events( int $current_page = -1, int $page_size = -1 ): Events_Query_Result {
 		$this->assert_pagination_arguments( $current_page, $page_size );
 		$now = new DateTimeImmutable( 'now', new DateTimeZone( 'UTC' ) );
 
@@ -88,7 +88,7 @@ class Event_Repository implements Event_Repository_Interface {
 		);
 	}
 
-	public function get_current_events_for_user( int $user_id, int $current_page = -1, int $page_size = -1 ): Event_Query_Result {
+	public function get_current_events_for_user( int $user_id, int $current_page = -1, int $page_size = -1 ): Events_Query_Result {
 		$this->assert_pagination_arguments( $current_page, $page_size );
 
 		$attending_array = get_user_meta( $user_id, self::USER_META_KEY_ATTENDING, true );
@@ -109,7 +109,7 @@ class Event_Repository implements Event_Repository_Interface {
 		);
 	}
 
-	public function get_past_events_for_user( int $user_id, int $current_page = -1, int $page_size = -1 ): Event_Query_Result {
+	public function get_past_events_for_user( int $user_id, int $current_page = -1, int $page_size = -1 ): Events_Query_Result {
 		$this->assert_pagination_arguments( $current_page, $page_size );
 
 		$attending_array = get_user_meta( $user_id, self::USER_META_KEY_ATTENDING, true );
@@ -135,10 +135,10 @@ class Event_Repository implements Event_Repository_Interface {
 		);
 	}
 
-	public function get_events_created_by_user( int $user_id, int $current_page = -1, int $page_size = -1 ): Event_Query_Result {
+	public function get_events_created_by_user( int $user_id, int $current_page = -1, int $page_size = -1 ): Events_Query_Result {
 		$this->assert_pagination_arguments( $current_page, $page_size );
 		// TODO.
-		return new Event_Query_Result( array(), 1 );
+		return new Events_Query_Result( array(), 1 );
 	}
 
 	/**
@@ -150,7 +150,7 @@ class Event_Repository implements Event_Repository_Interface {
 		array $filter_by_ids = array(),
 		int $current_page = -1,
 		int $page_size = -1
-	): Event_Query_Result {
+	): Events_Query_Result {
 		if ( $boundary_end < $boundary_start ) {
 			throw new Exception( 'boundary end must not be before boundary start' );
 		}
