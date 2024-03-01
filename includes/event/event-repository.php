@@ -79,17 +79,17 @@ class Event_Repository implements Event_Repository_Interface {
 
 	public function get_current_events_for_user( int $user_id, int $current_page = -1, int $page_size = -1 ): Event_Query_Result {
 		// TODO.
-		return new Event_Query_Result( array() );
+		return new Event_Query_Result( array(), 1 );
 	}
 
 	public function get_past_events_for_user( int $user_id, int $current_page = -1, int $page_size = -1 ): Event_Query_Result {
 		// TODO.
-		return new Event_Query_Result( array() );
+		return new Event_Query_Result( array(), 1 );
 	}
 
 	public function get_events_created_by_user( int $user_id, int $current_page = -1, int $page_size = -1 ): Event_Query_Result {
 		// TODO.
-		return new Event_Query_Result( array() );
+		return new Event_Query_Result( array(), 1 );
 	}
 
 	/**
@@ -152,7 +152,8 @@ class Event_Repository implements Event_Repository_Interface {
 			);
 		}
 
-		return new Event_Query_Result( $events );
+		// The call to intval() is required because max_num_pages is sometimes a float, despite being type-hinted as int.
+		return new Event_Query_Result( $events, intval( $query->max_num_pages ) );
 	}
 
 	/**
