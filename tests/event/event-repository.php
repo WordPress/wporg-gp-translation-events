@@ -161,4 +161,32 @@ class Event_Repository_Test extends GP_UnitTestCase {
 		$this->assertEquals( 2, $result->page_count );
 		$this->assertEquals( $event2_id, $events[0]->id() );
 	}
+
+	public function test_get_past_events_for_user() {
+		$user_id = $this->set_normal_user_as_current();
+
+		$event1_id = $this->event_factory->create_inactive_past( array( $user_id ) );
+		$event2_id = $this->event_factory->create_inactive_past( array( $user_id ) );
+
+		$now = new DateTimeImmutable( 'now', new DateTimeZone( 'UTC' ) );
+		$this->event_factory->create_active( array( $user_id ), $now );
+		$this->event_factory->create_active( array( $user_id ), $now );
+
+		$events = $this->repository->get_past_events_for_user( $user_id )->events;
+		$this->assertCount( 2, $events );
+		$this->assertEquals( $event1_id, $events[0]->id() );
+		$this->assertEquals( $event2_id, $events[1]->id() );
+
+		$result = $this->repository->get_past_events_for_user( $user_id, 1, 1 );
+		$events = $result->events;
+		$this->assertCount( 1, $events );
+		$this->assertEquals( 2, $result->page_count );
+		$this->assertEquals( $event1_id, $events[0]->id() );
+
+		$result = $this->repository->get_past_events_for_user( $user_id, 2, 1 );
+		$events = $result->events;
+		$this->assertCount( 1, $events );
+		$this->assertEquals( 2, $result->page_count );
+		$this->assertEquals( $event2_id, $events[0]->id() );
+	}
 }

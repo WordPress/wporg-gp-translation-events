@@ -90,7 +90,6 @@ class Event_Repository implements Event_Repository_Interface {
 
 	public function get_current_events_for_user( int $user_id, int $current_page = -1, int $page_size = -1 ): Event_Query_Result {
 		$this->assert_pagination_arguments( $current_page, $page_size );
-		$now = new DateTimeImmutable( 'now', new DateTimeZone( 'UTC' ) );
 
 		$attending_array = get_user_meta( $user_id, self::USER_META_KEY_ATTENDING, true );
 		if ( ! $attending_array ) {
@@ -100,6 +99,7 @@ class Event_Repository implements Event_Repository_Interface {
 		// $attending_array is an associative array with the event_id as key.
 		$event_ids_user_is_attending = array_keys( $attending_array );
 
+		$now = new DateTimeImmutable( 'now', new DateTimeZone( 'UTC' ) );
 		return $this->get_events_between(
 			$now,
 			$now,
@@ -111,8 +111,28 @@ class Event_Repository implements Event_Repository_Interface {
 
 	public function get_past_events_for_user( int $user_id, int $current_page = -1, int $page_size = -1 ): Event_Query_Result {
 		$this->assert_pagination_arguments( $current_page, $page_size );
-		// TODO.
-		return new Event_Query_Result( array(), 1 );
+
+		$attending_array = get_user_meta( $user_id, self::USER_META_KEY_ATTENDING, true );
+		if ( ! $attending_array ) {
+			$attending_array = array();
+		}
+
+		// $attending_array is an associative array with the event_id as key.
+		$event_ids_user_is_attending = array_keys( $attending_array );
+
+		// We consider the start of time to be January 1st 2024,
+		// which is guaranteed to be earlier than when this plugin was created.
+		$boundary_start = new DateTimeImmutable( 'now', new DateTimeZone( 'UTC' ) );
+		$boundary_start = $boundary_start->setDate( 2024, 1, 1 )->setTime( 0, 0 );
+		$boundary_end   = new DateTimeImmutable( 'now', new DateTimeZone( 'UTC' ) );
+
+		return $this->get_events_between(
+			$boundary_start,
+			$boundary_end,
+			$event_ids_user_is_attending,
+			$current_page,
+			$page_size
+		);
 	}
 
 	public function get_events_created_by_user( int $user_id, int $current_page = -1, int $page_size = -1 ): Event_Query_Result {
@@ -132,7 +152,7 @@ class Event_Repository implements Event_Repository_Interface {
 		int $page_size = -1
 	): Event_Query_Result {
 		if ( $boundary_end < $boundary_start ) {
-			throw new Exception( 'boundary end must be after boundary start' );
+			throw new Exception( 'boundary end must not be before boundary start' );
 		}
 
 		// phpcs:disable WordPress.DB.SlowDBQuery.slow_db_query_meta_query
