@@ -11,7 +11,7 @@ use WP_Query;
 use Wporg\TranslationEvents\Route;
 
 class Event_Repository implements Event_Repository_Interface {
-	private const POST_TYPE               = 'event';
+	private const POST_TYPE               = 'translation_event';
 	private const USER_META_KEY_ATTENDING = Route::USER_META_KEY_ATTENDING;
 
 	public function create_event( Event $event ): void {
