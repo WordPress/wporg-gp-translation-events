@@ -33,22 +33,22 @@ interface Event_Repository_Interface {
 	/**
 	 * @throws Exception
 	 */
-	public function get_current_events( int $current_page = -1, int $page_size = -1 ): Events_Query_Result;
+	public function get_current_events( int $page = -1, int $page_size = -1 ): Events_Query_Result;
 
 	/**
 	 * @throws Exception
 	 */
-	public function get_current_events_for_user( int $user_id, int $current_page = -1, int $page_size = -1 ): Events_Query_Result;
+	public function get_current_events_for_user( int $user_id, int $page = -1, int $page_size = -1 ): Events_Query_Result;
 
 	/**
 	 * @throws Exception
 	 */
-	public function get_past_events_for_user( int $user_id, int $current_page = -1, int $page_size = -1 ): Events_Query_Result;
+	public function get_past_events_for_user( int $user_id, int $page = -1, int $page_size = -1 ): Events_Query_Result;
 
 	/**
 	 * @throws Exception
 	 */
-	public function get_events_created_by_user( int $user_id, int $current_page = -1, int $page_size = -1 ): Events_Query_Result;
+	public function get_events_created_by_user( int $user_id, int $page = -1, int $page_size = -1 ): Events_Query_Result;
 }
 
 class Events_Query_Result {

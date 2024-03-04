@@ -76,21 +76,21 @@ class Event_Repository implements Event_Repository_Interface {
 		}
 	}
 
-	public function get_current_events( int $current_page = -1, int $page_size = -1 ): Events_Query_Result {
-		$this->assert_pagination_arguments( $current_page, $page_size );
+	public function get_current_events( int $page = -1, int $page_size = -1 ): Events_Query_Result {
+		$this->assert_pagination_arguments( $page, $page_size );
 		$now = new DateTimeImmutable( 'now', new DateTimeZone( 'UTC' ) );
 
 		return $this->get_events_active_between(
 			$now,
 			$now,
 			array(),
-			$current_page,
+			$page,
 			$page_size
 		);
 	}
 
-	public function get_current_events_for_user( int $user_id, int $current_page = -1, int $page_size = -1 ): Events_Query_Result {
-		$this->assert_pagination_arguments( $current_page, $page_size );
+	public function get_current_events_for_user( int $user_id, int $page = -1, int $page_size = -1 ): Events_Query_Result {
+		$this->assert_pagination_arguments( $page, $page_size );
 
 		$attending_array = get_user_meta( $user_id, self::USER_META_KEY_ATTENDING, true );
 		if ( ! $attending_array ) {
@@ -105,13 +105,13 @@ class Event_Repository implements Event_Repository_Interface {
 			$now,
 			$now,
 			$event_ids_user_is_attending,
-			$current_page,
+			$page,
 			$page_size
 		);
 	}
 
-	public function get_past_events_for_user( int $user_id, int $current_page = -1, int $page_size = -1 ): Events_Query_Result {
-		$this->assert_pagination_arguments( $current_page, $page_size );
+	public function get_past_events_for_user( int $user_id, int $page = -1, int $page_size = -1 ): Events_Query_Result {
+		$this->assert_pagination_arguments( $page, $page_size );
 
 		$attending_array = get_user_meta( $user_id, self::USER_META_KEY_ATTENDING, true );
 		if ( ! $attending_array ) {
@@ -134,7 +134,7 @@ class Event_Repository implements Event_Repository_Interface {
 			array(
 				'post_status'    => 'publish',
 				'post__in'       => $event_ids_user_is_attending,
-				'paged'          => $current_page,
+				'paged'          => $page,
 				'posts_per_page' => $page_size,
 				'meta_query'     => array(
 					array(
@@ -159,15 +159,15 @@ class Event_Repository implements Event_Repository_Interface {
 		// phpcs:enable
 	}
 
-	public function get_events_created_by_user( int $user_id, int $current_page = -1, int $page_size = -1 ): Events_Query_Result {
-		$this->assert_pagination_arguments( $current_page, $page_size );
+	public function get_events_created_by_user( int $user_id, int $page = -1, int $page_size = -1 ): Events_Query_Result {
+		$this->assert_pagination_arguments( $page, $page_size );
 		// phpcs:disable WordPress.DB.SlowDBQuery.slow_db_query_meta_query
 		// phpcs:disable WordPress.DB.SlowDBQuery.slow_db_query_meta_key
 		return $this->execute_events_query(
 			array(
 				'post_status'    => array( 'publish', 'draft' ),
 				'author'         => $user_id,
-				'paged'          => $current_page,
+				'paged'          => $page,
 				'posts_per_page' => $page_size,
 				'meta_key'       => '_event_start',
 				'orderby'        => array( 'meta_value', 'ID' ),
@@ -184,7 +184,7 @@ class Event_Repository implements Event_Repository_Interface {
 		DateTimeImmutable $boundary_start,
 		DateTimeImmutable $boundary_end,
 		array $filter_by_ids = array(),
-		int $current_page = -1,
+		int $page = -1,
 		int $page_size = -1
 	): Events_Query_Result {
 		if ( $boundary_end < $boundary_start ) {
@@ -195,7 +195,7 @@ class Event_Repository implements Event_Repository_Interface {
 		// phpcs:disable WordPress.DB.SlowDBQuery.slow_db_query_meta_key
 		$query_args = array(
 			'post_status'    => 'publish',
-			'paged'          => $current_page,
+			'paged'          => $page,
 			'posts_per_page' => $page_size,
 			'meta_query'     => array(
 				array(
@@ -227,15 +227,15 @@ class Event_Repository implements Event_Repository_Interface {
 	/**
 	 * @throws Exception
 	 */
-	protected function assert_pagination_arguments( int $current_page, int $page_size ) {
-		if ( -1 !== $current_page && $current_page <= 0 ) {
-			throw new Exception( 'current page must be greater than 0' );
+	protected function assert_pagination_arguments( int $page, int $page_size ) {
+		if ( -1 !== $page && $page <= 0 ) {
+			throw new Exception( 'page must be greater than 0' );
 		}
 		if ( -1 !== $page_size && $page_size <= 0 ) {
 			throw new Exception( 'page size must be greater than 0' );
 		}
-		if ( $page_size > 0 && -1 === $current_page ) {
-			throw new Exception( 'if page size is specified, current page must also be' );
+		if ( $page_size > 0 && -1 === $page ) {
+			throw new Exception( 'if page size is specified, page must also be' );
 		}
 	}
 

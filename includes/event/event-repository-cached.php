@@ -20,8 +20,8 @@ class Event_Repository_Cached extends Event_Repository {
 		$this->invalidate_cache();
 	}
 
-	public function get_current_events( int $current_page = -1, int $page_size = -1 ): Events_Query_Result {
-		$this->assert_pagination_arguments( $current_page, $page_size );
+	public function get_current_events( int $page = -1, int $page_size = -1 ): Events_Query_Result {
+		$this->assert_pagination_arguments( $page, $page_size );
 
 		$cache_duration = self::CACHE_DURATION;
 		$now            = new DateTimeImmutable( 'now', new DateTimeZone( 'UTC' ) );
@@ -46,16 +46,16 @@ class Event_Repository_Cached extends Event_Repository {
 			)
 		);
 
-		if ( $current_page > 0 && $page_size > 0 ) {
+		if ( $page > 0 && $page_size > 0 ) {
 			// Convert from 1-indexed to 0-indexed.
-			--$current_page;
+			--$page;
 			$pages = array_chunk( $events, $page_size );
 		} else {
-			$current_page = 0;
-			$pages        = array( $events );
+			$page  = 0;
+			$pages = array( $events );
 		}
 
-		return new Events_Query_Result( $pages[ $current_page ], count( $pages ) );
+		return new Events_Query_Result( $pages[ $page ], count( $pages ) );
 	}
 
 	private function invalidate_cache(): void {
