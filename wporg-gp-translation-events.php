@@ -26,7 +26,7 @@ use WP_Post;
 use WP_Query;
 
 class Translation_Events {
-	const CPT      = 'translation_event';
+	const CPT = 'translation_event';
 
 	public static function get_instance() {
 		static $instance = null;
