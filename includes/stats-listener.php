@@ -75,7 +75,7 @@ class Stats_Listener {
 			// phpcs:ignore Generic.Commenting.DocComment.MissingShort
 			/** @var GP_Translation_Set $translation_set Translation set */
 			$translation_set = ( new GP_Translation_Set() )->find_one( array( 'id' => $translation->translation_set_id ) );
-			global $wpdb;
+			global $wpdb, $gp_table_prefix;
 
 			foreach ( $events as $event ) {
 				// A given user can only do one action on a specific translation.
@@ -84,7 +84,7 @@ class Stats_Listener {
 				// phpcs:disable WordPress.DB.DirectDatabaseQuery.NoCaching
 				$wpdb->query(
 					$wpdb->prepare(
-						"insert ignore into {$wpdb->base_prefix}event_actions (event_id, locale, user_id, original_id, action, happened_at) values (%d, %s, %d, %d, %s, %s)",
+						"insert ignore into {$gp_table_prefix}event_actions (event_id, locale, user_id, original_id, action, happened_at) values (%d, %s, %d, %d, %s, %s)",
 						array(
 							// Start unique key.
 							'event_id'    => $event->id(),

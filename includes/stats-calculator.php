@@ -65,7 +65,7 @@ class Stats_Calculator {
 	 */
 	public function for_event( WP_Post $event ): Event_Stats {
 		$stats = new Event_Stats();
-		global $wpdb;
+		global $wpdb, $gp_table_prefix;
 
 		// phpcs:disable WordPress.DB.DirectDatabaseQuery.DirectQuery
 		// phpcs:disable WordPress.DB.DirectDatabaseQuery.NoCaching
@@ -78,7 +78,7 @@ class Stats_Calculator {
 					   sum(action = 'create') as created,
 					   count(*) as total,
 					   count(distinct user_id) as users
-				from {$wpdb->base_prefix}event_actions
+				from {$gp_table_prefix}event_actions
 				where event_id = %d
 				group by locale with rollup
 			",
