@@ -67,6 +67,7 @@ class Stats_Calculator {
 		$stats = new Event_Stats();
 		global $wpdb, $gp_table_prefix;
 
+		// phpcs:disable WordPress.DB.PreparedSQL.InterpolatedNotPrepared
 		// phpcs:disable WordPress.DB.DirectDatabaseQuery.DirectQuery
 		// phpcs:disable WordPress.DB.DirectDatabaseQuery.NoCaching
 		// phpcs thinks we're doing a schema change but we aren't.

@@ -80,6 +80,7 @@ class Stats_Listener {
 			foreach ( $events as $event ) {
 				// A given user can only do one action on a specific translation.
 				// So we insert ignore, which will keep only the first action.
+				// phpcs:disable WordPress.DB.PreparedSQL.InterpolatedNotPrepared
 				// phpcs:disable WordPress.DB.DirectDatabaseQuery.DirectQuery
 				// phpcs:disable WordPress.DB.DirectDatabaseQuery.NoCaching
 				$wpdb->query(

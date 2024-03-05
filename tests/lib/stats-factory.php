@@ -10,6 +10,7 @@ class Stats_Factory {
 
 		// phpcs:disable WordPress.DB.DirectDatabaseQuery.DirectQuery
 		// phpcs:disable WordPress.DB.DirectDatabaseQuery.NoCaching
+		// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
 		$wpdb->query( "delete from {$gp_table_prefix}event_actions" );
 		// phpcs:enable
 	}
@@ -18,6 +19,7 @@ class Stats_Factory {
 		global $wpdb, $gp_table_prefix;
 		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery
 		$wpdb->insert(
+			// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
 			$gp_table_prefix . 'event_actions',
 			array(
 				'event_id'    => $event_id,
@@ -33,6 +35,7 @@ class Stats_Factory {
 		global $wpdb, $gp_table_prefix;
 		// phpcs:disable WordPress.DB.DirectDatabaseQuery.DirectQuery
 		// phpcs:disable WordPress.DB.DirectDatabaseQuery.NoCaching
+		// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
 		return intval( $wpdb->get_var( "select count(*) from {$gp_table_prefix}event_actions" ) );
 		// phpcs:enable
 	}
@@ -41,6 +44,7 @@ class Stats_Factory {
 		global $wpdb, $gp_table_prefix;
 		// phpcs:disable WordPress.DB.DirectDatabaseQuery.DirectQuery
 		// phpcs:disable WordPress.DB.DirectDatabaseQuery.NoCaching
+		// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
 		return $wpdb->get_row( $wpdb->prepare( "select * from {$gp_table_prefix}event_actions where event_id = %s", $event_id ), ARRAY_A );
 		// phpcs:enable
 	}
