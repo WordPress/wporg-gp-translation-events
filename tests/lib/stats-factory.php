@@ -15,7 +15,7 @@ class Stats_Factory {
 	}
 
 	public function create( int $event_id, $user_id, $original_id, $action, $locale = 'aa' ) {
-		global $wpdb;
+		global $wpdb, $gp_table_prefix;
 		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery
 		$wpdb->insert(
 			$gp_table_prefix . 'event_actions',
