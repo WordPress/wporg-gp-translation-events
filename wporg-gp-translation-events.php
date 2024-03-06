@@ -203,7 +203,6 @@ class Translation_Events {
 		}
 		$action           = isset( $_POST['form_name'] ) ? sanitize_text_field( wp_unslash( $_POST['form_name'] ) ) : '';
 		$event_id         = null;
-		$event            = null;
 		$response_message = '';
 		$form_actions     = array( 'draft', 'publish', 'delete' );
 		$is_nonce_valid   = false;
