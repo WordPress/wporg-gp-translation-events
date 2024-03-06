@@ -79,7 +79,6 @@ gp_tmpl_load( 'events-header', get_defined_vars(), __DIR__ );
 			list( $permalink, $post_name ) = get_sample_permalink( $event_id );
 			$permalink                     = str_replace( '%pagename%', $post_name, $permalink );
 			$event_url                     = gp_url( wp_make_link_relative( $permalink ) );
-			$event_edit_url                = gp_url( 'events/edit/' . $event_id );
 			$event_status                  = get_post_status( $event_id );
 			$event_start                   = ( new DateTime( get_post_meta( get_the_ID(), '_event_start', true ) ) )->format( 'M j, Y' );
 			$event_end                     = ( new DateTime( get_post_meta( get_the_ID(), '_event_end', true ) ) )->format( 'M j, Y' );
