@@ -52,7 +52,7 @@ class Translation_Events {
 		register_activation_hook( __FILE__, array( $this, 'activate' ) );
 	}
 
-	public function gp_init() {
+	public function gp_init(): void {
 		require_once __DIR__ . '/templates/helper-functions.php';
 		require_once __DIR__ . '/includes/active-events-cache.php';
 		require_once __DIR__ . '/includes/event.php';
@@ -78,7 +78,7 @@ class Translation_Events {
 		$stats_listener->start();
 	}
 
-	public function activate() {
+	public function activate(): void {
 		global $gp_table_prefix;
 		$create_table = "
 		CREATE TABLE `{$gp_table_prefix}event_actions` (
@@ -99,7 +99,7 @@ class Translation_Events {
 	/**
 	 * Register the event post type.
 	 */
-	public function register_event_post_type() {
+	public function register_event_post_type(): void {
 		$labels = array(
 			'name'               => 'Translation Events',
 			'singular_name'      => 'Translation Event',
@@ -129,7 +129,7 @@ class Translation_Events {
 	/**
 	 * Add meta boxes for the event post type.
 	 */
-	public function event_meta_boxes() {
+	public function event_meta_boxes(): void {
 		add_meta_box( 'event_dates', 'Event Dates', array( $this, 'event_dates_meta_box' ), self::CPT, 'normal', 'high' );
 	}
 
@@ -138,7 +138,7 @@ class Translation_Events {
 	 *
 	 * @param  WP_Post $post The current post object.
 	 */
-	public function event_dates_meta_box( WP_Post $post ) {
+	public function event_dates_meta_box( WP_Post $post ): void {
 		wp_nonce_field( 'event_dates_nonce', 'event_dates_nonce' );
 		$event_start = get_post_meta( $post->ID, '_event_start', true );
 		$event_end   = get_post_meta( $post->ID, '_event_end', true );
@@ -153,7 +153,7 @@ class Translation_Events {
 	 *
 	 * @param  int $post_id The current post ID.
 	 */
-	public function save_event_meta_boxes( int $post_id ) {
+	public function save_event_meta_boxes( int $post_id ): void {
 		$nonces = array( 'event_dates' );
 		foreach ( $nonces as $nonce ) {
 			$nonce_name = $nonce . '_nonce';
@@ -197,7 +197,7 @@ class Translation_Events {
 	/**
 	 * Handle the event form submission for the creation, editing, and deletion of events. This function is called via AJAX.
 	 */
-	public function submit_event_ajax() {
+	public function submit_event_ajax(): void {
 		if ( ! is_user_logged_in() ) {
 			wp_send_json_error( esc_html__( 'The user must be logged in.', 'gp-translation-events' ), 403 );
 		}
@@ -359,9 +359,6 @@ class Translation_Events {
 		);
 	}
 
-
-
-
 	/**
 	 * Convert a date time in a time zone to UTC.
 	 *
@@ -376,7 +373,7 @@ class Translation_Events {
 		return $date_time->format( 'Y-m-d H:i:s' );
 	}
 
-	public function register_translation_event_js() {
+	public function register_translation_event_js(): void {
 		wp_register_style( 'translation-events-css', plugins_url( 'assets/css/translation-events.css', __FILE__ ), array(), filemtime( __DIR__ . '/assets/css/translation-events.css' ) );
 		gp_enqueue_style( 'translation-events-css' );
 		wp_register_script( 'translation-events-js', plugins_url( 'assets/js/translation-events.js', __FILE__ ), array( 'jquery', 'gp-common' ), filemtime( __DIR__ . '/assets/js/translation-events.js' ), false );
