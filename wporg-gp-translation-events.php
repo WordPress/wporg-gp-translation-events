@@ -469,7 +469,17 @@ class Translation_Events {
 			return;
 		}
 
-		$current_datetime_utc       = ( new DateTime( 'now', new DateTimeZone( 'UTC' ) ) )->format( 'Y-m-d H:i:s' );
+		try {
+			$current_datetime_utc = ( new DateTime( 'now', new DateTimeZone( 'UTC' ) ) )->format( 'Y-m-d H:i:s' );
+		} catch ( Exception $e ) {
+			// This can't happen because the DateTime constructor takes 'now' as argument so can't fail, neither can
+			// the DateTimeZone constructor because it takes UTC as argument.
+			// We log it nonetheless.
+			// phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_error_log
+			error_log( 'Failed to construct current_datetime_utc' );
+			die;
+		}
+
 		$user_attending_events_args = array(
 			'post_type'   => self::CPT,
 			'post__in'    => array_keys( $user_attending_events ),
