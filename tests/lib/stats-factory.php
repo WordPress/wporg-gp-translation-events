@@ -2,8 +2,6 @@
 
 namespace Wporg\TranslationEvents\Tests;
 
-use wpdb;
-
 class Stats_Factory {
 	public function clean(): void {
 		global $wpdb, $gp_table_prefix;
