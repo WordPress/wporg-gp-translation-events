@@ -4,6 +4,7 @@ namespace Wporg\TranslationEvents\Routes\User;
 
 use DateTime;
 use DateTimeZone;
+use Exception;
 use WP_Query;
 use Wporg\TranslationEvents\Routes\Route;
 use Wporg\TranslationEvents\Translation_Events;
@@ -38,11 +39,23 @@ class My_Events_Route extends Route {
 		}
 		// phpcs:enable
 
-		$user_id              = get_current_user_id();
-		$events               = get_user_meta( $user_id, Translation_Events::USER_META_KEY_ATTENDING, true ) ?: array();
-		$events               = array_keys( $events );
-		$current_datetime_utc = ( new DateTime( 'now', new DateTimeZone( 'UTC' ) ) )->format( 'Y-m-d H:i:s' );
-		$args                 = array(
+		$user_id = get_current_user_id();
+		$events  = get_user_meta( $user_id, Translation_Events::USER_META_KEY_ATTENDING, true ) ?: array();
+		$events  = array_keys( $events );
+
+		$current_datetime_utc = '';
+		try {
+			$current_datetime_utc = ( new DateTime( 'now', new DateTimeZone( 'UTC' ) ) )->format( 'Y-m-d H:i:s' );
+		} catch ( Exception $e ) {
+			// This can't happen because the DateTime constructor takes 'now' as argument so can't fail, neither can
+			// the DateTimeZone constructor because it takes UTC as argument.
+			// We log it nonetheless.
+			// phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_error_log
+			error_log( 'Failed to construct current_datetime_utc' );
+			die;
+		}
+
+		$args = array(
 			'post_type'              => Translation_Events::CPT,
 			'posts_per_page'         => 10,
 			'events_i_created_paged' => $_events_i_created_paged,
