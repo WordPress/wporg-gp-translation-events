@@ -31,7 +31,7 @@ require_once "$_tests_dir/includes/functions.php";
 /**
  * Manually load the plugin being tested.
  */
-function _manually_load_plugin() {
+function _manually_load_plugin(): void {
 	require_once _glotpress_path( '/tests/phpunit/includes/loader.php' );
 	require_once dirname( __DIR__ ) . '/wporg-gp-translation-events.php';
 	Wporg\TranslationEvents\Translation_Events::get_instance()->activate();

@@ -11,6 +11,7 @@ use WP_Query;
 /** @var WP_Query $current_events_query */
 /** @var WP_Query $upcoming_events_query */
 /** @var WP_Query $past_events_query */
+/** @var WP_Query $user_attending_events_query */
 
 gp_title( __( 'Translation Events', 'gp-translation-events' ) );
 gp_breadcrumb_translation_events();

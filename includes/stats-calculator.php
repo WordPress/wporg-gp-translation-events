@@ -32,14 +32,14 @@ class Event_Stats {
 	 *
 	 * @throws Exception When incorrect locale is passed.
 	 */
-	public function add_row( string $locale, Stats_Row $row ) {
+	public function add_row( string $locale, Stats_Row $row ): void {
 		if ( ! $locale ) {
 			throw new Exception( 'locale must not be empty' );
 		}
 		$this->rows[ $locale ] = $row;
 	}
 
-	public function set_totals( Stats_Row $totals ) {
+	public function set_totals( Stats_Row $totals ): void {
 		$this->totals = $totals;
 	}
 

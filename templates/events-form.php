@@ -15,6 +15,7 @@ namespace Wporg\TranslationEvents;
 /** @var string $event_timezone */
 /** @var string $event_url */
 /** @var string $css_show_url */
+/** @var string $visibility_delete_button */
 
 gp_title( __( 'Translation Events' ) . ' - ' . esc_html( $event_form_title . ' - ' . $event_title ) );
 gp_breadcrumb_translation_events( array( esc_html( $event_form_title ) ) );

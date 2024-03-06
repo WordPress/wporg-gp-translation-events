@@ -5,7 +5,7 @@ namespace Wporg\TranslationEvents\Tests;
 use wpdb;
 
 class Stats_Factory {
-	public function clean() {
+	public function clean(): void {
 		global $wpdb, $gp_table_prefix;
 
 		// phpcs:disable WordPress.DB.DirectDatabaseQuery.DirectQuery
@@ -15,7 +15,7 @@ class Stats_Factory {
 		// phpcs:enable
 	}
 
-	public function create( int $event_id, $user_id, $original_id, $action, $locale = 'aa' ) {
+	public function create( int $event_id, $user_id, $original_id, $action, $locale = 'aa' ): void {
 		global $wpdb, $gp_table_prefix;
 		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery
 		$wpdb->insert(
