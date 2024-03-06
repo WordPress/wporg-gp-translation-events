@@ -6,6 +6,7 @@
 namespace Wporg\TranslationEvents;
 
 use DateTime;
+use Exception;
 use WP_Query;
 
 /** @var WP_Query $events_i_created_query */
@@ -31,8 +32,20 @@ gp_tmpl_load( 'events-header', get_defined_vars(), __DIR__ );
 			$event_url                     = gp_url( wp_make_link_relative( $permalink ) );
 			$event_edit_url                = gp_url( 'events/edit/' . $event_id );
 			$event_status                  = get_post_status( $event_id );
-			$event_start                   = ( new DateTime( get_post_meta( get_the_ID(), '_event_start', true ) ) )->format( 'M j, Y' );
-			$event_end                     = ( new DateTime( get_post_meta( get_the_ID(), '_event_end', true ) ) )->format( 'M j, Y' );
+			try {
+				$event_start = ( new DateTime( get_post_meta( get_the_ID(), '_event_start', true ) ) )->format( 'M j, Y' );
+			} catch ( Exception $e ) {
+				// phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_error_log
+				error_log( 'Found event with invalid start datetime in the database. event_id = ' . get_the_ID() );
+				$event_start = '';
+			}
+			try {
+				$event_end = ( new DateTime( get_post_meta( get_the_ID(), '_event_end', true ) ) )->format( 'M j, Y' );
+			} catch ( Exception $e ) {
+				// phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_error_log
+				error_log( 'Found event with invalid end datetime in the database. event_id = ' . get_the_ID() );
+				$event_end = '';
+			}
 			?>
 			<li class="event-list-item">
 				<a class="event-link-<?php echo esc_attr( $event_status ); ?>" href="<?php echo esc_url( $event_url ); ?>"><?php the_title(); ?></a>
@@ -80,8 +93,21 @@ gp_tmpl_load( 'events-header', get_defined_vars(), __DIR__ );
 			$permalink                     = str_replace( '%pagename%', $post_name, $permalink );
 			$event_url                     = gp_url( wp_make_link_relative( $permalink ) );
 			$event_status                  = get_post_status( $event_id );
-			$event_start                   = ( new DateTime( get_post_meta( get_the_ID(), '_event_start', true ) ) )->format( 'M j, Y' );
-			$event_end                     = ( new DateTime( get_post_meta( get_the_ID(), '_event_end', true ) ) )->format( 'M j, Y' );
+			try {
+				$event_start = ( new DateTime( get_post_meta( get_the_ID(), '_event_start', true ) ) )->format( 'M j, Y' );
+			} catch ( Exception $e ) {
+				// phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_error_log
+				error_log( 'Found event with invalid start datetime in the database. event_id = ' . get_the_ID() );
+				$event_start = '';
+
+			}
+			try {
+				$event_end = ( new DateTime( get_post_meta( get_the_ID(), '_event_end', true ) ) )->format( 'M j, Y' );
+			} catch ( Exception $e ) {
+				// phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_error_log
+				error_log( 'Found event with invalid end datetime in the database. event_id = ' . get_the_ID() );
+				$event_end = '';
+			}
 			?>
 			<li class="event-list-item">
 				<a class="event-link-<?php echo esc_attr( $event_status ); ?>" href="<?php echo esc_url( $event_url ); ?>"><?php the_title(); ?></a>
