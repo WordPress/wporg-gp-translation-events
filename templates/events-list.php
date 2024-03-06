@@ -6,6 +6,7 @@
 namespace Wporg\TranslationEvents;
 
 use DateTime;
+use Exception;
 use WP_Query;
 
 /** @var WP_Query $current_events_query */
@@ -30,7 +31,13 @@ if ( $current_events_query->have_posts() ) :
 		<?php
 		while ( $current_events_query->have_posts() ) :
 			$current_events_query->the_post();
-			$event_end = Event::get_end_date_text( get_post_meta( get_the_ID(), '_event_end', true ) );
+			try {
+				$event_end = Event::get_end_date_text( get_post_meta( get_the_ID(), '_event_end', true ) );
+			} catch ( Exception $e ) {
+				// phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_error_log
+				error_log( 'Found event with invalid end datetime in the database. event_id = ' . get_the_ID() );
+				$event_end = '';
+			}
 			$event_url = gp_url( wp_make_link_relative( get_the_permalink() ) );
 			?>
 			<li class="event-list-item">
@@ -65,7 +72,13 @@ if ( $upcoming_events_query->have_posts() ) :
 		<?php
 		while ( $upcoming_events_query->have_posts() ) :
 			$upcoming_events_query->the_post();
-			$event_start = ( new DateTime( get_post_meta( get_the_ID(), '_event_start', true ) ) )->format( 'l, F j, Y' );
+			try {
+				$event_start = ( new DateTime( get_post_meta( get_the_ID(), '_event_start', true ) ) )->format( 'l, F j, Y' );
+			} catch ( Exception $e ) {
+				// phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_error_log
+				error_log( 'Found event with invalid start datetime in the database. event_id = ' . get_the_ID() );
+				$event_start = '';
+			}
 			?>
 			<li class="event-list-item">
 				<a href="<?php echo esc_url( gp_url( wp_make_link_relative( get_the_permalink() ) ) ); ?>"><?php the_title(); ?></a>
@@ -99,8 +112,20 @@ if ( $past_events_query->have_posts() ) :
 		<?php
 		while ( $past_events_query->have_posts() ) :
 			$past_events_query->the_post();
-			$event_start = ( new DateTime( get_post_meta( get_the_ID(), '_event_start', true ) ) )->format( 'M j, Y' );
-			$event_end   = ( new DateTime( get_post_meta( get_the_ID(), '_event_end', true ) ) )->format( 'M j, Y' );
+			try {
+				$event_start = ( new DateTime( get_post_meta( get_the_ID(), '_event_start', true ) ) )->format( 'M j, Y' );
+			} catch ( Exception $e ) {
+				// phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_error_log
+				error_log( 'Found event with invalid start datetime in the database. event_id = ' . get_the_ID() );
+				$event_start = '';
+			}
+			try {
+				$event_end = ( new DateTime( get_post_meta( get_the_ID(), '_event_end', true ) ) )->format( 'M j, Y' );
+			} catch ( Exception $e ) {
+				// phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_error_log
+				error_log( 'Found event with invalid end datetime in the database. event_id = ' . get_the_ID() );
+				$event_end = '';
+			}
 			?>
 			<li class="event-list-item">
 				<a href="<?php echo esc_url( gp_url( wp_make_link_relative( get_the_permalink() ) ) ); ?>"><?php the_title(); ?></a>
@@ -147,8 +172,20 @@ endif;
 				<?php
 				while ( $user_attending_events_query->have_posts() ) :
 					$user_attending_events_query->the_post();
-					$event_start = ( new DateTime( get_post_meta( get_the_ID(), '_event_start', true ) ) )->format( 'M j, Y' );
-					$event_end   = ( new DateTime( get_post_meta( get_the_ID(), '_event_end', true ) ) )->format( 'M j, Y' );
+					try {
+						$event_start = ( new DateTime( get_post_meta( get_the_ID(), '_event_start', true ) ) )->format( 'M j, Y' );
+					} catch ( Exception $e ) {
+						// phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_error_log
+						error_log( 'Found event with invalid start datetime in the database. event_id = ' . get_the_ID() );
+						$event_start = '';
+					}
+					try {
+						$event_end = ( new DateTime( get_post_meta( get_the_ID(), '_event_end', true ) ) )->format( 'M j, Y' );
+					} catch ( Exception $e ) {
+						// phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_error_log
+						error_log( 'Found event with invalid end datetime in the database. event_id = ' . get_the_ID() );
+						$event_end = '';
+					}
 					?>
 					<li class="event-list-item">
 						<a href="<?php echo esc_url( gp_url( wp_make_link_relative( get_the_permalink() ) ) ); ?>"><?php the_title(); ?></a>

@@ -59,6 +59,7 @@ class Event {
 	 * @param string $event_end The end date.
 	 *
 	 * @return string The end date text.
+	 * @throws Exception
 	 */
 	public static function get_end_date_text( string $event_end ): string {
 		$end_date_time     = new DateTimeImmutable( $event_end );
