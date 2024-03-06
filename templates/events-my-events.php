@@ -26,7 +26,6 @@ gp_tmpl_load( 'events-header', get_defined_vars(), __DIR__ );
 		while ( $events_i_created_query->have_posts() ) :
 			$events_i_created_query->the_post();
 			$event_id                      = get_the_ID();
-			$event_start                   = get_post_meta( $event_id, '_event_start', true );
 			list( $permalink, $post_name ) = get_sample_permalink( $event_id );
 			$permalink                     = str_replace( '%pagename%', $post_name, $permalink );
 			$event_url                     = gp_url( wp_make_link_relative( $permalink ) );
@@ -77,7 +76,6 @@ gp_tmpl_load( 'events-header', get_defined_vars(), __DIR__ );
 		while ( $events_i_attended_query->have_posts() ) :
 			$events_i_attended_query->the_post();
 			$event_id                      = get_the_ID();
-			$event_start                   = get_post_meta( $event_id, '_event_start', true );
 			list( $permalink, $post_name ) = get_sample_permalink( $event_id );
 			$permalink                     = str_replace( '%pagename%', $post_name, $permalink );
 			$event_url                     = gp_url( wp_make_link_relative( $permalink ) );
