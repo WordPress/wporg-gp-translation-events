@@ -5,6 +5,7 @@ namespace Wporg\Tests\Event;
 use DateTimeImmutable;
 use DateTimeZone;
 use GP_UnitTestCase;
+use Wporg\TranslationEvents\Attendee_Repository;
 use Wporg\TranslationEvents\Event\Event;
 use Wporg\TranslationEvents\Event\Event_Repository;
 use Wporg\TranslationEvents\Event\EventNotFound;
@@ -17,7 +18,9 @@ class Event_Repository_Test extends GP_UnitTestCase {
 	public function setUp(): void {
 		parent::setUp();
 		$this->event_factory = new Event_Factory();
-		$this->repository    = new Event_Repository();
+		$this->repository    = new Event_Repository( new Attendee_Repository() );
+
+		$this->set_normal_user_as_current();
 	}
 
 	public function test_get_event_throws_not_found_when_event_does_not_exist() {

@@ -4,20 +4,22 @@ namespace Wporg\Tests\Event;
 
 use DateTimeImmutable;
 use DateTimeZone;
-use WP_UnitTestCase;
+use GP_UnitTestCase;
+use Wporg\TranslationEvents\Attendee_Repository;
 use Wporg\TranslationEvents\Event\Event_Repository_Cached;
 use Wporg\TranslationEvents\Event\Event;
 use Wporg\TranslationEvents\Tests\Event_Factory;
 
-class Event_Repository_Cached_Test extends WP_UnitTestCase {
+class Event_Repository_Cached_Test extends GP_UnitTestCase {
 	private Event_Repository_Cached $repository;
 
 	public function setUp(): void {
 		parent::setUp();
 		$this->event_factory = new Event_Factory();
-		$this->repository    = new Event_Repository_Cached();
+		$this->repository    = new Event_Repository_Cached( new Attendee_Repository() );
 
 		wp_cache_delete( 'translation-events-active-events' );
+		$this->set_normal_user_as_current();
 	}
 
 	public function test_get_active_events() {

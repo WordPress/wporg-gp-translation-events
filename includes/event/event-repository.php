@@ -8,11 +8,17 @@ use Exception;
 use WP_Error;
 use WP_Post;
 use WP_Query;
+use Wporg\TranslationEvents\Attendee_Repository;
 use Wporg\TranslationEvents\Translation_Events;
 
 class Event_Repository implements Event_Repository_Interface {
-	private const POST_TYPE               = Translation_Events::CPT;
-	private const USER_META_KEY_ATTENDING = Translation_Events::USER_META_KEY_ATTENDING;
+	private const POST_TYPE = Translation_Events::CPT;
+
+	private Attendee_Repository $attendee_repository;
+
+	public function __construct( Attendee_Repository $attendee_repository ) {
+		$this->attendee_repository = $attendee_repository;
+	}
 
 	public function create_event( Event $event ): void {
 		$event_id = wp_insert_post(
@@ -91,14 +97,7 @@ class Event_Repository implements Event_Repository_Interface {
 
 	public function get_current_events_for_user( int $user_id, int $page = -1, int $page_size = -1 ): Events_Query_Result {
 		$this->assert_pagination_arguments( $page, $page_size );
-
-		$attending_array = get_user_meta( $user_id, self::USER_META_KEY_ATTENDING, true );
-		if ( ! $attending_array ) {
-			$attending_array = array();
-		}
-
-		// $attending_array is an associative array with the event_id as key.
-		$event_ids_user_is_attending = array_keys( $attending_array );
+		$event_ids_user_is_attending = $this->attendee_repository->get_events_for_user( $user_id );
 
 		$now = new DateTimeImmutable( 'now', new DateTimeZone( 'UTC' ) );
 		return $this->get_events_active_between(
@@ -112,14 +111,7 @@ class Event_Repository implements Event_Repository_Interface {
 
 	public function get_past_events_for_user( int $user_id, int $page = -1, int $page_size = -1 ): Events_Query_Result {
 		$this->assert_pagination_arguments( $page, $page_size );
-
-		$attending_array = get_user_meta( $user_id, self::USER_META_KEY_ATTENDING, true );
-		if ( ! $attending_array ) {
-			$attending_array = array();
-		}
-
-		// $attending_array is an associative array with the event_id as key.
-		$event_ids_user_is_attending = array_keys( $attending_array );
+		$event_ids_user_is_attending = $this->attendee_repository->get_events_for_user( $user_id );
 
 		// We consider the start of time to be January 1st 2024,
 		// which is guaranteed to be earlier than when this plugin was created.
