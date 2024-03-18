@@ -4,6 +4,7 @@ namespace Wporg\TranslationEvents\Routes\Event;
 
 use Exception;
 use GP;
+use Wporg\TranslationEvents\Attendee_Repository;
 use Wporg\TranslationEvents\Routes\Route;
 use Wporg\TranslationEvents\Stats_Calculator;
 use Wporg\TranslationEvents\Translation_Events;
@@ -12,6 +13,13 @@ use Wporg\TranslationEvents\Translation_Events;
  * Displays the event details page.
  */
 class Details_Route extends Route {
+	private Attendee_Repository $attendee_repository;
+
+	public function __construct() {
+		parent::__construct();
+		$this->attendee_repository = new Attendee_Repository();
+	}
+
 	public function handle( string $event_slug ): void {
 		$user  = wp_get_current_user();
 		$event = get_page_by_path( $event_slug, OBJECT, Translation_Events::CPT );
@@ -29,18 +37,18 @@ class Details_Route extends Route {
 			$this->die_with_error( esc_html__( 'You are not authorized to view this page.', 'gp-translation-events' ), 403 );
 		}
 
-		$event_id            = $event->ID;
-		$event_title         = $event->post_title;
-		$event_description   = $event->post_content;
-		$event_start         = get_post_meta( $event->ID, '_event_start', true ) ?: '';
-		$event_end           = get_post_meta( $event->ID, '_event_end', true ) ?: '';
-		$attending_event_ids = get_user_meta( $user->ID, Translation_Events::USER_META_KEY_ATTENDING, true ) ?: array();
-		$user_is_attending   = isset( $attending_event_ids[ $event_id ] );
+		$event_id          = $event->ID;
+		$event_title       = $event->post_title;
+		$event_description = $event->post_content;
+		$event_start       = get_post_meta( $event->ID, '_event_start', true ) ?: '';
+		$event_end         = get_post_meta( $event->ID, '_event_end', true ) ?: '';
+		$user_is_attending = $this->attendee_repository->is_attending( $event_id, $user->ID );
 
 		$stats_calculator = new Stats_Calculator();
 		try {
 			$event_stats  = $stats_calculator->for_event( $event );
-			$contributors = $stats_calculator->get_contributors( $event );
+			$contributors = $stats_calculator->get_contributors( $event_id );
+			$projects     = $stats_calculator->get_projects( $event_id );
 		} catch ( Exception $e ) {
 			// phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_error_log
 			error_log( $e );
