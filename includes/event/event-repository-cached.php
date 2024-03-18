@@ -31,6 +31,11 @@ class Event_Repository_Cached extends Event_Repository {
 		return $event_id_or_error;
 	}
 
+	public function delete_event( Event $event ) {
+		parent::delete_event( $event );
+		$this->invalidate_cache();
+	}
+
 	public function get_current_events( int $page = -1, int $page_size = -1 ): Events_Query_Result {
 		$this->assert_pagination_arguments( $page, $page_size );
 

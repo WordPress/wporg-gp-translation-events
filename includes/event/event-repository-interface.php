@@ -28,6 +28,13 @@ interface Event_Repository_Interface {
 	public function update_event( Event $event );
 
 	/**
+	 * @param Event $event Event to delete.
+	 *
+	 * @return Event|false Deleted event or false on error.
+	 */
+	public function delete_event( Event $event );
+
+	/**
 	 * @throws EventNotFound
 	 */
 	public function get_event( int $id ): Event;

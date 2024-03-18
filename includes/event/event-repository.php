@@ -9,6 +9,7 @@ use WP_Error;
 use WP_Post;
 use WP_Query;
 use Wporg\TranslationEvents\Attendee_Repository;
+use Wporg\TranslationEvents\Stats_Calculator;
 use Wporg\TranslationEvents\Translation_Events;
 
 class Event_Repository implements Event_Repository_Interface {
@@ -55,6 +56,14 @@ class Event_Repository implements Event_Repository_Interface {
 
 		$this->update_event_meta( $event );
 		return $event->id();
+	}
+
+	public function delete_event( Event $event ) {
+		$result = wp_trash_post( $event->id() );
+		if ( ! $result ) {
+			return false;
+		}
+		return $event;
 	}
 
 	public function get_event( int $id ): Event {
