@@ -73,7 +73,7 @@ class Event_Repository_Test extends GP_UnitTestCase {
 			$description,
 		);
 
-		$this->repository->create_event( $event );
+		$this->repository->insert_event( $event );
 		$this->assertGreaterThan( 0, $event->id() );
 
 		$created_event = $this->repository->get_event( $event->id() );

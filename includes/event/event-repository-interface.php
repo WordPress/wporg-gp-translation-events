@@ -4,6 +4,7 @@ namespace Wporg\TranslationEvents\Event;
 
 use Exception;
 use Throwable;
+use WP_Error;
 
 class EventNotFound extends Exception {
 	public function __construct( Throwable $previous = null ) {
@@ -11,14 +12,15 @@ class EventNotFound extends Exception {
 	}
 }
 
-class CreateEventFailed extends Exception {}
 class UpdateEventFailed extends Exception {}
 
 interface Event_Repository_Interface {
 	/**
-	 * @throws CreateEventFailed
+	 * @param Event $event Event to insert.
+	 *
+	 * @return int|WP_Error The id of the inserted event, or an error.
 	 */
-	public function create_event( Event $event ): void;
+	public function insert_event( Event $event );
 
 	/**
 	 * @throws UpdateEventFailed

@@ -5,14 +5,20 @@ namespace Wporg\TranslationEvents\Event;
 use DateTimeImmutable;
 use DateTimeZone;
 use Exception;
+use WP_Error;
 
 class Event_Repository_Cached extends Event_Repository {
 	private const CACHE_DURATION    = DAY_IN_SECONDS;
 	private const ACTIVE_EVENTS_KEY = 'translation-events-active-events';
 
-	public function create_event( Event $event ): void {
-		parent::create_event( $event );
+	public function insert_event( Event $event ) {
+		$event_id_or_error = parent::insert_event( $event );
+		if ( $event_id_or_error instanceof WP_Error ) {
+			return $event_id_or_error;
+		}
+
 		$this->invalidate_cache();
+		return $event_id_or_error;
 	}
 
 	public function update_event( Event $event ): void {

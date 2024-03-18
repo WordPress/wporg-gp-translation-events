@@ -64,7 +64,7 @@ class Event_Repository_Cached_Test extends GP_UnitTestCase {
 		);
 
 		wp_cache_set( 'translation-events-active-events', 'foo' );
-		$this->repository->create_event( $event );
+		$this->repository->insert_event( $event );
 		$this->assertFalse( wp_cache_get( 'translation-events-active-events' ) );
 	}
 

@@ -20,8 +20,8 @@ class Event_Repository implements Event_Repository_Interface {
 		$this->attendee_repository = $attendee_repository;
 	}
 
-	public function create_event( Event $event ): void {
-		$event_id = wp_insert_post(
+	public function insert_event( Event $event ) {
+		$event_id_or_error = wp_insert_post(
 			array(
 				'post_type'    => self::POST_TYPE,
 				'post_name'    => $event->slug(),
@@ -30,15 +30,13 @@ class Event_Repository implements Event_Repository_Interface {
 				'post_status'  => $event->status(),
 			)
 		);
-
-		if ( $event_id instanceof WP_Error ) {
-			$error = $event_id;
-			// phpcs:ignore WordPress.Security.EscapeOutput.ExceptionNotEscaped
-			throw new CreateEventFailed( $error->get_error_message(), $error->get_error_code() );
+		if ( $event_id_or_error instanceof WP_Error ) {
+			return $event_id_or_error;
 		}
 
-		$event->set_id( $event_id );
+		$event->set_id( $event_id_or_error );
 		$this->update_event_meta( $event );
+		return $event->id();
 	}
 
 	public function update_event( Event $event ): void {
