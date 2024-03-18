@@ -7,7 +7,7 @@ use DateTimeZone;
 use Exception;
 
 class Event_Repository_Cached extends Event_Repository {
-	private const CACHE_DURATION    = 60 * 60 * 24; // 24 hours.
+	private const CACHE_DURATION    = DAY_IN_SECONDS;
 	private const ACTIVE_EVENTS_KEY = 'translation-events-active-events';
 
 	public function create_event( Event $event ): void {
