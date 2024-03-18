@@ -12,8 +12,6 @@ class EventNotFound extends Exception {
 	}
 }
 
-class UpdateEventFailed extends Exception {}
-
 interface Event_Repository_Interface {
 	/**
 	 * @param Event $event Event to insert.
@@ -23,9 +21,11 @@ interface Event_Repository_Interface {
 	public function insert_event( Event $event );
 
 	/**
-	 * @throws UpdateEventFailed
+	 * @param Event $event Event to update.
+	 *
+	 * @return int|WP_Error The id of the updated event, or an error.
 	 */
-	public function update_event( Event $event ): void;
+	public function update_event( Event $event );
 
 	/**
 	 * @throws EventNotFound

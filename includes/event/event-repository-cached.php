@@ -21,9 +21,14 @@ class Event_Repository_Cached extends Event_Repository {
 		return $event_id_or_error;
 	}
 
-	public function update_event( Event $event ): void {
-		parent::update_event( $event );
+	public function update_event( Event $event ) {
+		$event_id_or_error = parent::update_event( $event );
+		if ( $event_id_or_error instanceof WP_Error ) {
+			return $event_id_or_error;
+		}
+
 		$this->invalidate_cache();
+		return $event_id_or_error;
 	}
 
 	public function get_current_events( int $page = -1, int $page_size = -1 ): Events_Query_Result {

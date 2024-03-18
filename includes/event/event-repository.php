@@ -39,8 +39,8 @@ class Event_Repository implements Event_Repository_Interface {
 		return $event->id();
 	}
 
-	public function update_event( Event $event ): void {
-		$error = wp_update_post(
+	public function update_event( Event $event ) {
+		$event_id_or_error = wp_update_post(
 			array(
 				'ID'           => $event->id(),
 				'post_name'    => $event->slug(),
@@ -49,13 +49,12 @@ class Event_Repository implements Event_Repository_Interface {
 				'post_status'  => $event->status(),
 			)
 		);
-
-		if ( $error instanceof WP_Error ) {
-			// phpcs:ignore WordPress.Security.EscapeOutput.ExceptionNotEscaped
-			throw new UpdateEventFailed( $error->get_error_message(), $error->get_error_code() );
+		if ( $event_id_or_error instanceof WP_Error ) {
+			return $event_id_or_error;
 		}
 
 		$this->update_event_meta( $event );
+		return $event->id();
 	}
 
 	public function get_event( int $id ): Event {
