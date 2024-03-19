@@ -264,17 +264,19 @@ class Translation_Events {
 			}
 		}
 
+		$title = isset( $_POST['event_title'] ) ? sanitize_text_field( wp_unslash( $_POST['event_title'] ) ) : '';
+
 		// This is a list of slugs that are not allowed, as they conflict with the event URLs.
 		$invalid_slugs = array( 'new', 'edit', 'attend', 'my-events' );
-		$title         = isset( $_POST['event_title'] ) ? sanitize_text_field( wp_unslash( $_POST['event_title'] ) ) : '';
+		if ( isset( $title ) && in_array( sanitize_title( $title ), $invalid_slugs, true ) ) {
+			wp_send_json_error( esc_html__( 'Invalid slug.', 'gp-translation-events' ), 422 );
+		}
+
 		// This will be sanitized by santitize_post which is called in wp_insert_post.
 		$description    = isset( $_POST['event_description'] ) ? force_balance_tags( wp_unslash( $_POST['event_description'] ) ) : ''; // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
 		$event_start    = isset( $_POST['event_start'] ) ? sanitize_text_field( wp_unslash( $_POST['event_start'] ) ) : '';
 		$event_end      = isset( $_POST['event_end'] ) ? sanitize_text_field( wp_unslash( $_POST['event_end'] ) ) : '';
 		$event_timezone = isset( $_POST['event_timezone'] ) ? sanitize_text_field( wp_unslash( $_POST['event_timezone'] ) ) : '';
-		if ( isset( $title ) && in_array( sanitize_title( $title ), $invalid_slugs, true ) ) {
-			wp_send_json_error( esc_html__( 'Invalid slug.', 'gp-translation-events' ), 422 );
-		}
 
 		$is_valid_event_date = false;
 		try {
