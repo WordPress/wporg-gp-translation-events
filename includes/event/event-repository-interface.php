@@ -7,6 +7,8 @@ use WP_Error;
 
 interface Event_Repository_Interface {
 	/**
+	 * Insert a new Event.
+	 *
 	 * @param Event $event Event to insert.
 	 *
 	 * @return int|WP_Error The id of the inserted event, or an error.
@@ -14,6 +16,8 @@ interface Event_Repository_Interface {
 	public function insert_event( Event $event );
 
 	/**
+	 * Update an Event.
+	 *
 	 * @param Event $event Event to update.
 	 *
 	 * @return int|WP_Error The id of the updated event, or an error.
@@ -21,30 +25,70 @@ interface Event_Repository_Interface {
 	public function update_event( Event $event );
 
 	/**
+	 * Delete an Event.
+	 *
 	 * @param Event $event Event to delete.
 	 *
 	 * @return Event|false Deleted event or false on error.
 	 */
 	public function delete_event( Event $event );
 
+	/**
+	 * Get an Event.
+	 *
+	 * @param int $id Event id.
+	 *
+	 * @return Event|null
+	 */
 	public function get_event( int $id ): ?Event;
 
 	/**
 	 * @throws Exception
 	 */
+
+	/**
+	 * Get events that are currently active.
+	 *
+	 * @param int $page      Index of the page to return.
+	 * @param int $page_size Page size.
+	 *
+	 * @return Events_Query_Result
+	 * @throws Exception
+	 */
 	public function get_current_events( int $page = -1, int $page_size = -1 ): Events_Query_Result;
 
 	/**
+	 * Get events that are currently active for a given user.
+	 *
+	 * @param int $user_id   Id of the user.
+	 * @param int $page      Index of the page to return.
+	 * @param int $page_size Page size.
+	 *
+	 * @return Events_Query_Result
 	 * @throws Exception
 	 */
 	public function get_current_events_for_user( int $user_id, int $page = -1, int $page_size = -1 ): Events_Query_Result;
 
 	/**
+	 * Get events that are no longer active for a given user.
+	 *
+	 * @param int $user_id   Id of the user.
+	 * @param int $page      Index of the page to return.
+	 * @param int $page_size Page size.
+	 *
+	 * @return Events_Query_Result
 	 * @throws Exception
 	 */
 	public function get_past_events_for_user( int $user_id, int $page = -1, int $page_size = -1 ): Events_Query_Result;
 
 	/**
+	 * Get events created by a given user.
+	 *
+	 * @param int $user_id   Id of the user.
+	 * @param int $page      Index of the page to return.
+	 * @param int $page_size Page size.
+	 *
+	 * @return Events_Query_Result
 	 * @throws Exception
 	 */
 	public function get_events_created_by_user( int $user_id, int $page = -1, int $page_size = -1 ): Events_Query_Result;
