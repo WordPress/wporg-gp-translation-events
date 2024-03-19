@@ -218,7 +218,11 @@ class Translation_Events {
 			wp_send_json_error( esc_html__( 'Nonce verification failed.', 'gp-translation-events' ), 403 );
 		}
 
-		$action = isset( $_POST['form_name'] ) ? sanitize_text_field( wp_unslash( $_POST['form_name'] ) ) : '';
+		if ( ! isset( $_POST['form_name'] ) ) {
+			wp_send_json_error( esc_html__( 'Form name must be set.', 'gp-translation-events' ), 422 );
+		}
+
+		$action = sanitize_text_field( wp_unslash( $_POST['form_name'] ) );
 		if ( ! in_array( $action, array( 'create_event', 'edit_event', 'delete_event' ), true ) ) {
 			wp_send_json_error( esc_html__( 'Invalid form name.', 'gp-translation-events' ), 403 );
 		}
@@ -281,10 +285,6 @@ class Translation_Events {
 			$event_status = sanitize_text_field( wp_unslash( $_POST['event_form_action'] ) );
 		}
 
-		if ( ! isset( $_POST['form_name'] ) ) {
-			wp_send_json_error( esc_html__( 'Form name must be set.', 'gp-translation-events' ), 422 );
-		}
-
 		if ( 'create_event' === $action ) {
 			$event_id         = wp_insert_post(
 				array(
@@ -334,7 +334,7 @@ class Translation_Events {
 		if ( ! $event_id ) {
 			wp_send_json_error( esc_html__( 'Event could not be created or updated.', 'gp-translation-events' ), 422 );
 		}
-		if ( 'delete_event' !== $_POST['form_name'] ) {
+		if ( 'delete_event' !== $action ) {
 			try {
 				update_post_meta( $event_id, '_event_start', $this->convert_to_utc( $event_start, $event_timezone ) );
 				update_post_meta( $event_id, '_event_end', $this->convert_to_utc( $event_end, $event_timezone ) );
