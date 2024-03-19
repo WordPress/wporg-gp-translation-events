@@ -205,16 +205,19 @@ class Translation_Events {
 		if ( ! is_user_logged_in() ) {
 			wp_send_json_error( esc_html__( 'The user must be logged in.', 'gp-translation-events' ), 403 );
 		}
-		$action           = isset( $_POST['form_name'] ) ? sanitize_text_field( wp_unslash( $_POST['form_name'] ) ) : '';
+
+		$action = isset( $_POST['form_name'] ) ? sanitize_text_field( wp_unslash( $_POST['form_name'] ) ) : '';
+		if ( ! in_array( $action, array( 'create_event', 'edit_event', 'delete_event' ), true ) ) {
+			wp_send_json_error( esc_html__( 'Invalid form name.', 'gp-translation-events' ), 403 );
+		}
+
 		$event_id         = null;
 		$event            = null;
 		$response_message = '';
 		$form_actions     = array( 'draft', 'publish', 'delete' );
 		$is_nonce_valid   = false;
 		$nonce_name       = '_event_nonce';
-		if ( ! in_array( $action, array( 'create_event', 'edit_event', 'delete_event' ), true ) ) {
-			wp_send_json_error( esc_html__( 'Invalid form name.', 'gp-translation-events' ), 403 );
-		}
+
 		/**
 		 * Filter the ability to create, edit, or delete an event.
 		 *
