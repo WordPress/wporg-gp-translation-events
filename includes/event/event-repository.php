@@ -9,7 +9,6 @@ use WP_Error;
 use WP_Post;
 use WP_Query;
 use Wporg\TranslationEvents\Attendee_Repository;
-use Wporg\TranslationEvents\Stats_Calculator;
 use Wporg\TranslationEvents\Translation_Events;
 
 class Event_Repository implements Event_Repository_Interface {

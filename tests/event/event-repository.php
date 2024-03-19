@@ -9,17 +9,14 @@ use Wporg\TranslationEvents\Attendee_Repository;
 use Wporg\TranslationEvents\Event\Event;
 use Wporg\TranslationEvents\Event\Event_Repository;
 use Wporg\TranslationEvents\Tests\Event_Factory;
-use Wporg\TranslationEvents\Tests\Stats_Factory;
 
 class Event_Repository_Test extends GP_UnitTestCase {
 	private Event_Factory $event_factory;
-	private Stats_Factory $stats_factory;
 	private Event_Repository $repository;
 
 	public function setUp(): void {
 		parent::setUp();
 		$this->event_factory = new Event_Factory();
-		$this->stats_factory = new Stats_Factory();
 		$this->repository    = new Event_Repository( new Attendee_Repository() );
 
 		$this->set_normal_user_as_current();
