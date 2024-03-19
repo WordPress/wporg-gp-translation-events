@@ -297,7 +297,6 @@ class Translation_Events {
 			$response_message = esc_html__( 'Event created successfully!', 'gp-translation-events' );
 		}
 		if ( 'edit_event' === $action ) {
-			$event = get_post( $event_id );
 			if ( ! $event || self::CPT !== $event->post_type || ! ( current_user_can( 'edit_post', $event->ID ) || intval( $event->post_author ) === get_current_user_id() ) ) {
 				wp_send_json_error( esc_html__( 'Event does not exist.', 'gp-translation-events' ), 404 );
 			}
@@ -312,7 +311,6 @@ class Translation_Events {
 			$response_message = esc_html__( 'Event updated successfully!', 'gp-translation-events' );
 		}
 		if ( 'delete_event' === $action ) {
-			$event = get_post( $event_id );
 			if ( ! $event || self::CPT !== $event->post_type ) {
 				wp_send_json_error( esc_html__( 'Event does not exist.', 'gp-translation-events' ), 404 );
 			}
