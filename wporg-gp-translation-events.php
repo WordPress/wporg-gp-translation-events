@@ -250,7 +250,8 @@ class Translation_Events {
 			if ( ! $event || self::CPT !== $event->post_type ) {
 				wp_send_json_error( esc_html__( 'Event does not exist.', 'gp-translation-events' ), 404 );
 			}
-			if ( ! ( $can_crud_event || current_user_can( 'edit_post', $event_id ) || intval( $event->post_author ) === get_current_user_id() ) ) {
+			$can_edit = $can_crud_event && current_user_can( 'edit_post', $event_id ) && intval( $event->post_author ) === get_current_user_id();
+			if ( ! $can_edit ) {
 				wp_send_json_error( esc_html__( 'The user does not have permission to edit or delete the event.', 'gp-translation-events' ), 403 );
 			}
 		}
@@ -259,7 +260,8 @@ class Translation_Events {
 			if ( ! $event || self::CPT !== $event->post_type ) {
 				wp_send_json_error( esc_html__( 'Event does not exist.', 'gp-translation-events' ), 404 );
 			}
-			if ( ! ( $can_crud_event || current_user_can( 'delete_post', $event->ID ) || get_current_user_id() === $event->post_author ) ) {
+			$can_delete = $can_crud_event && current_user_can( 'delete_post', $event->ID ) && get_current_user_id() === $event->post_author;
+			if ( ! $can_delete ) {
 				wp_send_json_error( esc_html__( 'You do not have permission to delete this event.', 'gp-translation-events' ), 403 );
 			}
 		}
