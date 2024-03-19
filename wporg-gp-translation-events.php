@@ -206,6 +206,18 @@ class Translation_Events {
 			wp_send_json_error( esc_html__( 'The user must be logged in.', 'gp-translation-events' ), 403 );
 		}
 
+		$nonce_name     = '_event_nonce';
+		$is_nonce_valid = false;
+		if ( isset( $_POST[ $nonce_name ] ) ) {
+			$nonce_value = sanitize_text_field( wp_unslash( $_POST[ $nonce_name ] ) );
+			if ( wp_verify_nonce( $nonce_value, $nonce_name ) ) {
+				$is_nonce_valid = true;
+			}
+		}
+		if ( ! $is_nonce_valid ) {
+			wp_send_json_error( esc_html__( 'Nonce verification failed.', 'gp-translation-events' ), 403 );
+		}
+
 		$action = isset( $_POST['form_name'] ) ? sanitize_text_field( wp_unslash( $_POST['form_name'] ) ) : '';
 		if ( ! in_array( $action, array( 'create_event', 'edit_event', 'delete_event' ), true ) ) {
 			wp_send_json_error( esc_html__( 'Invalid form name.', 'gp-translation-events' ), 403 );
@@ -219,8 +231,6 @@ class Translation_Events {
 		$event            = null;
 		$response_message = '';
 		$form_actions     = array( 'draft', 'publish', 'delete' );
-		$is_nonce_valid   = false;
-		$nonce_name       = '_event_nonce';
 
 		/**
 		 * Filter the ability to create, edit, or delete an event.
@@ -243,15 +253,7 @@ class Translation_Events {
 				wp_send_json_error( esc_html__( 'You do not have permission to delete this event.', 'gp-translation-events' ), 403 );
 			}
 		}
-		if ( isset( $_POST[ $nonce_name ] ) ) {
-			$nonce_value = sanitize_text_field( wp_unslash( $_POST[ $nonce_name ] ) );
-			if ( wp_verify_nonce( $nonce_value, $nonce_name ) ) {
-				$is_nonce_valid = true;
-			}
-		}
-		if ( ! $is_nonce_valid ) {
-			wp_send_json_error( esc_html__( 'Nonce verification failed.', 'gp-translation-events' ), 403 );
-		}
+
 		// This is a list of slugs that are not allowed, as they conflict with the event URLs.
 		$invalid_slugs = array( 'new', 'edit', 'attend', 'my-events' );
 		$title         = isset( $_POST['event_title'] ) ? sanitize_text_field( wp_unslash( $_POST['event_title'] ) ) : '';
