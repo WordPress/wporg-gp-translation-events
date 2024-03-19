@@ -8,7 +8,6 @@ use GP_UnitTestCase;
 use Wporg\TranslationEvents\Attendee_Repository;
 use Wporg\TranslationEvents\Event\Event;
 use Wporg\TranslationEvents\Event\Event_Repository;
-use Wporg\TranslationEvents\Event\EventNotFound;
 use Wporg\TranslationEvents\Tests\Event_Factory;
 use Wporg\TranslationEvents\Tests\Stats_Factory;
 
@@ -26,15 +25,13 @@ class Event_Repository_Test extends GP_UnitTestCase {
 		$this->set_normal_user_as_current();
 	}
 
-	public function test_get_event_throws_not_found_when_event_does_not_exist() {
-		$this->expectException( EventNotFound::class );
-		$this->repository->get_event( 42 );
+	public function test_get_event_returns_null_when_event_does_not_exist() {
+		$this->assertNull( $this->repository->get_event( 42 ) );
 	}
 
-	public function test_get_event_throws_not_found_when_post_is_not_event() {
+	public function test_get_event_returns_null_when_post_is_not_event() {
 		$post_id = $this->factory()->post->create();
-		$this->expectException( EventNotFound::class );
-		$this->repository->get_event( $post_id );
+		$this->assertNull( $this->repository->get_event( $post_id ) );
 	}
 
 	public function test_get_event() {
@@ -120,8 +117,7 @@ class Event_Repository_Test extends GP_UnitTestCase {
 		$event = $this->repository->get_event( $event_id );
 		$this->repository->delete_event( $event );
 
-		$this->expectException( EventNotFound::class );
-		$this->repository->get_event( $event_id );
+		$this->assertNull( $this->repository->get_event( $event_id ) );
 	}
 
 	public function test_get_active_events() {

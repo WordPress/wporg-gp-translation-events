@@ -3,14 +3,7 @@
 namespace Wporg\TranslationEvents\Event;
 
 use Exception;
-use Throwable;
 use WP_Error;
-
-class EventNotFound extends Exception {
-	public function __construct( Throwable $previous = null ) {
-		parent::__construct( 'Event not found', 0, $previous );
-	}
-}
 
 interface Event_Repository_Interface {
 	/**
@@ -34,10 +27,7 @@ interface Event_Repository_Interface {
 	 */
 	public function delete_event( Event $event );
 
-	/**
-	 * @throws EventNotFound
-	 */
-	public function get_event( int $id ): Event;
+	public function get_event( int $id ): ?Event;
 
 	/**
 	 * @throws Exception

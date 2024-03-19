@@ -66,7 +66,7 @@ class Event_Repository implements Event_Repository_Interface {
 		return $event;
 	}
 
-	public function get_event( int $id ): Event {
+	public function get_event( int $id ): ?Event {
 		$post = $this->get_event_post( $id );
 
 		try {
@@ -84,7 +84,7 @@ class Event_Repository implements Event_Repository_Interface {
 		} catch ( Exception $e ) {
 			// This should not be possible as it means data in the database is invalid.
 			// So we consider an invalid event to be not found.
-			throw new EventNotFound();
+			return null;
 		}
 	}
 
@@ -272,19 +272,16 @@ class Event_Repository implements Event_Repository_Interface {
 		return new Events_Query_Result( $events, $query->max_num_pages );
 	}
 
-	/**
-	 * @throws EventNotFound
-	 */
-	private function get_event_post( int $event_id ): WP_Post {
+	private function get_event_post( int $event_id ): ?WP_Post {
 		if ( 0 === $event_id ) {
-			throw new EventNotFound();
+			return null;
 		}
 		$post = get_post( $event_id );
 		if ( ! ( $post instanceof WP_Post ) ) {
-			throw new EventNotFound();
+			return null;
 		}
 		if ( self::POST_TYPE !== $post->post_type ) {
-			throw new EventNotFound();
+			return null;
 		}
 
 		return $post;
