@@ -31,13 +31,10 @@ class Attendee_Repository_Test extends WP_UnitTestCase {
 		$this->repository->add_attendee( $event1_id, $user_id );
 		$this->repository->add_attendee( $event2_id, $user_id );
 
-		$event_ids = get_user_meta( $user_id, 'translation-events-attending', true );
-		$this->assertCount( 2, $event_ids );
-		$this->assertTrue( $event_ids[ $event1_id ] );
-		$this->assertTrue( $event_ids[ $event2_id ] );
-
-		$event_ids_another_user = get_user_meta( $user_id + 1, 'translation-events-attending', true );
-		$this->assertEmpty( $event_ids_another_user );
+		$rows = $this->all_table_rows();
+		$this->assertCount( 2, $rows );
+		$this->assertEquals( $event1_id, $rows[0]->event_id );
+		$this->assertEquals( $event2_id, $rows[1]->event_id );
 	}
 
 	public function test_remove_attendee_invalid_event_id() {
@@ -60,9 +57,9 @@ class Attendee_Repository_Test extends WP_UnitTestCase {
 
 		$this->repository->remove_attendee( $event1_id, $user_id );
 
-		$event_ids = get_user_meta( $user_id, 'translation-events-attending', true );
-		$this->assertCount( 1, $event_ids );
-		$this->assertTrue( $event_ids[ $event2_id ] );
+		$rows = $this->all_table_rows();
+		$this->assertCount( 1, $rows );
+		$this->assertEquals( $event2_id, $rows[0]->event_id );
 	}
 
 	public function test_is_attending() {
@@ -76,7 +73,7 @@ class Attendee_Repository_Test extends WP_UnitTestCase {
 		$this->assertFalse( $this->repository->is_attending( $event2_id, $user_id ) );
 	}
 
-	public function test_get_event_ids() {
+	public function test_get_events_for_user() {
 		$event1_id    = 1;
 		$event2_id    = 2;
 		$event3_id    = 3;
@@ -90,5 +87,14 @@ class Attendee_Repository_Test extends WP_UnitTestCase {
 		$this->assertEquals( array( $event1_id, $event2_id ), $this->repository->get_events_for_user( $user_id ) );
 		$this->assertEquals( array( $event3_id ), $this->repository->get_events_for_user( $another_user ) );
 		$this->assertEmpty( $this->repository->get_events_for_user( $another_user + 1 ) );
+	}
+
+	private function all_table_rows(): array {
+		global $wpdb, $gp_table_prefix;
+		// phpcs:disable WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+		// phpcs:disable WordPress.DB.DirectDatabaseQuery.DirectQuery
+		// phpcs:disable WordPress.DB.DirectDatabaseQuery.NoCaching
+		return $wpdb->get_results( "select * from {$gp_table_prefix}event_attendees order by event_id, user_id" );
+		// phpcs:enable
 	}
 }
