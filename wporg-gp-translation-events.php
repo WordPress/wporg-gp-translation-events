@@ -49,6 +49,7 @@ class Translation_Events {
 		\add_action( 'gp_init', array( $this, 'gp_init' ) );
 		\add_action( 'gp_before_translation_table', array( $this, 'add_active_events_current_user' ) );
 		\register_activation_hook( __FILE__, array( $this, 'activate' ) );
+		\add_filter( 'wporg_translation_events_snippets', array( Events_Text_Snippet::class, 'generate_snippet_links' ) );
 	}
 
 	public function gp_init() {
@@ -69,6 +70,7 @@ class Translation_Events {
 		require_once __DIR__ . '/includes/attendee-repository.php';
 		require_once __DIR__ . '/includes/stats-calculator.php';
 		require_once __DIR__ . '/includes/stats-listener.php';
+		require_once __DIR__ . '/includes/event-text-snippet.php';
 
 		GP::$router->add( '/events?', array( 'Wporg\TranslationEvents\Routes\Event\List_Route', 'handle' ) );
 		GP::$router->add( '/events/new', array( 'Wporg\TranslationEvents\Routes\Event\Create_Route', 'handle' ) );
