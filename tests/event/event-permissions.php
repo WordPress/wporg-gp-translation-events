@@ -8,6 +8,7 @@ use Wporg\TranslationEvents\Attendee\Attendee_Repository;
 use Wporg\TranslationEvents\Event\Event_Repository;
 use Wporg\TranslationEvents\Tests\Event_Factory;
 use Wporg\TranslationEvents\Tests\Stats_Factory;
+use Wporg\TranslationEvents\User\Cannot_Edit;
 use Wporg\TranslationEvents\User\Event_Permissions;
 
 class Event_Permissions_Test extends GP_UnitTestCase {
@@ -32,7 +33,8 @@ class Event_Permissions_Test extends GP_UnitTestCase {
 		$event_id = $this->event_factory->create_active();
 		$event    = $this->event_repository->get_event( $event_id );
 
-		$this->assertTrue( $this->permissions->can_edit( $event, $author_user_id ) );
+		$this->expectNotToPerformAssertions();
+		$this->permissions->assert_can_edit( $event, $author_user_id );
 	}
 
 	public function test_non_author_cannot_edit() {
@@ -43,7 +45,9 @@ class Event_Permissions_Test extends GP_UnitTestCase {
 		$event_id = $this->event_factory->create_active();
 		$event    = $this->event_repository->get_event( $event_id );
 
-		$this->assertFalse( $this->permissions->can_edit( $event, $non_author_user_id ) );
+		$this->expectException( Cannot_Edit::class );
+		$this->expectExceptionMessage( 'You are not allowed to edit the event.' );
+		$this->permissions->assert_can_edit( $event, $non_author_user_id );
 	}
 
 	public function test_can_edit_with_edit_capability() {
@@ -56,7 +60,7 @@ class Event_Permissions_Test extends GP_UnitTestCase {
 
 		$this->markTestSkipped( 'How can we test the edit capability?' );
 		// phpcs:ignore Squiz.PHP.CommentedOutCode.Found
-		// $this->assertTrue( $this->permissions->can_edit( $event, $non_author_user_id ) );
+		// $this->permissions->assert_can_edit( $event, $non_author_user_id );
 	}
 
 	public function test_host_can_edit() {
@@ -71,7 +75,8 @@ class Event_Permissions_Test extends GP_UnitTestCase {
 		$attendee->mark_as_host();
 		$this->attendee_repository->insert_attendee( $attendee );
 
-		$this->assertTrue( $this->permissions->can_edit( $event, $non_author_user_id ) );
+		$this->expectNotToPerformAssertions();
+		$this->permissions->assert_can_edit( $event, $non_author_user_id );
 	}
 
 	public function test_cannot_edit_past_event() {
@@ -81,7 +86,9 @@ class Event_Permissions_Test extends GP_UnitTestCase {
 		$event_id = $this->event_factory->create_inactive_past();
 		$event    = $this->event_repository->get_event( $event_id );
 
-		$this->assertFalse( $this->permissions->can_edit( $event, $author_user_id ) );
+		$this->expectException( Cannot_Edit::class );
+		$this->expectExceptionMessage( 'Past events cannot be edited.' );
+		$this->permissions->assert_can_edit( $event, $author_user_id );
 	}
 
 	public function test_cannot_edit_event_with_stats() {
@@ -93,6 +100,8 @@ class Event_Permissions_Test extends GP_UnitTestCase {
 
 		$this->stats_factory->create( $event_id, $author_user_id, 1, 'create' );
 
-		$this->assertFalse( $this->permissions->can_edit( $event, $author_user_id ) );
+		$this->expectException( Cannot_Edit::class );
+		$this->expectExceptionMessage( 'Events with stats cannot be edited.' );
+		$this->permissions->assert_can_edit( $event, $author_user_id );
 	}
 }
