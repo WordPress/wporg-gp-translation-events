@@ -3,6 +3,7 @@
 namespace event;
 
 use GP_UnitTestCase;
+use Wporg\TranslationEvents\Attendee\Attendee;
 use Wporg\TranslationEvents\Attendee\Attendee_Repository;
 use Wporg\TranslationEvents\Event\Event_Repository;
 use Wporg\TranslationEvents\Tests\Event_Factory;
@@ -53,5 +54,20 @@ class Event_Permissions_Test extends GP_UnitTestCase {
 		$this->markTestSkipped( 'How can we test the edit capability?' );
 		// phpcs:ignore Squiz.PHP.CommentedOutCode.Found
 		// $this->assertTrue( $this->permissions->can_edit( $event, $non_author_user_id ) );
+	}
+
+	public function test_host_can_edit() {
+		$this->set_normal_user_as_current();
+		$non_author_user_id = get_current_user_id();
+		$this->set_normal_user_as_current(); // This user is the author.
+
+		$event_id = $this->event_factory->create_active();
+		$event    = $this->event_repository->get_event( $event_id );
+
+		$attendee = new Attendee( $event_id, $non_author_user_id );
+		$attendee->mark_as_host();
+		$this->attendee_repository->insert_attendee( $attendee );
+
+		$this->assertTrue( $this->permissions->can_edit( $event, $non_author_user_id ) );
 	}
 }
