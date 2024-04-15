@@ -104,4 +104,17 @@ class Event_Permissions_Test extends GP_UnitTestCase {
 		$this->expectExceptionMessage( 'Events with stats cannot be edited.' );
 		$this->permissions->assert_can_edit( $event, $author_user_id );
 	}
+
+	public function test_can_delete_with_manage_options_capability() {
+		$this->set_normal_user_as_current();
+		$non_author_user_id = get_current_user_id();
+		$this->set_normal_user_as_current(); // This user is the author.
+
+		$event_id = $this->event_factory->create_active();
+		$event    = $this->event_repository->get_event( $event_id );
+
+		$this->markTestSkipped( 'How can we test the manage options capability?' );
+		// phpcs:ignore Squiz.PHP.CommentedOutCode.Found
+		// $this->permissions->assert_can_delete( $event, $non_author_user_id );
+	}
 }

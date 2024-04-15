@@ -15,6 +15,12 @@ class Cannot_Edit extends Exception {
 	}
 }
 
+class Cannot_Delete extends Exception {
+	public function __construct( string $message ) {
+		parent::__construct( $message, 403 );
+	}
+}
+
 class Event_Permissions {
 	private Attendee_Repository $attendee_repository;
 	private Stats_Calculator $stats_calculator;
@@ -59,5 +65,33 @@ class Event_Permissions {
 		}
 
 		throw new Cannot_Edit( esc_html__( 'You are not allowed to edit the event.', 'gp-translation-events' ) );
+	}
+
+	public function can_delete( Event $event, int $user_id ): bool {
+		try {
+			$this->assert_can_delete( $event, $user_id );
+			return true;
+		} catch ( Cannot_Delete $e ) {
+			return false;
+		}
+	}
+
+	/**
+	 * @throws Cannot_Delete
+	 */
+	public function assert_can_delete( Event $event, int $user_id ): void {
+		try {
+			$this->assert_can_edit( $event, $user_id );
+		} catch ( Cannot_Edit $e ) {
+			// The exception message was already escaped when Cannot_Edit was thrown.
+			// phpcs:ignore WordPress.Security.EscapeOutput.ExceptionNotEscaped
+			throw new Cannot_Delete( $e->getMessage() );
+		}
+
+		if ( user_can( $user_id, 'manage_options' ) ) {
+			return;
+		}
+
+		throw new Cannot_Delete( esc_html__( 'You are not allowed to delete the event.', 'gp-translation-events' ) );
 	}
 }
