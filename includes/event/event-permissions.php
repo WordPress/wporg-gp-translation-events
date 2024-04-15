@@ -24,6 +24,15 @@ class Event_Permissions {
 		$this->stats_calculator    = new Stats_Calculator();
 	}
 
+	public function can_edit( Event $event, int $user_id ): bool {
+		try {
+			$this->assert_can_edit( $event, $user_id );
+			return true;
+		} catch ( Cannot_Edit $e ) {
+			return false;
+		}
+	}
+
 	/**
 	 * @throws Cannot_Edit
 	 */
