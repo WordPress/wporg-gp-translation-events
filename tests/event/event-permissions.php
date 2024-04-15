@@ -70,4 +70,14 @@ class Event_Permissions_Test extends GP_UnitTestCase {
 
 		$this->assertTrue( $this->permissions->can_edit( $event, $non_author_user_id ) );
 	}
+
+	public function test_cannot_edit_past_event() {
+		$this->set_normal_user_as_current();
+		$author_user_id = get_current_user_id();
+
+		$event_id = $this->event_factory->create_inactive_past();
+		$event    = $this->event_repository->get_event( $event_id );
+
+		$this->assertFalse( $this->permissions->can_edit( $event, $author_user_id ) );
+	}
 }
