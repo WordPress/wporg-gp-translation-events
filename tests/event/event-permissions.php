@@ -34,8 +34,7 @@ class Event_Permissions_Test extends GP_UnitTestCase {
 		$event_id = $this->event_factory->create_active();
 		$event    = $this->event_repository->get_event( $event_id );
 
-		$this->expectNotToPerformAssertions();
-		$this->permissions->assert_can_edit( $event, $author_user_id );
+		$this->assertTrue( $this->permissions->can_edit( $event, $author_user_id ) );
 	}
 
 	public function test_non_author_cannot_edit() {
@@ -76,8 +75,7 @@ class Event_Permissions_Test extends GP_UnitTestCase {
 		$attendee->mark_as_host();
 		$this->attendee_repository->insert_attendee( $attendee );
 
-		$this->expectNotToPerformAssertions();
-		$this->permissions->assert_can_edit( $event, $non_author_user_id );
+		$this->assertTrue( $this->permissions->can_edit( $event, $non_author_user_id ) );
 	}
 
 	public function test_cannot_edit_past_event() {
