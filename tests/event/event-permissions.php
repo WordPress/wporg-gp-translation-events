@@ -8,6 +8,7 @@ use Wporg\TranslationEvents\Attendee\Attendee_Repository;
 use Wporg\TranslationEvents\Event\Event_Repository;
 use Wporg\TranslationEvents\Tests\Event_Factory;
 use Wporg\TranslationEvents\Tests\Stats_Factory;
+use Wporg\TranslationEvents\User\Cannot_Create;
 use Wporg\TranslationEvents\User\Cannot_Edit;
 use Wporg\TranslationEvents\User\Event_Permissions;
 
@@ -116,5 +117,24 @@ class Event_Permissions_Test extends GP_UnitTestCase {
 		$this->markTestSkipped( 'How can we test the manage options capability?' );
 		// phpcs:ignore Squiz.PHP.CommentedOutCode.Found
 		// $this->permissions->assert_can_delete( $event, $non_author_user_id );
+	}
+
+	public function test_cannot_create_if_no_crud_permission() {
+		$this->set_normal_user_as_current();
+		$user_id = get_current_user_id();
+
+		add_filter( 'gp_translation_events_can_crud_event', '__return_false' );
+
+		$this->expectException( Cannot_Create::class );
+		$this->permissions->assert_can_create( $user_id );
+	}
+
+	public function test_can_create_if_crud_permission() {
+		$this->set_normal_user_as_current();
+		$user_id = get_current_user_id();
+
+		add_filter( 'gp_translation_events_can_crud_event', '__return_true' );
+
+		$this->assertTrue( $this->permissions->can_create( $user_id ) );
 	}
 }

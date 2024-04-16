@@ -3,11 +3,18 @@
 namespace Wporg\TranslationEvents\User;
 
 use Exception;
+use GP;
 use Wporg\TranslationEvents\Attendee\Attendee;
 use Wporg\TranslationEvents\Attendee\Attendee_Repository;
 use Wporg\TranslationEvents\Event\Event;
 use Wporg\TranslationEvents\Stats\Stats_Calculator;
 use Wporg\TranslationEvents\Translation_Events;
+
+class Cannot_Create extends Exception {
+	public function __construct( string $message ) {
+		parent::__construct( $message, 403 );
+	}
+}
 
 class Cannot_Edit extends Exception {
 	public function __construct( string $message ) {
@@ -28,6 +35,26 @@ class Event_Permissions {
 	public function __construct() {
 		$this->attendee_repository = Translation_Events::get_attendee_repository();
 		$this->stats_calculator    = new Stats_Calculator();
+	}
+
+	public function can_create( int $user_id ): bool {
+		try {
+			$this->assert_can_create( $user_id );
+			return true;
+		} catch ( Cannot_Create $e ) {
+			return false;
+		}
+	}
+
+	/**
+	 * @throws Cannot_Create
+	 */
+	public function assert_can_create( int $user_id ): void {
+		if ( $this->can_crud( $user_id ) ) {
+			return;
+		}
+
+		throw new Cannot_Create( esc_html__( 'You do not have permission to create events.', 'gp-translation-events' ) );
 	}
 
 	public function can_edit( Event $event, int $user_id ): bool {
@@ -93,5 +120,9 @@ class Event_Permissions {
 		}
 
 		throw new Cannot_Delete( esc_html__( 'You are not allowed to delete the event.', 'gp-translation-events' ) );
+	}
+
+	private function can_crud( int $user_id ): bool {
+		return apply_filters( 'gp_translation_events_can_crud_event', GP::$permission->user_can( $user_id, 'admin' ) );
 	}
 }
