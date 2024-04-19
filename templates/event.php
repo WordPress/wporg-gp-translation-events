@@ -123,9 +123,10 @@ gp_tmpl_load( 'events-header', get_defined_vars(), __DIR__ );
 				<table>
 					<thead>
 					<tr>
-						<th scope="col">Locale</th>
-						<th scope="col">Translations created</th>
-						<th scope="col">Translations reviewed</th>
+						<th scope="col">Translations</th>
+						<th scope="col">Created</th>
+						<th scope="col">Waiting</th>
+						<th scope="col">Reviewed</th>
 						<th scope="col">Contributors</th>
 					</tr>
 					</thead>
@@ -142,6 +143,7 @@ gp_tmpl_load( 'events-header', get_defined_vars(), __DIR__ );
 					<tr class="event-details-stats-totals">
 						<td>Total</td>
 						<td><?php echo esc_html( $event_stats->totals()->created ); ?></td>
+						<td><?php echo esc_html( $event_stats->totals()->waiting ); ?></td>
 						<td><?php echo esc_html( $event_stats->totals()->reviewed ); ?></td>
 						<td><?php echo esc_html( $event_stats->totals()->users ); ?></td>
 					</tr>
