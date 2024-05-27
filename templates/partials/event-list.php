@@ -41,9 +41,12 @@ $print_time = function ( $time ) use ( $date_format, $relative_time ): void {
 		$current_user_attendee = $current_user_attendee_per_event[ $event->id() ] ?? null;
 		?>
 		<li class="event-list-item">
-			<?php // Title. ?>
-			<?php // phpcs:ignore Squiz.ControlStructures.ControlSignature.NewlineAfterOpenBrace ?>
-			<a <?php if ( $event->is_draft() ) : ?>class="event-link-draft" <?php endif; ?>
+			<?php
+				// Title.
+				$title_classes = $event->is_draft() ? array( 'event-link-draft' ) : array();
+				$title_classes = implode( ', ', $title_classes );
+			?>
+			<a class="<?php echo esc_attr( $title_classes ); ?>"
 				href="<?php echo esc_url( Urls::event_details( $event->id() ) ); ?>">
 				<?php echo esc_html( $event->title() ); ?>
 			</a>
