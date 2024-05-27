@@ -14,7 +14,6 @@ use Wporg\TranslationEvents\Urls;
 /** @var ?bool $show_excerpt */
 /** @var ?string $date_format */
 /** @var ?bool $relative_time */
-/** @var ?string[] $extra_classes */
 /** @var ?Attendee[] $current_user_attendee_per_event Associative array with event id as key, and Attendee as value. */
 
 $show_start                      = $show_start ?? false;
@@ -22,7 +21,6 @@ $show_end                        = $show_end ?? false;
 $show_excerpt                    = $show_excerpt ?? true;
 $date_format                     = $date_format ?? '';
 $relative_time                   = $relative_time ?? true;
-$extra_classes                   = isset( $extra_classes ) ? implode( $extra_classes, ' ' ) : '';
 $current_user_attendee_per_event = $current_user_attendee_per_event ?? array();
 
 /**
@@ -37,7 +35,7 @@ $print_time = function ( $time ) use ( $date_format, $relative_time ): void {
 };
 ?>
 
-<ul class="event-list <?php echo esc_attr( $extra_classes ); ?>">
+<ul class="event-list">
 	<?php foreach ( $query->events as $event ) : ?>
 		<?php
 		$current_user_attendee = $current_user_attendee_per_event[ $event->id() ] ?? null;
