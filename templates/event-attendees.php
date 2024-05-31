@@ -58,17 +58,21 @@ Templates::header(
 					</td>
 					<td>
 					<form class="add-remove-user-as-host" method="post" action="<?php echo esc_url( Urls::event_toggle_host( $event->id(), $attendee->user_id() ) ); ?>">
-						<?php if ( $attendee->is_host() ) : ?>
-							<input type="submit" class="button is-primary remove-as-host" value="<?php echo esc_attr__( 'Remove as host', 'gp-translation-events' ); ?>"/>
+					<div class="wp-block-buttons is-layout-flex wp-block-buttons-is-layout-flex create-event-btn" style="margin-top:var(--wp--preset--spacing--30)">
+						<div class="wp-block-button is-style-outline">						
+					<?php if ( $attendee->is_host() ) : ?>
+							<button class="wp-block-button__link wp-element-button remove-as-host" type="submit"><?php echo esc_html__( 'Remove as host', 'gp-translation-events' ); ?></button>
 							<?php else : ?>
-									<input type="submit" class="button is-secondary convert-to-host" value="<?php echo esc_attr__( 'Make co-host', 'gp-translation-events' ); ?>"/>
+								<button class="wp-block-button__link wp-element-button convert-to-host" type="submit"><?php echo esc_html__( 'Make co-host', 'gp-translation-events' ); ?></button>
 							<?php endif; ?>
 							<?php if ( $event->is_hybrid() ) : ?>
 								<a href="<?php echo esc_url( Urls::event_toggle_attendance_mode( $event->id(), $attendee->user_id() ) ); ?>" class="button set-attendance-mode"><?php $attendee->is_remote() ? esc_html_e( 'Set as on-site', 'gp-translation-events' ) : esc_html_e( 'Set as remote', 'gp-translation-events' ); ?></a>
 							<?php endif; ?>
 							<?php if ( ! $attendee->is_host() ) : ?>
-								<a href="<?php echo esc_url( Urls::event_remove_attendee( $event->id(), $attendee->user_id() ) ); ?>" class="button remove-attendee"><?php esc_html_e( 'Remove', 'gp-translation-events' ); ?></a>
+								<a href="<?php echo esc_url( Urls::event_remove_attendee( $event->id(), $attendee->user_id() ) ); ?>" class="wp-block-button__link wp-element-button remove-attendee"><?php esc_html_e( 'Remove', 'gp-translation-events' ); ?></a>
 							<?php endif; ?>
+							</div>
+					</div>	
 						</form>
 					</td>
 				</tr>
