@@ -63,7 +63,13 @@ gp_tmpl_header();
 			<?php endif; ?>
 			<li><a href="<?php echo esc_url( Urls::my_events() ); ?>">My Events</a></li>
 			<?php if ( current_user_can( 'create_translation_event' ) ) : ?>
-				<li><a class="button is-primary" href="<?php echo esc_url( Urls::event_create() ); ?>">Create Event</a></li>
+				<li>
+					<div class="wp-block-buttons is-layout-flex wp-block-buttons-is-layout-flex create-event-btn" style="margin-top:var(--wp--preset--spacing--30)">
+						<div class="wp-block-button is-style-outline">
+							<a class="wp-block-button__link wp-element-button" href="<?php echo esc_url( Urls::event_create() ); ?>">Create Event</a>
+						</div>
+					</div>
+				</li>
 			<?php endif; ?>
 		<?php endif; ?>
 	</ul>
