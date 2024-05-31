@@ -105,3 +105,6 @@ ul.breadcrumb {
     line-height: var(--wp--custom--button--typography--line-height);
     border-radius: var(--wp--custom--button--border--radius);
 }
+.create-event-btn {
+    display: inline !important;
+}
