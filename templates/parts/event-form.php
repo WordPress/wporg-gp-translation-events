@@ -88,21 +88,26 @@ use Wporg\TranslationEvents\Urls;
 		</div>
 		<div class="submit-btn-group">
 			<label for="event-status"></label>
-			<?php if ( $event->id() ) : ?>
-				<?php if ( $event->is_draft() ) : ?>
-					<button class="button is-primary save-draft submit-event" type="submit" data-event-status="draft">Update Draft</button>
-				<?php endif; ?>
-				<button class="button is-primary submit-event" type="submit"  data-event-status="publish">
-					<?php echo ( $event->is_published() ) ? esc_html( 'Update Event' ) : esc_html( 'Publish Event' ); ?>
-				</button>
-			<?php else : ?>
-				<button class="button is-primary save-draft submit-event" type="submit" data-event-status="draft">Save Draft</button>
-				<button class="button is-primary submit-event" type="submit"  data-event-status="publish">Publish Event</button>
-			<?php endif; ?>
-			<?php $visibility_trash_button = current_user_can( 'trash_translation_event', $event->id() ) ? 'inline-flex' : 'none'; ?>
-			<button id="trash-button" class="button is-destructive trash-event" type="submit" name="submit" value="Delete" style="display: <?php echo esc_attr( $visibility_trash_button ); ?>">Delete Event</button>
-		</div>
-		<div class="clear"></div>
+			<div class="wp-block-buttons is-layout-flex wp-block-buttons-is-layout-flex create-event-btn" style="margin-top:var(--wp--preset--spacing--30)">
+			<div class="wp-block-button is-style-outline">
+	<?php if ( $event->id() ) : ?>
+		<?php if ( $event->is_draft() ) : ?>
+				<button class="wp-block-button__link wp-element-button save-draft submit-event" type="submit" data-event-status="draft">Save Draft</button>
+		<?php endif; ?>
+	<button class="wp-block-button__link wp-element-button submit-event" type="submit" data-event-status="publish">
+
+		<?php echo ( $event->is_published() ) ? esc_html( 'Update Event' ) : esc_html( 'Publish Event' ); ?>
+	</button>
+	<?php else : ?>
+			<button class="wp-block-button__link wp-element-button save-draft submit-event" type="submit" data-event-status="draft">Save Draft</button>
+			<button class="wp-block-button__link wp-element-button submit-event" type="submit" data-event-status="publish">Publish Event</button>
+	<?php endif; ?>
+	<?php $visibility_trash_button = current_user_can( 'trash_translation_event', $event->id() ) ? 'inline-flex' : 'none'; ?>
+	<button id="trash-button" class="wp-block-button__link wp-element-button trash-event" type="submit" name="submit" value="Delete" style="display: <?php echo esc_attr( $visibility_trash_button ); ?>">Delete Event</button>
+</div>
+		</div>	
+</div>
+	<div class="clear"></div>
 		<div class="published-update-text">
 			<?php
 			$visibility_published_button = 'none';
