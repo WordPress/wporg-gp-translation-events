@@ -91,6 +91,7 @@ class Translation_Events {
 		add_action( 'wp_ajax_nopriv_submit_event_ajax', array( $this, 'submit_event_ajax' ) );
 		add_action( 'wp_enqueue_scripts', array( $this, 'register_translation_event_js' ) );
 		add_action( 'init', array( $this, 'register_event_post_type' ) );
+		add_action( 'init', array( $this, 'register_blocks' ) );
 		add_action( 'init', array( $this, 'send_notifications' ) );
 		add_action( 'add_meta_boxes', array( $this, 'event_meta_boxes' ) );
 		add_action( 'save_post', array( $this, 'save_event_meta_boxes' ) );
@@ -113,6 +114,10 @@ class Translation_Events {
 			new Stats_Calculator()
 		);
 		$this->event_capabilities->register_hooks();
+	}
+
+	public function register_blocks(): void {
+		include_once __DIR__ . '/src/blocks/event-query/index.php';
 	}
 
 	public function gp_init() {
@@ -187,6 +192,7 @@ class Translation_Events {
 			'menu_icon'    => 'dashicons-calendar',
 			'supports'     => array( 'title', 'editor', 'thumbnail', 'revisions', 'page-attributes' ),
 			'rewrite'      => array( 'slug' => 'events' ),
+			'show_in_rest' => true,
 		);
 
 		register_post_type( self::CPT, $args );
