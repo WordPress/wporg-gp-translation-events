@@ -2,15 +2,23 @@
 
 namespace Wporg\TranslationEvents\Blocks\EventList;
 
-add_action( 'init', __NAMESPACE__ . '\init' );
+add_action(
+	'init',
+	function () {
+		register_block_type(
+			__DIR__ . '/../../../build/blocks/event-list',
+			array(
+				'attributes'      => array(),
+				'render_callback' => function ( array $attributes ) {
+					ob_start();
+					render( $attributes );
+					return do_blocks( ob_get_clean() );
+				},
+			)
+		);
+	}
+);
 
-/**
- * Registers the block using the metadata loaded from the `block.json` file.
- * Behind the scenes, it registers also all assets so they can be enqueued
- * through the block editor in the corresponding context.
- *
- * @see https://developer.wordpress.org/reference/functions/register_block_type/
- */
-function init() {
-	register_block_type( __DIR__ . '/../../../build/blocks/event-list' );
+function render( array $attributes ): void {
+	include_once __DIR__ . '/render.php';
 }

@@ -1,5 +1,6 @@
 <?php
-namespace Wporg\TranslationEvents\Theme_2024;
+
+namespace Wporg\TranslationEvents\Blocks\EventList;
 
 use Wporg\TranslationEvents\Event\Events_Query_Result;
 
@@ -7,4 +8,4 @@ use Wporg\TranslationEvents\Event\Events_Query_Result;
 $events = $attributes['events'] ?? array();
 ?>
 
-<!-- wp:wporg-translate-events/event-list /-->
+<p>Event List</p>
