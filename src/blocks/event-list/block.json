@@ -1,0 +1,18 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/block.json",
+	"apiVersion": 3,
+	"name": "wporg-translate-events/event-list",
+	"version": "0.1.0",
+	"title": "Event List",
+	"category": "widgets",
+	"icon": "calendar-alt",
+	"description": "Displays a list of events",
+	"example": {},
+	"supports": {
+		"html": false
+	},
+	"textdomain": "gp-translation-events",
+	"editorScript": "file:./index.js",
+	"editorStyle": "file:./index.css",
+	"style": "file:./style-index.css"
+}

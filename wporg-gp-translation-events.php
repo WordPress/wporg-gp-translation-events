@@ -37,6 +37,7 @@ use Wporg\TranslationEvents\Stats\Stats_Listener;
 
 // Register blocks.
 require_once __DIR__ . '/src/blocks/example/index.php';
+require_once __DIR__ . '/src/blocks/event-list/index.php';
 
 class Translation_Events {
 	public const CPT = 'translation_event';
