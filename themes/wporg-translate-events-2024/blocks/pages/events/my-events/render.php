@@ -1,10 +1,7 @@
-<?php
-namespace Wporg\TranslationEvents\Theme_2024;
+<?php namespace Wporg\TranslationEvents\Theme_2024; ?>
 
-use Wporg\TranslationEvents\Event\Events_Query_Result;
+<!-- wp:heading {"level":3} -->
+<h3 class="wp-block-heading">Current events</h3>
+<!-- /wp:heading -->
 
-/** @var Events_Query_Result $events */
-$events = $attributes['events'] ?? array();
-?>
-
-<!-- wp:wporg-translate-events/event-list /-->
+<!-- wp:wporg-translate-events/event-list {"filter":"current"} /-->
