@@ -1,4 +1,5 @@
 <?php namespace Wporg\TranslationEvents\Theme_2024;
+use Wporg\TranslationEvents\Event\Events_Query_Result;
 
 register_block_type(
 	'wporg-translate-events-2024/start-date',
@@ -7,8 +8,8 @@ register_block_type(
 		// because otherwise it won't be available in render.php.
 		// phpcs:ignore Generic.CodeAnalysis.UnusedFunctionParameter.Found
 		'render_callback' => function ( array $attributes ) {
-			global $translation_events_lookup;
-			return '<div>'.esc_html( $translation_events_lookup[$attributes['id']]->start() ).'</div>';
+			$event = Events_Query_Result::get_event( $attributes['id'] );
+			return esc_html( $event->start() );
 		},
 	)
 );
@@ -19,8 +20,8 @@ register_block_type(
 		// because otherwise it won't be available in render.php.
 		// phpcs:ignore Generic.CodeAnalysis.UnusedFunctionParameter.Found
 		'render_callback' => function ( array $attributes ) {
-			global $translation_events_lookup;
-			return  '<h1>'.esc_html( $translation_events_lookup[$attributes['id']]->title() ).'</h1>';
+			$event = Events_Query_Result::get_event( $attributes['id'] );
+			return  esc_html( $event->title() );
 		},
 	)
 );
