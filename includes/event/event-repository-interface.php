@@ -192,8 +192,4 @@ class Events_Query_Result {
 		$this->page_count   = intval( $page_count );
 		$this->current_page = intval( $current_page );
 	}
-
-	public static function get_event( int $event_id ) {
-		return $this->events[ $event_id ] ?? null;
-	}
 }
