@@ -556,9 +556,7 @@ class Event_Repository implements Event_Repository_Interface {
 			$event->set_id( $post->ID );
 			$event->set_slug( $post->post_name );
 			$events[] = $event;
-		}
 
-		foreach ( $events as $event ) {
 			$this->cache[ $event->id() ] = $event;
 		}
 
