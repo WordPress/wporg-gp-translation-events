@@ -30,6 +30,9 @@ function register_blocks(): void {
 	include_once __DIR__ . '/blocks/pages/events/event-create/index.php';
 	include_once __DIR__ . '/blocks/event-form/index.php';
 	include_once __DIR__ . '/blocks/pages/events/event-edit/index.php';
+	include_once __DIR__ . '/blocks/event-edit-link/index.php';
+	include_once __DIR__ . '/blocks/event-trash-link/index.php';
+	include_once __DIR__ . '/blocks/event-nav-links/index.php';
 }
 
 function register_patterns(): void {
