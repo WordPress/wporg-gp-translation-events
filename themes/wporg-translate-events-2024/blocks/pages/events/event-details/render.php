@@ -37,13 +37,29 @@ if ( is_user_logged_in() ) :
 		<?php
 		if ( $user_is_attending ) :
 			?>
-			<p class="has-charcoal-4-color has-text-color has-small-font-size" style="margin-top:var(--wp--preset--spacing--10);margin-bottom:var(--wp--preset--spacing--20)"><?php esc_html_e( 'You attended this event.', 'wporg-translate-events-2024' ); ?></p>
+			<!-- wp:wporg/notice {"type":"info", "style":{"spacing":{"margin":{"top":"var:preset|spacing|20"}}}} -->
+			<div class="wp-block-wporg-notice is-info-notice" style="margin-top:var(--wp--preset--spacing--20)">
+				<div class="wp-block-wporg-notice__icon"></div>
+				<div class="wp-block-wporg-notice__content">
+					<p>
+						<?php esc_html_e( 'You attended this event.', 'wporg-translate-events-2024' ); ?>
+					</p>
+				</div>
+			</div>
+			<!-- /wp:wporg/notice -->
 		<?php endif; ?>
 	<?php else : ?>
 		<?php if ( ! $event->is_hybrid() && ! $event->is_remote() ) : ?>
-			<p class="onsite-btn-note">
-				<?php echo wp_kses_post( __( '<strong>Note:</strong> This is an onsite-only event. Please only click attend if you are at the event. The host might otherwise remove you.', 'wporg-translate-events-2024' ) ); ?>
-			</p>
+			<!-- wp:wporg/notice {"type":"tip","style":{"spacing":{"margin":{"top":"var:preset|spacing|20"}}}} -->
+			<div class="wp-block-wporg-notice is-tip-notice" style="margin-top:var(--wp--preset--spacing--20)">
+				<div class="wp-block-wporg-notice__icon"></div>
+				<div class="wp-block-wporg-notice__content">
+					<p>
+						<?php echo wp_kses_post( __( 'This is an onsite-only event. Please only click attend if you are at the event. The host might otherwise remove you.', 'wporg-translate-events-2024' ) ); ?>
+					</p>
+				</div>
+			</div>
+			<!-- /wp:wporg/notice -->
 		<?php endif; ?>	
 		<?php
 	endif;
