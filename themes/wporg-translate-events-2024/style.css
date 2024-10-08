@@ -207,7 +207,21 @@ span.user-remote-icon.dashicons-video-alt2 {
 .event-nav-link:hover {
 	text-decoration: underline;
 }
- @media (min-width: 960px) {
+
+.event-details-join {
+	display: inline-block;
+}
+
+a.details-edit-event span.dashicons-edit {
+	vertical-align: text-bottom;
+}
+
+a.details-edit-event {
+	float: right;
+	text-decoration: none;
+}
+
+@media (min-width: 960px) {
 
 .wporg-marker-list__container .wporg-marker-list-item {
 	display: grid;

@@ -2,6 +2,7 @@
 namespace Wporg\TranslationEvents\Theme_2024;
 
 use Wporg\TranslationEvents\Attendee\Attendee;
+use Wporg\TranslationEvents\Urls;
 
 $event               = $attributes['event'];
 $user_is_attending   = $attributes['user_is_attending'];
@@ -20,6 +21,13 @@ echo wp_json_encode(
 ?>
 
 /-->
+
+<?php if ( current_user_can( 'edit_translation_event', $event->id() ) ) : ?>
+<a class="details-edit-event" href="<?php echo esc_url( Urls::event_edit( $event->id() ) ); ?>">
+	<span class="dashicons dashicons-edit"></span><?php echo esc_html__( 'Edit Event', 'wporg-translate-events-2024' ); ?>
+</a>
+<?php endif; ?>
+
 <?php
 if ( is_user_logged_in() ) :
 	if ( $event->is_past() ) :
