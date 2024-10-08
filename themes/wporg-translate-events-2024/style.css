@@ -162,7 +162,20 @@ select.wp-block-form-input__input {
 	background-color: #46b450;
 }
 
- @media (min-width: 960px) {
+.event-details-join {
+	display: inline-block;
+}
+
+a.details-edit-event span.dashicons-edit {
+	vertical-align: text-bottom;
+}
+
+a.details-edit-event {
+	float: right;
+	text-decoration: none;
+}
+
+@media (min-width: 960px) {
 
 .wporg-marker-list__container .wporg-marker-list-item {
 	display: grid;
