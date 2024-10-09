@@ -1,7 +1,7 @@
 <?php
 namespace Wporg\TranslationEvents\Theme_2024;
 
-use Wporg\TranslationEvents\Attendee\Attendee;
+use Wporg\TranslationEvents\Urls;
 
 $event               = $attributes['event'];
 $user_is_attending   = $attributes['user_is_attending'];
@@ -20,20 +20,58 @@ echo wp_json_encode(
 ?>
 
 /-->
-<?php
-if ( $event->is_past() ) :
-	?>
-<!-- wp:wporg/notice {"type":"alert", "style":{"spacing":{"margin":{"top":"var:preset|spacing|20"}}}} -->
-<div class="wp-block-wporg-notice is-alert-notice" style="margin-top:var(--wp--preset--spacing--20)">
-	<div class="wp-block-wporg-notice__icon"></div>
-	<div class="wp-block-wporg-notice__content">
-		<p>
-		<?php echo esc_html__( 'This event has ended.', 'wporg-translate-events-2024' ); ?>
-		</p>
-	</div>
-</div>
-<!-- /wp:wporg/notice -->
+
+<?php if ( current_user_can( 'edit_translation_event', $event->id() ) ) : ?>
+<a class="details-edit-event" href="<?php echo esc_url( Urls::event_edit( $event->id() ) ); ?>">
+	<span class="dashicons dashicons-edit"></span><?php echo esc_html__( 'Edit Event', 'wporg-translate-events-2024' ); ?>
+</a>
 <?php endif; ?>
+
+<?php
+if ( is_user_logged_in() ) :
+	if ( $event->is_past() ) :
+		?>
+		<!-- wp:wporg/notice {"type":"alert", "style":{"spacing":{"margin":{"top":"var:preset|spacing|20"}}}} -->
+		<div class="wp-block-wporg-notice is-alert-notice" style="margin-top:var(--wp--preset--spacing--20)">
+			<div class="wp-block-wporg-notice__icon"></div>
+			<div class="wp-block-wporg-notice__content">
+				<p>
+				<?php echo esc_html__( 'This event has ended.', 'wporg-translate-events-2024' ); ?>
+				</p>
+			</div>
+		</div>
+		<!-- /wp:wporg/notice -->
+		<?php
+		if ( $user_is_attending ) :
+			?>
+			<!-- wp:wporg/notice {"type":"info", "style":{"spacing":{"margin":{"top":"var:preset|spacing|20"}}}} -->
+			<div class="wp-block-wporg-notice is-info-notice" style="margin-top:var(--wp--preset--spacing--20)">
+				<div class="wp-block-wporg-notice__icon"></div>
+				<div class="wp-block-wporg-notice__content">
+					<p>
+						<?php esc_html_e( 'You attended this event.', 'wporg-translate-events-2024' ); ?>
+					</p>
+				</div>
+			</div>
+			<!-- /wp:wporg/notice -->
+		<?php endif; ?>
+	<?php else : ?>
+		<?php if ( ! $event->is_hybrid() && ! $event->is_remote() ) : ?>
+			<!-- wp:wporg/notice {"type":"tip","style":{"spacing":{"margin":{"top":"var:preset|spacing|20"}}}} -->
+			<div class="wp-block-wporg-notice is-tip-notice" style="margin-top:var(--wp--preset--spacing--20)">
+				<div class="wp-block-wporg-notice__icon"></div>
+				<div class="wp-block-wporg-notice__content">
+					<p>
+						<?php echo wp_kses_post( __( 'This is an onsite-only event. Please only click attend if you are at the event. The host might otherwise remove you.', 'wporg-translate-events-2024' ) ); ?>
+					</p>
+				</div>
+			</div>
+			<!-- /wp:wporg/notice -->
+		<?php endif; ?>	
+		<?php
+	endif;
+endif;
+?>
 
 <!-- wp:paragraph -->
 <p>
