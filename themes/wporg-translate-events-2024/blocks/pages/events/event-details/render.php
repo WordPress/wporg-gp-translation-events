@@ -1,7 +1,6 @@
 <?php
 namespace Wporg\TranslationEvents\Theme_2024;
 
-use Wporg\TranslationEvents\Attendee\Attendee;
 use Wporg\TranslationEvents\Urls;
 
 $event               = $attributes['event'];
