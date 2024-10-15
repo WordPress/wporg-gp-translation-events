@@ -12,8 +12,9 @@ register_block_type(
 
 			$query = new \WP_Query(
 				array(
-					'p'         => intval( $attributes['id'] ),
-					'post_type' => Translation_Events::CPT,
+					'p'           => intval( $attributes['id'] ),
+					'post_type'   => Translation_Events::CPT,
+					'post_status' => array( 'publish', 'draft', 'trash' ),
 				)
 			);
 
