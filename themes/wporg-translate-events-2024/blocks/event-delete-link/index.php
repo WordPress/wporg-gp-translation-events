@@ -23,7 +23,7 @@ register_block_type(
 			}
 			?>
 				<a href="<?php echo esc_url( Urls::event_delete( $event->id() ) ); ?>"
-					class="button is-small is-destructive"
+					class="small-btn is-destructive"
 					title="<?php echo esc_attr__( 'Delete permanently', 'gp-translation-events' ); ?>">
 					<?php echo esc_attr__( 'Delete permanently', 'gp-translation-events' ); ?>
 				</a>

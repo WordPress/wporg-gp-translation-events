@@ -24,8 +24,8 @@ register_block_type(
 			}
 			if ( $event->is_trashed() ) :
 				?>
-					<a href="<?php echo esc_url( Urls::event_trash( $event->id() ) ); ?>"
-						class="button is-small"
+					<a href=""
+						class="small-btn"
 						title="<?php echo esc_attr__( 'Restore', 'gp-translation-events' ); ?>">
 						<?php echo esc_attr__( 'Restore', 'gp-translation-events' ); ?>
 					</a>

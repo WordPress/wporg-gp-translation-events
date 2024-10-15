@@ -175,6 +175,25 @@ a.event-list-item-button:any-link {
 .event-nav-link:hover {
 	text-decoration: underline;
 }
+
+.is-destructive{
+	color: var(--wp--preset--color--vivid-red);
+
+}
+.small-btn {
+	padding: 3px 12px;
+	font-size: 12px;
+	min-height: 28px;
+	margin-left: 3px;
+	border: thin solid currentColor;
+	text-decoration: none;
+}
+
+.small-btn:hover {
+	border: 2px solid currentColor;
+	font-weight: bold;
+
+}
  @media (min-width: 960px) {
 
 .wporg-marker-list__container .wporg-marker-list-item {
