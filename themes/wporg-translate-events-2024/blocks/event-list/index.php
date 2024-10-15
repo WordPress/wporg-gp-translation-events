@@ -35,6 +35,7 @@ register_block_type(
 							?>
 						<!-- wp:wporg-translate-events-2024/event-edit-link /-->
 						<!-- wp:wporg-translate-events-2024/event-trash-link /-->
+						<!-- wp:wporg-translate-events-2024/event-delete-link /-->
 						</div>
 						<!-- wp:wporg-translate-events-2024/event-attendance-mode /-->
 						<!-- wp:wporg-translate-events-2024/event-start /-->

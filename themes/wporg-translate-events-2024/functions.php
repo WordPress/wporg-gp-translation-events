@@ -34,6 +34,7 @@ function register_blocks(): void {
 	include_once __DIR__ . '/blocks/event-trash-link/index.php';
 	include_once __DIR__ . '/blocks/event-nav-links/index.php';
 	include_once __DIR__ . '/blocks/pages/events/trashed-events/index.php';
+	include_once __DIR__ . '/blocks/event-delete-link/index.php';
 }
 
 function register_patterns(): void {
