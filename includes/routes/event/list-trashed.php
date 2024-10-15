@@ -39,7 +39,7 @@ class List_Trashed_Route extends Route {
 		// phpcs:enable
 
 		$trashed_events_query = $this->event_repository->get_trashed_events( $current_page, 10 );
-
+		$this->use_theme();
 		$this->tmpl(
 			'trashed-events',
 			array(
