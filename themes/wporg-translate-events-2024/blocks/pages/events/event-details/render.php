@@ -22,9 +22,9 @@ echo wp_json_encode(
 /-->
 
 <?php if ( current_user_can( 'edit_translation_event', $event->id() ) ) : ?>
-<a class="details-edit-event" href="<?php echo esc_url( Urls::event_edit( $event->id() ) ); ?>">
-	<span class="dashicons dashicons-edit"></span><?php echo esc_html__( 'Edit Event', 'wporg-translate-events-2024' ); ?>
-</a>
+	<div class="wp-block-button is-style-outline is-style-outline--13 details-edit-event">
+		<a class="wp-block-button__link wp-element-button" href="<?php echo esc_url( Urls::event_edit( $event->id() ) ); ?>"><?php echo esc_html__( 'Edit Event', 'wporg-translate-events-2024' ); ?></a>
+	</div>
 <?php endif; ?>
 
 <?php
@@ -32,7 +32,7 @@ if ( is_user_logged_in() ) :
 	if ( $event->is_past() ) :
 		?>
 		<!-- wp:wporg/notice {"type":"alert", "style":{"spacing":{"margin":{"top":"var:preset|spacing|20"}}}} -->
-		<div class="wp-block-wporg-notice is-alert-notice" style="margin-top:var(--wp--preset--spacing--20)">
+		<div class="wp-block-wporg-notice is-alert-notice" style="margin-top:var(--wp--preset--spacing--40)">
 			<div class="wp-block-wporg-notice__icon"></div>
 			<div class="wp-block-wporg-notice__content">
 				<p>

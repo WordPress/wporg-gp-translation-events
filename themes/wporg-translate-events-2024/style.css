@@ -212,11 +212,7 @@ span.user-remote-icon.dashicons-video-alt2 {
 	display: inline-block;
 }
 
-a.details-edit-event span.dashicons-edit {
-	vertical-align: text-bottom;
-}
-
-a.details-edit-event {
+div.details-edit-event {
 	float: right;
 	text-decoration: none;
 }
