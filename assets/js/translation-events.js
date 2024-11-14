@@ -21,6 +21,16 @@
 					}
 				);
 
+				$( '.trash-event-from-list' ).on(
+					'click',
+					function ( e ) {
+						e.preventDefault();
+						if ( confirm( 'Are you sure you want to delete this event?' ) ) {
+							window.location = $(this).attr('href');
+						}
+					}
+				);
+
 				$( '.trash-event' ).on(
 					'click',
 					function ( e ) {

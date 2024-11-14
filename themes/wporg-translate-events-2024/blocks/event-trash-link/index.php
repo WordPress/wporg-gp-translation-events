@@ -31,7 +31,7 @@ register_block_type(
 					</a>
 				<?php else : ?>
 					<a href="<?php echo esc_url( Urls::event_trash( $event->id() ) ); ?>"
-						class="event-list-item-button is-destructive"
+						class="event-list-item-button is-destructive trash-event-from-list"
 						title="<?php echo esc_attr__( 'Move to trash', 'gp-translation-events' ); ?>">
 						<span class="dashicons dashicons-trash"></span>
 					</a>
