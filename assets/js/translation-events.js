@@ -21,12 +21,15 @@
 					}
 				);
 
-				$( '.trash-event-from-list' ).on(
+				$( '.trash-event-from-list, #delete-permanently' ).on(
 					'click',
 					function ( e ) {
 						e.preventDefault();
-						if ( confirm( 'Are you sure you want to delete this event?' ) ) {
-							window.location = $(this).attr('href');
+						const permanent_delete_clause = 'delete-permanently' == $(this).attr('id') ? 'permanently' : '';
+						const confirmMessage = `Are you sure you want to ${permanent_delete_clause} delete this event?`;
+
+						if ( confirm( confirmMessage ) ) {
+							window.location = this.href;
 						}
 					}
 				);
