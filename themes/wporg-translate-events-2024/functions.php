@@ -178,18 +178,23 @@ function render_page( string $template_path, string $title, array $attributes ):
 	require $template_path;
 	$rendered_template = ob_get_clean();
 	$page_title        = esc_html( $title );
-	$page_content      = do_blocks(
+	$page_title_block  = ! empty( $page_title ) ? do_blocks( // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+		<<<BLOCKS
+		<!-- wp:group {"layout":{"type":"flex","flexWrap":"nowrap","justifyContent":"space-between"}} -->
+					<div class="wp-block-group page-upcoming-title-past-wrapper">
+						<!-- wp:heading --><h2 class="wp-block-heading">$page_title </h2><!-- /wp:heading -->
+					</div>
+				<!-- /wp:group -->
+		BLOCKS
+	) : '';
+
+	$page_content = do_blocks(
 		<<<BLOCKS
 		<!-- wp:group {"tagName":"main","style":{"spacing":{"blockGap":"0px"}},"className":"entry-content","layout":{"type":"constrained"}} -->
 		<main class="wp-block-group entry-content">
 			<!-- wp:group {"align":"wide","style":{"spacing":{"padding":{"top":"var:preset|spacing|20","left":"var:preset|spacing|edge-space","right":"var:preset|spacing|edge-space","bottom":"var:preset|spacing|50"}}},"layout":{"type":"default"}} -->
 			<div class="wp-block-group alignwide" style="padding-top:var(--wp--preset--spacing--20);padding-right:var(--wp--preset--spacing--edge-space);padding-bottom:var(--wp--preset--spacing--50);padding-left:var(--wp--preset--spacing--edge-space)">
-				<!-- wp:group {"layout":{"type":"flex","flexWrap":"nowrap","justifyContent":"space-between"}} -->
-				<div class="wp-block-group page-upcoming-title-past-wrapper">
-					<!-- wp:heading --><h2 class="wp-block-heading">$page_title</h2><!-- /wp:heading -->
-				</div>
-				<!-- /wp:group -->
-
+				$page_title_block
 				<!-- wp:group {"layout":{"type":"inherit","flexWrap":"nowrap","justifyContent":"space-between"}} -->
 				<div class="wp-block-group">$rendered_template</div>
 				<!-- /wp:group -->
