@@ -217,6 +217,11 @@ div.details-edit-event {
 	text-decoration: none;
 }
 
+.details-page-title {
+	grid-template-columns: 85% 15%;
+	align-items: center;
+}
+
 @media (min-width: 960px) {
 
 .wporg-marker-list__container .wporg-marker-list-item {

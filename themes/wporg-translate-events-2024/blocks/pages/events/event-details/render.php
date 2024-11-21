@@ -9,20 +9,21 @@ $user_is_contributor = $attributes['user_is_contributor'];
 
 ?>
 
-<div class="wp-block-columns is-layout-flex details-page-title">
-	<div class="wp-block-column" style="flex-basis:85%">
+<div class="wp-block-grid is-layout-grid details-page-title">
+	<div>
 		<h2 class="wp-block-heading"><?php echo esc_html( $event->title() ); ?></h2>
 	</div>
 	<?php if ( current_user_can( 'edit_translation_event', $event->id() ) ) : ?>
-		<div class="wp-block-column" style="flex-basis:15%">
-			<div class="wp-block-button is-style-outline is-style-outline--13 details-edit-event">
-				<div class="wp-block-button">
-					<a class="wp-block-button__link wp-element-button" href="<?php echo esc_url( Urls::event_edit( $event->id() ) ); ?>"><?php echo esc_html__( 'Edit Event', 'wporg-translate-events-2024' ); ?></a>
+		<div>
+			<div class="wp-block-buttons is-content-justification-end">
+				<div class="wp-block-button is-style-outline">
+					<a class="wp-block-button__link wp-element-button" href="<?php echo esc_url( Urls::event_edit( $event->id() ) ); ?>">
+						<?php echo esc_html__( 'Edit Event', 'wporg-translate-events-2024' ); ?>
+					</a>
 				</div>
 			</div>
 		</div>
 	<?php endif; ?>
-
 </div>
 
 <?php if ( ! $event->is_past() ) : ?>
