@@ -31,7 +31,7 @@ register_block_type(
 
 			render_page(
 				__DIR__ . '/render.php',
-				esc_html( $event->title() ),
+				'',
 				$attributes
 			);
 		},
