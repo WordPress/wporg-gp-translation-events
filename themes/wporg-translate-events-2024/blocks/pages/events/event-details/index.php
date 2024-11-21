@@ -28,10 +28,11 @@ register_block_type(
 				return '';
 			}
 			$attributes['event'] = $event;
+			$attributes['use_custom_page_title'] = true;
 
 			render_page(
 				__DIR__ . '/render.php',
-				'',
+				esc_html( $event->title() ),
 				$attributes
 			);
 		},

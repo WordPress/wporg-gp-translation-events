@@ -178,7 +178,7 @@ function render_page( string $template_path, string $title, array $attributes ):
 	require $template_path;
 	$rendered_template = ob_get_clean();
 	$page_title        = esc_html( $title );
-	$page_title_block  = ! empty( $page_title ) ? do_blocks( // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+	$page_title_block  = ( empty( $attributes['use_custom_page_title'] ) ) ? do_blocks( // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 		<<<BLOCKS
 		<!-- wp:group {"layout":{"type":"flex","flexWrap":"nowrap","justifyContent":"space-between"}} -->
 					<div class="wp-block-group page-upcoming-title-past-wrapper">
