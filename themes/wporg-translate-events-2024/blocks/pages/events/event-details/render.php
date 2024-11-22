@@ -26,7 +26,19 @@ $user_is_contributor = $attributes['user_is_contributor'];
 	<?php endif; ?>
 </div>
 
-<?php if ( ! $event->is_past() ) : ?>
+<?php if ( $event->is_past() ) : ?>
+	<!-- wp:wporg/notice {"type":"alert"} -->
+	<div class="wp-block-wporg-notice is-alert-notice">
+			<div class="wp-block-wporg-notice__icon"></div>
+			<div class="wp-block-wporg-notice__content">
+				<p>
+				<?php echo esc_html__( 'This event has ended.', 'wporg-translate-events-2024' ); ?>
+				</p>
+			</div>
+		</div>
+		<!-- /wp:wporg/notice -->
+
+<?php else : ?>
 <!-- wp:wporg-translate-events-2024/event-attend-button 
 	<?php
 	echo wp_json_encode(
@@ -38,24 +50,12 @@ $user_is_contributor = $attributes['user_is_contributor'];
 	);
 	?>
 
-/-->
+/-->	
 <?php endif; ?>
 
 <?php
 if ( is_user_logged_in() ) :
 	if ( $event->is_past() ) :
-		?>
-		<!-- wp:wporg/notice {"type":"alert"} -->
-		<div class="wp-block-wporg-notice is-alert-notice">
-			<div class="wp-block-wporg-notice__icon"></div>
-			<div class="wp-block-wporg-notice__content">
-				<p>
-				<?php echo esc_html__( 'This event has ended.', 'wporg-translate-events-2024' ); ?>
-				</p>
-			</div>
-		</div>
-		<!-- /wp:wporg/notice -->
-		<?php
 		if ( $user_is_attending ) :
 			?>
 			<!-- wp:wporg/notice {"type":"info", "style":{"spacing":{"margin":{"top":"var:preset|spacing|20"}}}} -->
