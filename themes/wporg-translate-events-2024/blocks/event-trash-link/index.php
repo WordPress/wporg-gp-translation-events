@@ -25,9 +25,9 @@ register_block_type(
 			if ( $event->is_trashed() ) :
 				?>
 					<a href="<?php echo esc_url( Urls::event_trash( $event->id() ) ); ?>"
-						class="small-btn"
-						title="<?php echo esc_attr__( 'Restore', 'gp-translation-events' ); ?>">
-						<?php echo esc_attr__( 'Restore', 'gp-translation-events' ); ?>
+						title="<?php echo esc_attr__( 'Restore', 'gp-translation-events' ); ?>"
+						class="no-text-decoration">
+						<span class="gp-events-icon gp-events-icon-restore" aria-hidden="true"></span>
 					</a>
 				<?php else : ?>
 					<a href="<?php echo esc_url( Urls::event_trash( $event->id() ) ); ?>"

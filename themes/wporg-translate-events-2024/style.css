@@ -212,6 +212,7 @@ span.user-remote-icon.dashicons-video-alt2 {
 	color: var(--wp--preset--color--vivid-red);
 
 }
+
 .small-btn {
 	padding: 3px 12px;
 	font-size: 12px;
@@ -225,6 +226,10 @@ span.user-remote-icon.dashicons-video-alt2 {
 	border: 2px solid currentColor;
 	font-weight: bold;
 
+}
+
+.no-text-decoration {
+	text-decoration: none;
 }
 
 .gp-events-icon {
