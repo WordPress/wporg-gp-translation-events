@@ -212,14 +212,16 @@ span.user-remote-icon.dashicons-video-alt2 {
 	display: inline-block;
 }
 
-div.details-edit-event {
+div.details-edit-event-btn {
 	float: right;
 	text-decoration: none;
 }
 
 .details-page-title {
 	grid-template-columns: 85% 15%;
-	align-items: center;
+	gap: 0;
+	align-items: baseline;
+
 }
 .details-page-title h2.wp-block-heading {
 	margin-bottom: 10px;
