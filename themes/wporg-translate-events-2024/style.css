@@ -221,7 +221,9 @@ div.details-edit-event {
 	grid-template-columns: 85% 15%;
 	align-items: center;
 }
-
+.details-page-title h2.wp-block-heading {
+	margin-bottom: 10px;
+}
 @media (min-width: 960px) {
 
 .wporg-marker-list__container .wporg-marker-list-item {
