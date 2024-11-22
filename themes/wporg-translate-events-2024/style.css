@@ -226,13 +226,25 @@ span.user-remote-icon.dashicons-video-alt2 {
 	font-weight: bold;
 
 }
- @media (min-width: 960px) {
 
-.wporg-marker-list__container .wporg-marker-list-item {
-	display: grid;
-	align-items: start;
-	gap: var(--wp--preset--spacing--20);
-	grid-template-columns: 45% 1fr 2fr;
+.delete-permanently-icon {
+    -webkit-mask: url(assets/icons/delete-permanently.svg) no-repeat center;
+    mask: url(assets/icons/delete-permanently.svg) no-repeat center;
+    -webkit-mask-size: contain;
+    mask-size: contain;
+    background-color: var(--wp--preset--color--vivid-red);  /* Set your desired color here */
+    display: inline-block;
+    width: 20px;
+    height: 20px;
+    vertical-align: middle;
+}
+
+ @media (min-width: 960px) {
+	.wporg-marker-list__container .wporg-marker-list-item {
+		display: grid;
+		align-items: start;
+		gap: var(--wp--preset--spacing--20);
+		grid-template-columns: 45% 1fr 2fr;
 	}
 }
 

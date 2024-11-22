@@ -22,11 +22,12 @@ register_block_type(
 				return '';
 			}
 			?>
+
 				<a href="<?php echo esc_url( Urls::event_delete( $event->id() ) ); ?>"
-					class="small-btn is-destructive"
+					class="is-destructive"
 					id="delete-permanently"
 					title="<?php echo esc_attr__( 'Delete permanently', 'gp-translation-events' ); ?>">
-					<?php echo esc_attr__( 'Delete permanently', 'gp-translation-events' ); ?>
+					<span class="delete-permanently-icon" aria-hidden="true"></span>
 				</a>
 					<?php
 					return ob_get_clean();
