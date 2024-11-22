@@ -227,16 +227,29 @@ span.user-remote-icon.dashicons-video-alt2 {
 
 }
 
-.delete-permanently-icon {
-    -webkit-mask: url(assets/icons/delete-permanently.svg) no-repeat center;
-    mask: url(assets/icons/delete-permanently.svg) no-repeat center;
-    -webkit-mask-size: contain;
-    mask-size: contain;
-    background-color: var(--wp--preset--color--vivid-red);  /* Set your desired color here */
+.gp-events-icon {
     display: inline-block;
     width: 20px;
     height: 20px;
     vertical-align: middle;
+    -webkit-mask-size: contain;
+    mask-size: contain;
+    -webkit-mask-repeat: no-repeat;
+    mask-repeat: no-repeat;
+    -webkit-mask-position: center;
+    mask-position: center;
+}
+
+.gp-events-icon-delete-permanently {
+    -webkit-mask-image: url(assets/icons/delete-permanently.svg);
+    mask-image: url(assets/icons/delete-permanently.svg);
+    background-color: var(--wp--preset--color--vivid-red);
+}
+
+.gp-events-icon-restore {
+    -webkit-mask-image: url(assets/icons/restore.svg);
+    mask-image: url(assets/icons/restore.svg);
+	background-color: var(--wp--preset--color--vivid-green-cyan);
 }
 
  @media (min-width: 960px) {
