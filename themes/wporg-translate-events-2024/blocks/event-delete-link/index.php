@@ -27,7 +27,7 @@ register_block_type(
 					class="is-destructive"
 					id="delete-permanently"
 					title="<?php echo esc_attr__( 'Delete permanently', 'gp-translation-events' ); ?>">
-					<span class="delete-permanently-icon" aria-hidden="true"></span>
+					<span class="gp-events-icon gp-events-icon-delete-permanently" aria-hidden="true"></span>
 				</a>
 					<?php
 					return ob_get_clean();
