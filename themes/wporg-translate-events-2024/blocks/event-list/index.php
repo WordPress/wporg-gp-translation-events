@@ -33,12 +33,20 @@ register_block_type(
 								<?php
 							endif;
 							?>
-						<!-- wp:wporg-translate-events-2024/event-edit-link /-->
-						<!-- wp:wporg-translate-events-2024/event-trash-link /-->
-						<!-- wp:wporg-translate-events-2024/event-delete-link /-->
 						</div>
 						<!-- wp:wporg-translate-events-2024/event-attendance-mode /-->
 						<!-- wp:wporg-translate-events-2024/event-start /-->
+					<?php
+					if ( current_user_can( 'edit_translation_event', $event_id ) ) :
+						?>
+						<div class="gp-events-admin-links">
+							<!-- wp:wporg-translate-events-2024/event-edit-link /-->
+							<!-- wp:wporg-translate-events-2024/event-trash-link /-->
+							<!-- wp:wporg-translate-events-2024/event-delete-link /-->
+						</div>
+						<?php
+						endif;
+					?>
 						<!-- /wp:wporg-translate-events-2024/event-template -->
 					</li>
 					<?php

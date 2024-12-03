@@ -257,12 +257,16 @@ span.user-remote-icon.dashicons-video-alt2 {
 	background-color: var(--wp--preset--color--vivid-green-cyan);
 }
 
+.gp-events-admin-links {
+	text-align: right;
+}
+
  @media (min-width: 960px) {
 	.wporg-marker-list__container .wporg-marker-list-item {
 		display: grid;
 		align-items: start;
 		gap: var(--wp--preset--spacing--20);
-		grid-template-columns: 45% 1fr 2fr;
+		grid-template-columns: 45% 1fr 1fr 1fr;
 	}
 }
 
@@ -274,7 +278,7 @@ span.user-remote-icon.dashicons-video-alt2 {
 
 @media (min-width: 1280px) {
 	.wporg-marker-list__container .wporg-marker-list-item {
-		grid-template-columns: 60% 1fr 1fr;
+		grid-template-columns: 60% repeat(auto-fit, minmax(0, 1fr));
 	}
 }
 
