@@ -30,8 +30,8 @@ class Event_Form_Handler_Test extends Base_Test {
 	public function test_user_is_not_logged_in() {
 		wp_set_current_user( 0 );
 		$form_data = $this->event_form_handler_factory->future_inactive_event_form_data( 'create_event', $this->now );
-		$response  = $this->event_form_handler->handle( $form_data );
+		$response  = $this->event_form_handler->process_form( $form_data );
 
-		$this->assertEquals( '{"success":false,"data":"The user must be logged in."}', $response );
+		$this->assertEquals( 'The user must be logged in.', $response->get_error_message() );
 	}
 }
