@@ -26,6 +26,5 @@ class Event_Form_Handler_Factory {
 			'event_timezone'        => $timezone,
 			'event_attendance_mode' => $event_attendance_mode,
 		);
-
 	}
 }
