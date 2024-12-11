@@ -36,7 +36,7 @@ class Event_Form_Handler {
 
 		$action = isset( $form_data['form_name'] ) ? sanitize_text_field( wp_unslash( $form_data['form_name'] ) ) : '';
 		if ( ! in_array( $action, array( 'create_event', 'edit_event', 'trash_event' ), true ) ) {
-			return new WP_Error( '', esc_html__( 'Invalid form name.', 'gp-translation-events' ), array( 'status' => 403 ) );
+			return new WP_Error( 'form_name_error', esc_html__( 'Invalid form name.', 'gp-translation-events' ), array( 'status' => 403 ) );
 		}
 
 		$event_id = isset( $form_data['event_id'] ) ? intval( sanitize_text_field( wp_unslash( $form_data['event_id'] ) ) ) : 0;
