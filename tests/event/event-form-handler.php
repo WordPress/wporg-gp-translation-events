@@ -20,6 +20,7 @@ class Event_Form_Handler_Test extends Base_Test {
 		$this->event_repository           = new Event_Repository( $this->now, $this->attendee_repository );
 		$this->event_form_handler         = new Event_Form_Handler( $this->now, $this->event_repository );
 		$this->event_form_handler_factory = new Event_Form_Handler_Factory();
+		$this->set_normal_user_as_current();
 	}
 
 	/**
@@ -33,5 +34,12 @@ class Event_Form_Handler_Test extends Base_Test {
 		$response  = $this->event_form_handler->process_form( $form_data );
 
 		$this->assertEquals( 'The user must be logged in.', $response->get_error_message() );
+	}
+
+	public function test_form_name_is_invalid() {
+		$form_data = $this->event_form_handler_factory->future_inactive_event_form_data( 'invalid_form_name', $this->now );
+		$response  = $this->event_form_handler->process_form( $form_data );
+
+		$this->assertEquals( 'Invalid form name.', $response->get_error_message() );
 	}
 }
