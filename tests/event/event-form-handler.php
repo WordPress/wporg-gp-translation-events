@@ -42,4 +42,20 @@ class Event_Form_Handler_Test extends Base_Test {
 
 		$this->assertEquals( 'Invalid form name.', $response->get_error_message() );
 	}
+
+	public function test_invalid_permissions() {
+
+		$form_data = $this->event_form_handler_factory->future_inactive_event_form_data( 'create_event', $this->now );
+		$response  = $this->event_form_handler->process_form( $form_data );
+		$this->assertEquals( 'You do not have permissions to create events.', $response->get_error_message() );
+
+		$form_data = $this->event_form_handler_factory->future_inactive_event_form_data( 'edit_event', $this->now );
+		$response  = $this->event_form_handler->process_form( $form_data );
+		$this->assertEquals( 'You do not have permissions to edit this event.', $response->get_error_message() );
+
+		$form_data = $this->event_form_handler_factory->future_inactive_event_form_data( 'trash_event', $this->now );
+		$response  = $this->event_form_handler->process_form( $form_data );
+		$this->assertEquals( 'You do not have permissions to delete this event.', $response->get_error_message() );
+	}
 }
+
