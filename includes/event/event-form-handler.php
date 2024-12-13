@@ -43,13 +43,13 @@ class Event_Form_Handler {
 		$event    = null;
 
 		if ( 'create_event' === $action && ( ! current_user_can( 'create_translation_event' ) ) ) {
-			return new WP_Error( '', esc_html__( 'You do not have permissions to create events.', 'gp-translation-events' ), array( 'status' => 403 ) );
+			return new WP_Error( 'permission_error', esc_html__( 'You do not have permissions to create events.', 'gp-translation-events' ), array( 'status' => 403 ) );
 		}
 		if ( 'edit_event' === $action && ( ! current_user_can( 'edit_translation_event', $event_id ) ) ) {
-			return new WP_Error( '', esc_html__( 'You do not have permissions to edit this event.', 'gp-translation-events' ), array( 'status' => 403 ) );
+			return new WP_Error( 'permission_error', esc_html__( 'You do not have permissions to edit this event.', 'gp-translation-events' ), array( 'status' => 403 ) );
 		}
 		if ( 'trash_event' === $action && ( ! current_user_can( 'trash_translation_event', $event_id ) ) ) {
-			return new WP_Error( '', esc_html__( 'You do not have permissions to delete this event.', 'gp-translation-events' ), array( 'status' => 403 ) );
+			return new WP_Error( 'permission_error', esc_html__( 'You do not have permissions to delete this event.', 'gp-translation-events' ), array( 'status' => 403 ) );
 		}
 
 		$is_nonce_valid = false;
@@ -61,7 +61,7 @@ class Event_Form_Handler {
 			}
 		}
 		if ( ! $is_nonce_valid ) {
-			return new WP_Error( '', esc_html__( 'Nonce verification failed.', 'gp-translation-events' ), array( 'status' => 403 ) );
+			return new WP_Error( 'invalid_nonce', esc_html__( 'Nonce verification failed.', 'gp-translation-events' ), array( 'status' => 403 ) );
 		}
 
 		$response_message = '';
@@ -72,17 +72,17 @@ class Event_Form_Handler {
 		if ( 'trash_event' === $action ) {
 			// Trash event.
 			if ( ! $event ) {
-				return new WP_Error( '', esc_html__( 'Event does not exist.', 'gp-translation-events' ), array( 'status' => 404 ) );
+				return new WP_Error( 'inexistent_event', esc_html__( 'Event does not exist.', 'gp-translation-events' ), array( 'status' => 404 ) );
 			}
 
 			$stats_calculator = new Stats_Calculator();
 			try {
 				$event_stats = $stats_calculator->for_event( $event->id() );
 			} catch ( Exception $e ) {
-				return new WP_Error( '', esc_html__( 'Failed to calculate event stats.', 'gp-translation-events' ), array( 'status' => 500 ) );
+				return new WP_Error( 'stats_calculation_error', esc_html__( 'Failed to calculate event stats.', 'gp-translation-events' ), array( 'status' => 500 ) );
 			}
 			if ( ! empty( $event_stats->rows() ) ) {
-				return new WP_Error( '', esc_html__( 'Event has stats so it cannot be deleted.', 'gp-translation-events' ), array( 'status' => 422 ) );
+				return new WP_Error( 'cannot_delete_event', esc_html__( 'Event has stats so it cannot be deleted.', 'gp-translation-events' ), array( 'status' => 422 ) );
 			}
 
 			if ( false === $this->event_repository->trash_event( $event ) ) {
@@ -99,29 +99,29 @@ class Event_Form_Handler {
 			try {
 				$new_event = $this->parse_form_data( $form_data );
 			} catch ( InvalidTimeZone $e ) {
-				return new WP_Error( '', esc_html__( 'Invalid time zone.', 'gp-translation-events' ), array( 'status' => 422 ) );
+				return new WP_Error( 'invalid_timezone', esc_html__( 'Invalid time zone.', 'gp-translation-events' ), array( 'status' => 422 ) );
 			} catch ( InvalidStart $e ) {
-				return new WP_Error( '', esc_html__( 'Invalid start date.', 'gp-translation-events' ), array( 'status' => 422 ) );
+				return new WP_Error( 'invalid_start_date', esc_html__( 'Invalid start date.', 'gp-translation-events' ), array( 'status' => 422 ) );
 			} catch ( InvalidEnd $e ) {
-				return new WP_Error( '', esc_html__( 'Invalid end date.', 'gp-translation-events' ), array( 'status' => 422 ) );
+				return new WP_Error( 'invalid_end_date', esc_html__( 'Invalid end date.', 'gp-translation-events' ), array( 'status' => 422 ) );
 			} catch ( InvalidStatus $e ) {
-				return new WP_Error( '', esc_html__( 'Invalid status.', 'gp-translation-events' ), array( 'status' => 422 ) );
+				return new WP_Error( 'invalid_status', esc_html__( 'Invalid status.', 'gp-translation-events' ), array( 'status' => 422 ) );
 			}
 
 			if ( empty( $new_event->title() ) ) {
-				return new WP_Error( '', esc_html__( 'Invalid title.', 'gp-translation-events' ), array( 'status' => 422 ) );
+				return new WP_Error( 'invalid_title', esc_html__( 'Invalid title.', 'gp-translation-events' ), array( 'status' => 422 ) );
 			}
 
 			// This is a list of slugs that are not allowed, as they conflict with the event URLs.
 			$invalid_slugs = array( 'new', 'edit', 'attend', 'my-events' );
 			if ( in_array( sanitize_title( $new_event->title() ), $invalid_slugs, true ) ) {
-				return new WP_Error( '', esc_html__( 'Invalid slug.', 'gp-translation-events' ), array( 'status' => 422 ) );
+				return new WP_Error( 'invalid_slug', esc_html__( 'Invalid slug.', 'gp-translation-events' ), array( 'status' => 422 ) );
 			}
 
 			if ( 'create_event' === $action ) {
 				$result = $this->event_repository->insert_event( $new_event );
 				if ( $result instanceof WP_Error ) {
-					return new WP_Error( '', esc_html__( 'Failed to create event.', 'gp-translation-events' ), array( 'status' => 422 ) );
+					return new WP_Error( 'cannot_create_event', esc_html__( 'Failed to create event.', 'gp-translation-events' ), array( 'status' => 422 ) );
 
 				}
 				$response_message = esc_html__( 'Event created successfully.', 'gp-translation-events' );
@@ -130,7 +130,7 @@ class Event_Form_Handler {
 			if ( 'edit_event' === $action ) {
 				$event = $this->event_repository->get_event( $new_event->id() );
 				if ( ! $event ) {
-					return new WP_Error( '', esc_html__( 'Event does not exist.', 'gp-translation-events' ), array( 'status' => 404 ) );
+					return new WP_Error( 'inexistent_event', esc_html__( 'Event does not exist.', 'gp-translation-events' ), array( 'status' => 404 ) );
 				}
 
 				try {
@@ -157,13 +157,13 @@ class Event_Form_Handler {
 						$event->set_attendance_mode( $new_event->attendance_mode() );
 					}
 				} catch ( Exception $e ) {
-					return new WP_Error( '', esc_html__( 'Failed to update event.', 'gp-translation-events' ), array( 'status' => 422 ) );
+					return new WP_Error( 'cannot_update_event', esc_html__( 'Failed to update event.', 'gp-translation-events' ), array( 'status' => 422 ) );
 
 				}
 
 				$result = $this->event_repository->update_event( $event );
 				if ( $result instanceof WP_Error ) {
-					return new WP_Error( '', esc_html__( 'Failed to update event.', 'gp-translation-events' ), array( 'status' => 422 ) );
+					return new WP_Error( 'cannot_update_event', esc_html__( 'Failed to update event.', 'gp-translation-events' ), array( 'status' => 422 ) );
 
 				}
 				$response_message = esc_html__( 'Event updated successfully', 'gp-translation-events' );
