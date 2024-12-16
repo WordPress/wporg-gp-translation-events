@@ -56,4 +56,13 @@ class Event_Form_Handler_Test extends Base_Test {
 		$response_3  = $this->event_form_handler->process_form( $form_data_3 );
 		$this->assertEquals( 'You do not have permissions to delete this event.', $response_3->get_error_message() );
 	}
+
+	public function test_invalid_nonce() {
+		add_filter( 'gp_translation_events_can_crud_event', '__return_true' );
+		$form_data                 = $this->event_form_handler_factory->future_inactive_event_form_data( 'create_event', $this->now );
+		$form_data['_event_nonce'] = wp_create_nonce( 'invalid_nonce' );
+		$response                  = $this->event_form_handler->process_form( $form_data );
+
+		$this->assertEquals( 'Nonce verification failed.', $response->get_error_message() );
+	}
 }
