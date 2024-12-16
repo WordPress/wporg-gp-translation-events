@@ -8,7 +8,7 @@ use DateTimeZone;
 class Event_Form_Handler_Factory {
 
 	public function future_inactive_event_form_data( $form_name, DateTimeImmutable $now, $event_id = 0 ): array {
-		$timezone              = new DateTimeZone( 'Europe/Lisbon' );
+		$timezone              = 'Europe/Lisbon';
 		$event_title           = 'Foo title';
 		$event_description     = 'Foo description';
 		$event_attendance_mode = 'hybrid';
