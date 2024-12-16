@@ -63,6 +63,7 @@ class Event_Form_Handler_Test extends Base_Test {
 		$form_data['_event_nonce'] = wp_create_nonce( 'invalid_nonce' );
 		$response                  = $this->event_form_handler->process_form( $form_data );
 
+		$this->assertArrayHasKey( 'invalid_nonce', $response->error_data );
 		$this->assertEquals( 'Nonce verification failed.', $response->get_error_message() );
 	}
 }
