@@ -13,6 +13,7 @@ class Event_Form_Handler_Factory {
 		$event_description     = 'Foo description';
 		$event_attendance_mode = 'hybrid';
 		$_event_id             = isset( $event_id ) ? $event_id : 0;
+		$event_nonce           = wp_create_nonce( '_event_nonce' );
 
 		return array(
 			'action'                => 'submit_event_ajax',
@@ -25,6 +26,7 @@ class Event_Form_Handler_Factory {
 			'event_end'             => $now->modify( '+2 month' )->format( 'Y-m-d H:i:s' ),
 			'event_timezone'        => $timezone,
 			'event_attendance_mode' => $event_attendance_mode,
+			'_event_nonce'          => $event_nonce,
 		);
 	}
 }
