@@ -174,7 +174,7 @@ class Event_Form_Handler {
 			$event_status = $new_event->status();
 		}
 
-		wp_send_json_success(
+		return(
 			array(
 				'message'       => $response_message,
 				'eventId'       => $event_id,
