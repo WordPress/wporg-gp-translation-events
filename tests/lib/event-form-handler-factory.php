@@ -21,8 +21,8 @@ class Event_Form_Handler_Factory {
 			'event_form_action'     => 'publish',
 			'event_title'           => $event_title,
 			'event_description'     => $event_description,
-			'event_start'           => $now->modify( '+1 month' ),
-			'event_end'             => $now->modify( '+2 month' ),
+			'event_start'           => $now->modify( '+1 month' )->format( 'Y-m-d H:i:s' ),
+			'event_end'             => $now->modify( '+2 month' )->format( 'Y-m-d H:i:s' ),
 			'event_timezone'        => $timezone,
 			'event_attendance_mode' => $event_attendance_mode,
 		);
