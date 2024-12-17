@@ -44,7 +44,7 @@ class Event_Form_Handler_Test extends Base_Test {
 	}
 
 	public function test_invalid_permissions() {
-		$event_id = 9999;
+		$event_id    = 9999;
 		$form_data_1 = $this->event_form_handler_factory->future_inactive_event_form_data( 'create_event', $this->now );
 		$response_1  = $this->event_form_handler->process_form( $form_data_1 );
 		$this->assertEquals( 'You do not have permissions to create events.', $response_1->get_error_message() );
@@ -67,4 +67,37 @@ class Event_Form_Handler_Test extends Base_Test {
 		$this->assertArrayHasKey( 'invalid_nonce', $response->error_data );
 		$this->assertEquals( 'Nonce verification failed.', $response->get_error_message() );
 	}
+
+	/**
+	 * @dataProvider emptyFormDataProvider
+	 */
+	public function test_empty_form_fields( $action, $field, $error_key ) {
+		add_filter( 'gp_translation_events_can_crud_event', '__return_true' );
+		$form_data           = $this->event_form_handler_factory->future_inactive_event_form_data( $action, $this->now );
+		$form_data[ $field ] = '';
+		$response            = $this->event_form_handler->process_form( $form_data );
+
+		$this->assertArrayHasKey( $error_key, $response->error_data );
+	}
+
+	/**
+	 * Data provider for invalid form data test cases.
+	 */
+	public function emptyFormDataProvider() {
+		return array(
+			array( 'create_event', 'event_title', 'invalid_title' ),
+			array( 'create_event', 'event_description', 'invalid_title' ),
+			array( 'create_event', 'event_start', 'invalid_start_date' ),
+			array( 'create_event', 'event_end', 'invalid_end_date' ),
+			array( 'create_event', 'event_timezone', 'invalid_timezone' ),
+			array( 'create_event', 'event_attendance_mode', 'invalid event_attendance_mode' ),
+			array( 'edit_event', 'event_title', 'invalid_title' ),
+			array( 'edit_event', 'event_description', 'invalid_title' ),
+			array( 'edit_event', 'event_start', 'invalid_start_date' ),
+			array( 'edit_event', 'event_end', 'invalid_end_date' ),
+			array( 'edit_event', 'event_timezone', 'invalid_timezone' ),
+			array( 'edit_event', 'event_attendance_mode', 'invalid event_attendance_mode' ),
+		);
+	}
+
 }
