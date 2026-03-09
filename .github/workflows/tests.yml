@@ -9,28 +9,19 @@ jobs:
     name: PHPUnit ${{ matrix.php }}
     runs-on: ubuntu-latest
 
-    services:
-      mysql:
-        image: mysql:5.7
-        ports:
-          - 3306/tcp
-        env:
-          MYSQL_ROOT_PASSWORD: password
-        # Set health checks to wait until mysql has started
-        options: >-
-          --health-cmd "mysqladmin ping"
-          --health-interval 10s
-          --health-timeout 5s
-          --health-retries 3
-
     strategy:
       fail-fast: false
       matrix:
-        php: [ '7.4', '8.3' ]
+        php: [ '8.4', '8.5' ]
 
     steps:
       - name: Check out Git repository
         uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
 
       - name: Setup PHP
         uses: shivammathur/setup-php@v2
@@ -39,18 +30,19 @@ jobs:
           coverage: 'none'
           tools: composer
 
-      - name: Install dependencies
+      - name: Install Composer dependencies
         uses: ramsey/composer-install@v2
         with:
           composer-options: "--no-progress --no-ansi --no-interaction"
 
-      - name: Install WordPress test setup
-        run: bash bin/install-wp-tests.sh wordpress_test root password 127.0.0.1:${{ job.services.mysql.ports[3306] }} latest
+      - name: Install wp-env
+        run: npm -g install @wordpress/env
 
-      - name: Setup problem matchers for PHPUnit
-        run: echo "::add-matcher::${{ runner.tool_cache }}/phpunit.json"
+      - name: Override PHP version
+        run: echo '{ "phpVersion":"${{ matrix.php }}" }' > .wp-env.override.json
+
+      - name: Start wp-env
+        run: wp-env start
 
       - name: Run tests
-        env:
-          WP_TESTS_DIR: /tmp/wordpress-tests-lib/
-        run: vendor/bin/phpunit
+        run: wp-env run tests-cli --env-cwd=wp-content/plugins/wporg-gp-translation-events ./vendor/bin/phpunit
