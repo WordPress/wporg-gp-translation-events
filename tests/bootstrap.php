@@ -8,12 +8,17 @@ if ( ! $_tests_dir ) {
 }
 
 function _glotpress_path( string $path ): string {
-	$glotpress_path = dirname( __DIR__, 2 ) . '/glotpress/';
-	if ( getenv( 'GITHUB_ACTIONS' ) ) {
-		$glotpress_path = '/tmp/wordpress/wp-content/plugins/glotpress/';
+	$plugins_dir = dirname( __DIR__, 2 );
+
+	// GlotPress may be installed as 'glotpress' or 'GlotPress' depending on the environment.
+	foreach ( array( 'glotpress', 'GlotPress' ) as $dir_name ) {
+		if ( is_dir( $plugins_dir . '/' . $dir_name ) ) {
+			return $plugins_dir . '/' . $dir_name . '/' . $path;
+		}
 	}
 
-	return $glotpress_path . $path;
+	// Fallback to lowercase.
+	return $plugins_dir . '/glotpress/' . $path;
 }
 
 // Forward custom PHPUnit Polyfills configuration to PHPUnit bootstrap file.
