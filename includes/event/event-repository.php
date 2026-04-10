@@ -509,7 +509,7 @@ class Event_Repository {
 		int $page_size,
 		array $args,
 		array $filter_by_ids = array(),
-		int $user_id = null,
+		?int $user_id = null,
 		bool $include_created_by_user = false
 	): Events_Query_Result {
 		$this->assert_pagination_arguments( $page, $page_size );
