@@ -27,6 +27,11 @@ class Trash_Route extends Route {
 			exit;
 		}
 
+		$nonce_action = 'trash_translation_event_' . $event_id;
+		if ( ! isset( $_GET['_wpnonce'] ) || ! wp_verify_nonce( sanitize_text_field( wp_unslash( $_GET['_wpnonce'] ) ), $nonce_action ) ) {
+			$this->die_with_error( esc_html__( 'Your link has expired or is invalid. Please go back and try again.', 'gp-translation-events' ), 403 );
+		}
+
 		$event = $this->event_repository->get_event( $event_id );
 		if ( ! $event ) {
 			$this->die_with_404();

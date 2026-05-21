@@ -41,6 +41,11 @@ class Attendance_Mode_Route extends Route {
 			$this->die_with_error( esc_html__( 'Only logged-in users can manage the attendance mode of an attendee', 'gp-translation-events' ), 403 );
 		}
 
+		$nonce_action = "toggle_translation_event_attendance_mode_{$event_id}_{$user_id}";
+		if ( ! isset( $_GET['_wpnonce'] ) || ! wp_verify_nonce( sanitize_text_field( wp_unslash( $_GET['_wpnonce'] ) ), $nonce_action ) ) {
+			$this->die_with_error( esc_html__( 'Your link has expired or is invalid. Please go back and try again.', 'gp-translation-events' ), 403 );
+		}
+
 		if ( ! current_user_can( 'edit_translation_event', $event_id ) ) {
 			$this->die_with_error( esc_html__( 'You do not have permissions to manage the attendance mode of an attendee', 'gp-translation-events' ), 403 );
 		}
