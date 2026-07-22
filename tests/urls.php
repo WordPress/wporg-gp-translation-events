@@ -71,14 +71,20 @@ class Urls_Test extends Base_Test {
 
 	public function test_event_trash() {
 		$event_id = 42;
-		$expected = "/glotpress/events/trash/$event_id";
-		$this->assertEquals( $expected, Urls::event_trash( $event_id ) );
+		$url      = Urls::event_trash( $event_id );
+		$this->assertStringStartsWith( "/glotpress/events/trash/$event_id?_wpnonce=", $url );
+		$nonce = wp_parse_url( $url, PHP_URL_QUERY );
+		parse_str( $nonce, $query );
+		$this->assertNotFalse( wp_verify_nonce( $query['_wpnonce'], 'trash_translation_event_' . $event_id ) );
 	}
 
 	public function test_event_delete() {
 		$event_id = 42;
-		$expected = "/glotpress/events/delete/$event_id";
-		$this->assertEquals( $expected, Urls::event_delete( $event_id ) );
+		$url      = Urls::event_delete( $event_id );
+		$this->assertStringStartsWith( "/glotpress/events/delete/$event_id?_wpnonce=", $url );
+		$nonce = wp_parse_url( $url, PHP_URL_QUERY );
+		parse_str( $nonce, $query );
+		$this->assertNotFalse( wp_verify_nonce( $query['_wpnonce'], 'delete_translation_event_' . $event_id ) );
 	}
 
 	public function test_event_toggle_attendee() {
