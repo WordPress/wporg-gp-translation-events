@@ -36,7 +36,8 @@ class Remove_Attendee_Route extends Route {
 		global $wp;
 		if ( ! is_user_logged_in() ) {
 			wp_safe_redirect( wp_login_url( home_url( $wp->request ) ) );
-			exit;
+			$this->exit_();
+			return; // exit_() doesn't exit under GP_Route::$fake_request.
 		}
 
 		$nonce_action = "remove_translation_event_attendee_{$event_id}_{$user_id}";
@@ -65,6 +66,6 @@ class Remove_Attendee_Route extends Route {
 		}
 
 		wp_safe_redirect( Urls::event_attendees( $event->id() ) );
-		exit;
+		$this->exit_();
 	}
 }

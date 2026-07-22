@@ -24,7 +24,8 @@ class Trash_Route extends Route {
 		if ( ! is_user_logged_in() ) {
 			global $wp;
 			wp_safe_redirect( wp_login_url( home_url( $wp->request ) ) );
-			exit;
+			$this->exit_();
+			return; // exit_() doesn't exit under GP_Route::$fake_request.
 		}
 
 		$nonce_action = 'trash_translation_event_' . $event_id;
@@ -55,6 +56,6 @@ class Trash_Route extends Route {
 			wp_safe_redirect( Urls::event_edit( $event->id() ) );
 		}
 
-		exit;
+		$this->exit_();
 	}
 }
