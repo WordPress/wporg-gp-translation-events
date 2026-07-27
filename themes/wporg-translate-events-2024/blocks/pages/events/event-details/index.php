@@ -11,7 +11,7 @@ register_block_type(
 			$event = Translation_Events::get_event_repository()->get_event( $event_id );
 			add_filter(
 				'wporg_block_site_breadcrumbs',
-				function ( $breadcrumbs ) use( $event ): array {
+				function ( $breadcrumbs ) use ( $event ): array {
 					return array_merge(
 						$breadcrumbs,
 						array(
