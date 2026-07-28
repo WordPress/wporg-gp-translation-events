@@ -121,6 +121,9 @@ class Nonce_Guards_Test extends Base_Test {
 
 		$event_id = ( new Event_Factory() )->create_active( $this->now );
 
+		if ( Delete_Route::class === $route_class ) {
+			wp_trash_post( $event_id );
+		}
 		unset( $_GET[ $field ], $_POST[ $field ] );
 		if ( null !== $nonce ) {
 			if ( 'GET' === $method ) {
