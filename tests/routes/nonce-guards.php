@@ -68,7 +68,7 @@ class Nonce_Guards_Test extends Base_Test {
 	 *
 	 * @return array
 	 */
-	public function guarded_routes(): array {
+	public static function guarded_routes(): array {
 		return array(
 			'trash'           => array( Trash_Route::class, '_wpnonce', 'GET', false ),
 			'delete'          => array( Delete_Route::class, '_wpnonce', 'GET', false ),
