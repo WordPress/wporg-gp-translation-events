@@ -53,8 +53,8 @@ class Event_Repository {
 			array(
 				'post_type'    => self::POST_TYPE,
 				'post_name'    => $event->slug(),
-				'post_title'   => $event->title(),
-				'post_content' => $event->description(),
+				'post_title'   => wp_slash( $event->title() ),
+				'post_content' => wp_slash( $event->description() ),
 				'post_status'  => $event->status(),
 				'post_parent'  => $post_parent,
 			)
@@ -77,8 +77,8 @@ class Event_Repository {
 			array(
 				'ID'           => $event->id(),
 				'post_name'    => $event->slug(),
-				'post_title'   => $event->title(),
-				'post_content' => $event->description(),
+				'post_title'   => wp_slash( $event->title() ),
+				'post_content' => wp_slash( $event->description() ),
 				'post_status'  => $event->status(),
 				'post_parent'  => $post_parent,
 			)
@@ -622,11 +622,16 @@ class Event_Repository {
 			return null;
 		}
 
+		$attendance_mode = $meta['_event_attendance_mode'][0] ?? 'onsite';
+		if ( ! in_array( $attendance_mode, Event::ATTENDANCE_MODES, true ) ) {
+			$attendance_mode = 'onsite'; // Stored before the model validated it.
+		}
+
 		return array(
 			'start'           => new Event_Start_Date( $meta['_event_start'][0], $utc ),
 			'end'             => new Event_End_Date( $meta['_event_end'][0], $utc ),
 			'timezone'        => new DateTimeZone( $meta['_event_timezone'][0] ),
-			'attendance_mode' => ! isset( $meta['_event_attendance_mode'][0] ) ? 'onsite' : $meta['_event_attendance_mode'][0],
+			'attendance_mode' => $attendance_mode,
 		);
 	}
 

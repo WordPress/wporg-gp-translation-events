@@ -49,6 +49,11 @@ class Attend_Event_Route extends Route {
 			return; // die_with_*() doesn't die under GP_Route::$fake_request.
 		}
 
+		if ( ! current_user_can( 'view_translation_event', $event->id() ) ) {
+			$this->die_with_error( esc_html__( 'You are not authorized to attend this event.', 'gp-translation-events' ), 403 );
+			return; // die_with_*() doesn't die under GP_Route::$fake_request.
+		}
+
 		if ( $event->is_past() ) {
 			$this->die_with_error( esc_html__( 'Cannot attend or un-attend a past event', 'gp-translation-events' ), 403 );
 			return; // die_with_*() doesn't die under GP_Route::$fake_request.

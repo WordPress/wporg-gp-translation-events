@@ -101,6 +101,9 @@ class Event_Form_Handler {
 			} catch ( InvalidStatus $e ) {
 				wp_send_json_error( esc_html__( 'Invalid status.', 'gp-translation-events' ), 422 );
 				return;
+			} catch ( InvalidAttendanceMode $e ) {
+				wp_send_json_error( esc_html__( 'Invalid attendance mode.', 'gp-translation-events' ), 422 );
+				return;
 			}
 
 			if ( empty( $new_event->title() ) ) {
@@ -127,6 +130,15 @@ class Event_Form_Handler {
 				$event = $this->event_repository->get_event( $new_event->id() );
 				if ( ! $event ) {
 					wp_send_json_error( esc_html__( 'Event does not exist.', 'gp-translation-events' ), 404 );
+				}
+				if ( $event->is_trashed() ) {
+					wp_send_json_error( esc_html__( 'Trashed events must be restored before they can be edited.', 'gp-translation-events' ), 403 );
+					return;
+				}
+				// Publishing is ordinary host work; unpublishing hides the event like trashing does.
+				if ( $event->is_published() && $new_event->is_draft() && ! current_user_can( 'trash_translation_event', $event->id() ) ) {
+					wp_send_json_error( esc_html__( 'You do not have permissions to unpublish this event.', 'gp-translation-events' ), 403 );
+					return;
 				}
 
 				try {
@@ -189,6 +201,7 @@ class Event_Form_Handler {
 	 * @throws InvalidEnd
 	 * @throws InvalidTimeZone
 	 * @throws InvalidStatus
+	 * @throws InvalidAttendanceMode
 	 */
 	// phpcs:enable
 	private function parse_form_data( array $data ): Event {
@@ -204,7 +217,7 @@ class Event_Form_Handler {
 		$attendance_mode = isset( $data['event_attendance_mode'] ) ? sanitize_text_field( wp_unslash( $data['event_attendance_mode'] ) ) : 'onsite';
 
 		$event_status = '';
-		if ( isset( $data['event_form_action'] ) && in_array( $data['event_form_action'], array( 'draft', 'publish', 'trash' ), true ) ) {
+		if ( isset( $data['event_form_action'] ) && in_array( $data['event_form_action'], array( 'draft', 'publish' ), true ) ) {
 			$event_status = sanitize_text_field( wp_unslash( $data['event_form_action'] ) );
 		}
 

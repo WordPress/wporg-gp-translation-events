@@ -2,6 +2,7 @@
 
 namespace Wporg\Tests\Routes;
 
+use GP_Route_Exit_Exception;
 use Wporg\Tests\Base_Test;
 use Wporg\TranslationEvents\Routes\Attendee\Remove_Attendee_Route;
 use Wporg\TranslationEvents\Routes\Event\Delete_Route;
@@ -14,11 +15,12 @@ use Wporg\TranslationEvents\Tests\Event_Factory;
 /**
  * Every state-changing route must refuse a request whose nonce is missing or forged.
  *
- * These handlers report failure through die_with_error(), which does not halt under
- * GP_Route::$fake_request, so each guard is followed by an explicit `return;`. Asserting
- * only on the 403 would pass even if that return were removed and the destructive work
- * ran anyway, so every case also asserts that no redirect was issued — reaching the
- * redirect means the handler ran to completion.
+ * These handlers report failure through die_with_error(). Under GP_Route::$fake_request,
+ * GlotPress 4.1 halts the request by throwing GP_Route_Exit_Exception, while older versions
+ * fall through, so each guard is followed by an explicit `return;`. Asserting only on the
+ * 403 would pass even if that return were removed and the destructive work ran anyway, so
+ * every case also asserts that no redirect was issued — reaching the redirect means the
+ * handler ran to completion.
  */
 class Nonce_Guards_Test extends Base_Test {
 	/**
@@ -141,12 +143,17 @@ class Nonce_Guards_Test extends Base_Test {
 		 * garble PHPUnit's output.
 		 */
 		ob_start();
-		if ( $needs_user ) {
-			$route->handle( $event_id, $user_id );
-		} else {
-			$route->handle( $event_id );
+		try {
+			if ( $needs_user ) {
+				$route->handle( $event_id, $user_id );
+			} else {
+				$route->handle( $event_id );
+			}
+		} catch ( GP_Route_Exit_Exception $e ) {
+			$route->exited = true;
+		} finally {
+			ob_end_clean();
 		}
-		ob_end_clean();
 
 		$this->assertSame( 403, $route->http_status );
 		$this->assertTrue( $route->exited );

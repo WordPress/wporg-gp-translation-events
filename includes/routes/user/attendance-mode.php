@@ -48,7 +48,7 @@ class Attendance_Mode_Route extends Route {
 			return; // die_with_*() doesn't die under GP_Route::$fake_request.
 		}
 
-		if ( ! current_user_can( 'edit_translation_event', $event_id ) ) {
+		if ( ! current_user_can( 'edit_translation_event_attendees', $event_id ) ) {
 			$this->die_with_error( esc_html__( 'You do not have permissions to manage the attendance mode of an attendee', 'gp-translation-events' ), 403 );
 			return; // die_with_*() doesn't die under GP_Route::$fake_request.
 		}

@@ -58,8 +58,9 @@ class Remove_Attendee_Route extends Route {
 
 		$attendee = $this->attendee_repository->get_attendee_for_event_for_user( $event->id(), $user_id );
 		if ( $attendee instanceof Attendee ) {
-			if ( ! current_user_can( 'edit_translation_event_attendees', $event->id() ) ) {
-				$this->die_with_error( esc_html__( 'You do not have permission to remove this attendee.', 'gp-translation-events' ), 403 );
+			$is_protected = $attendee->is_host() || $attendee->is_contributor() || $attendee->user_id() === $event->author_id();
+			if ( $is_protected && ! current_user_can( 'manage_translation_events' ) ) {
+				$this->die_with_error( esc_html__( 'Only administrators can remove hosts, contributors, or the event author.', 'gp-translation-events' ), 403 );
 				return; // die_with_*() doesn't die under GP_Route::$fake_request.
 			}
 			$this->attendee_repository->remove_attendee( $event->id(), $user_id );
