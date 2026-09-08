@@ -67,7 +67,8 @@ Templates::header(
 							<?php if ( $event->is_hybrid() ) : ?>
 								<a href="<?php echo esc_url( Urls::event_toggle_attendance_mode( $event->id(), $attendee->user_id() ) ); ?>" class="button set-attendance-mode"><?php $attendee->is_remote() ? esc_html_e( 'Set as on-site', 'gp-translation-events' ) : esc_html_e( 'Set as remote', 'gp-translation-events' ); ?></a>
 							<?php endif; ?>
-							<?php if ( ! $attendee->is_host() ) : ?>
+							<?php $is_protected = $attendee->is_host() || $attendee->is_contributor() || $attendee->user_id() === $event->author_id(); ?>
+							<?php if ( ! $is_protected || current_user_can( 'manage_translation_events' ) ) : ?>
 								<a href="<?php echo esc_url( Urls::event_remove_attendee( $event->id(), $attendee->user_id() ) ); ?>" class="button remove-attendee"><?php esc_html_e( 'Remove', 'gp-translation-events' ); ?></a>
 							<?php endif; ?>
 						</form>

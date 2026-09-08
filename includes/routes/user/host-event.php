@@ -58,7 +58,7 @@ class Host_Event_Route extends Route {
 			return; // die_with_*() doesn't die under GP_Route::$fake_request.
 		}
 
-		if ( $user_id === $event->author_id() && ! current_user_can( 'manage_translation_events' ) ) {
+		if ( $user_id === $event->author_id() && $user_id !== $current_user->ID && ! current_user_can( 'manage_translation_events' ) ) {
 			$this->die_with_error( esc_html__( 'Only administrators can change whether the event author is a host.', 'gp-translation-events' ), 403 );
 			return; // die_with_*() doesn't die under GP_Route::$fake_request.
 		}

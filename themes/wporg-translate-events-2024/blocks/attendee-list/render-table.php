@@ -50,7 +50,8 @@ use Wporg\TranslationEvents\Urls;
 							<?php if ( $event->is_hybrid() ) : ?>
 								<div class="wp-block-button is-style-outline"><a href="<?php echo esc_url( Urls::event_toggle_attendance_mode( $event->id(), $attendee->user_id() ) ); ?>" class="wp-block-button__link wp-element-button set-attendance-mode" id="wporg-theme-button-preview"><?php $attendee->is_remote() ? esc_html_e( 'Set as on-site', 'wporg-translate-events-2024' ) : esc_html_e( 'Set as remote', 'wporg-translate-events-2024' ); ?></a></div>
 							<?php endif; ?>
-							<?php if ( ! $attendee->is_host() ) : ?>
+							<?php $is_protected = $attendee->is_host() || $attendee->is_contributor() || $attendee->user_id() === $event->author_id(); ?>
+							<?php if ( ! $is_protected || current_user_can( 'manage_translation_events' ) ) : ?>
 								<div class="wp-block-button is-style-outline"><a href="<?php echo esc_url( Urls::event_remove_attendee( $event->id(), $attendee->user_id() ) ); ?>" class="wp-block-button__link wp-element-button remove-attendee" id="wporg-theme-button-preview"><?php esc_html_e( 'Remove', 'wporg-translate-events-2024' ); ?></a></div>
 							<?php endif; ?>
 					</div>

@@ -115,6 +115,7 @@ class Event_Form_Handler {
 			$invalid_slugs = array( 'new', 'edit', 'attend', 'my-events' );
 			if ( in_array( sanitize_title( $new_event->title() ), $invalid_slugs, true ) ) {
 				wp_send_json_error( esc_html__( 'Invalid slug.', 'gp-translation-events' ), 422 );
+				return;
 			}
 
 			if ( 'create_event' === $action ) {
@@ -130,6 +131,7 @@ class Event_Form_Handler {
 				$event = $this->event_repository->get_event( $new_event->id() );
 				if ( ! $event ) {
 					wp_send_json_error( esc_html__( 'Event does not exist.', 'gp-translation-events' ), 404 );
+					return;
 				}
 				if ( $event->is_trashed() ) {
 					wp_send_json_error( esc_html__( 'Trashed events must be restored before they can be edited.', 'gp-translation-events' ), 403 );

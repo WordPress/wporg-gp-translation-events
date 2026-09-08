@@ -103,7 +103,7 @@ register_block_type(
 
 		<!-- wp:form-input -->
 		<div class="wp-block-form-input"><label class="wp-block-form-input__label"><span class="wp-block-form-input__label-content"><?php esc_html_e( 'Event Timezone', 'wporg-translate-events-2024' ); ?></span>
-		<select class="wp-block-form-input__input" id="event-timezone" name="event_timezone" required <?php echo esc_html( $is_create_form || current_user_can( 'edit_translation_event_timezone', $event->id() ) ?: 'disabled' ); ?> >
+		<select class="wp-block-form-input__input" id="event-timezone" name="event_timezone" required <?php echo ( $is_create_form || current_user_can( 'edit_translation_event_timezone', $event->id() ) ) ? '' : 'disabled'; ?> >
 				<?php
 				echo wp_kses(
 					wp_timezone_choice( $is_create_form ? null : $event->timezone()->getName(), get_user_locale() ),

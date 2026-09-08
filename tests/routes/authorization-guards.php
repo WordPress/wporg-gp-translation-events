@@ -67,7 +67,7 @@ class Authorization_Guards_Test extends Base_Test {
 		$this->attendee_repository = new Attendee_Repository();
 		$this->stats_factory       = new Stats_Factory();
 
-		$this->redirect_guard = function ( $location ) {
+		$this->redirect_guard = function ( string $location ): bool {
 			$this->redirect_to = $location;
 			return false;
 		};
@@ -209,6 +209,24 @@ class Authorization_Guards_Test extends Base_Test {
 
 		$this->assert_refused( $route );
 		$this->assertTrue( $this->attendee_repository->get_attendee_for_event_for_user( $event_id, $author_id )->is_host() );
+	}
+
+	/**
+	 * @return void
+	 */
+	public function test_author_can_step_down_as_host(): void {
+		$author_id = $this->set_normal_user_as_current();
+		$event_id  = $this->event_factory->create_active( $this->now, array( $author_id ) );
+		$author    = $this->attendee_repository->get_attendee_for_event_for_user( $event_id, $author_id );
+		$author->mark_as_host();
+		$this->attendee_repository->update_attendee( $author );
+
+		$_POST['_wpnonce'] = wp_create_nonce( "toggle_translation_event_host_{$event_id}_{$author_id}" );
+		$route             = new Host_Event_Route();
+		$this->run_route( $route, fn() => $route->handle( $event_id, $author_id ) );
+
+		$this->assertNotNull( $this->redirect_to );
+		$this->assertFalse( $this->attendee_repository->get_attendee_for_event_for_user( $event_id, $author_id )->is_host() );
 	}
 
 	/**

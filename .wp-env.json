@@ -12,6 +12,6 @@
     "SAVEQUERIES": true
   },
   "lifecycleScripts": {
-    "afterStart": "wp-env run cli wp rewrite structure '/%postname%/' && wp-env run cli wp plugin activate wporg-gp-translation-events"
+    "afterStart": "wp-env run cli sh -c 'wp rewrite structure \"/%postname%/\" && wp plugin activate wporg-gp-translation-events'"
   }
 }
