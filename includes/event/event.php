@@ -32,7 +32,15 @@ class InvalidStatus extends Exception {
 	}
 }
 
+class InvalidAttendanceMode extends Exception {
+	public function __construct( ?Throwable $previous = null ) {
+		parent::__construct( 'Event attendance mode is invalid', 0, $previous );
+	}
+}
+
 class Event {
+	public const ATTENDANCE_MODES = array( 'onsite', 'remote', 'hybrid' );
+
 	private int $id = 0;
 	private int $author_id;
 	private Event_Start_Date $start;
@@ -49,6 +57,7 @@ class Event {
 	 * @throws InvalidStart
 	 * @throws InvalidEnd
 	 * @throws InvalidStatus
+	 * @throws InvalidAttendanceMode
 	 */
 	public function __construct(
 		int $author_id,
@@ -188,7 +197,13 @@ class Event {
 		$this->updated_at = $updated_at ?? Translation_Events::now();
 	}
 
+	/**
+	 * @throws InvalidAttendanceMode
+	 */
 	public function set_attendance_mode( string $attendance_mode ): void {
+		if ( ! in_array( $attendance_mode, self::ATTENDANCE_MODES, true ) ) {
+			throw new InvalidAttendanceMode();
+		}
 		$this->attendance_mode = $attendance_mode;
 	}
 

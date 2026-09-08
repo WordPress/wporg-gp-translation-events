@@ -3,10 +3,15 @@
   "phpVersion": "8.4",
   "plugins": [
     "GlotPress/GlotPress",
-    "https://downloads.wordpress.org/plugin/sqlite-object-cache.1.3.7.zip",
-    "."
+    "https://downloads.wordpress.org/plugin/sqlite-object-cache.1.3.7.zip"
   ],
+  "mappings": {
+    "wp-content/plugins/wporg-gp-translation-events": "."
+  },
   "config": {
     "SAVEQUERIES": true
+  },
+  "lifecycleScripts": {
+    "afterStart": "wp-env run cli sh -c 'wp rewrite structure \"/%postname%/\" && wp plugin activate wporg-gp-translation-events'"
   }
 }

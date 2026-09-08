@@ -37,9 +37,14 @@ class Image_Route extends Route {
 		}
 
 		$event = $this->event_repository->get_event( $event_id );
-		$text  = ! $event ? esc_html__( 'Translation events', 'gp-translation-events' ) : $event->title();
-		$text  = '' === $text ? esc_html__( 'Translation events', 'gp-translation-events' ) : $text;
-		$text  = substr( $text, 0, 44 ); // Limit the text to 44 characters.
+		if ( $event && ! current_user_can( 'view_translation_event', $event->id() ) ) {
+			$this->die_with_error( esc_html__( 'You are not authorized to view this page.', 'gp-translation-events' ), 403 );
+			return; // Pre-4.1 GlotPress falls through here under GP_Route::$fake_request.
+		}
+
+		$text = $event ? $event->title() : esc_html__( 'Translation events', 'gp-translation-events' );
+		$text = '' === $text ? esc_html__( 'Translation events', 'gp-translation-events' ) : $text;
+		$text = substr( $text, 0, 44 ); // Limit the text to 44 characters.
 
 		$lines = $this->split_text( $text, 22 ); // Limit each line to 22 characters.
 		$text1 = $lines[0];
