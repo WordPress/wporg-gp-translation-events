@@ -39,7 +39,7 @@ class Image_Route extends Route {
 		$event = $this->event_repository->get_event( $event_id );
 		if ( $event && ! current_user_can( 'view_translation_event', $event->id() ) ) {
 			$this->die_with_error( esc_html__( 'You are not authorized to view this page.', 'gp-translation-events' ), 403 );
-			return; // die_with_*() doesn't die under GP_Route::$fake_request.
+			return; // Pre-4.1 GlotPress falls through here under GP_Route::$fake_request.
 		}
 
 		$text = $event ? $event->title() : esc_html__( 'Translation events', 'gp-translation-events' );

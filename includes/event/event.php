@@ -57,6 +57,7 @@ class Event {
 	 * @throws InvalidStart
 	 * @throws InvalidEnd
 	 * @throws InvalidStatus
+	 * @throws InvalidAttendanceMode
 	 */
 	public function __construct(
 		int $author_id,

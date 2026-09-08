@@ -569,10 +569,6 @@ class Event_Repository {
 				// that do not have a title. To work around that, we set the title of those events to a single space.
 				$title = ' ';
 			}
-			if ( empty( $meta['attendance_mode'] ) ) {
-				$meta['attendance_mode'] = 'onsite';
-			}
-
 			$event = new Event(
 				intval( $post->post_author ),
 				$meta['start'],
