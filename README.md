@@ -1,6 +1,6 @@
 # wporg-gp-translation-events
 
-> **This repository is archived.** The Translation Events plugin now lives in the WordPress.org Meta repository, alongside the rest of translate.wordpress.org. Development moved there in September 2026 (meta [r15165](https://meta.trac.wordpress.org/changeset/15165), see [#8368](https://meta.trac.wordpress.org/ticket/8368)). Issues and pull requests opened here are no longer monitored.
+**This repository is archived.** The Translation Events plugin now lives in the WordPress.org Meta repository, alongside the rest of translate.wordpress.org. Development moved there in September 2026 (meta [r15165](https://meta.trac.wordpress.org/changeset/15165), see [#8368](https://meta.trac.wordpress.org/ticket/8368)). Issues and pull requests opened here are no longer monitored.
 
 Translation Events lets Polyglots organize translation days and track contributions made during them, as discussed in the Polyglots Make P2 post [Translation Events Prototype](https://make.wordpress.org/polyglots/2024/02/28/translation-events-prototype/). It is live at https://translate.wordpress.org/events/.
 
