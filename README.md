@@ -1,50 +1,16 @@
 # wporg-gp-translation-events
 
-Here we are implementing Translation Events, as discussed in our Polyglots Make P2 Post: [Translation Events Prototype](https://make.wordpress.org/polyglots/2024/02/28/translation-events-prototype/).
+**This repository is archived.** The Translation Events plugin now lives in the WordPress.org Meta repository, alongside the rest of translate.wordpress.org. Development moved there in September 2026 (meta [r15165](https://meta.trac.wordpress.org/changeset/15165), see [#8368](https://meta.trac.wordpress.org/ticket/8368)). Issues and pull requests opened here are no longer monitored.
 
-## Development environment
-First follow [instructions to install `wp-env`](https://developer.wordpress.org/block-editor/reference-guides/packages/packages-env/#prerequisites).
+Translation Events lets Polyglots organize translation days and track contributions made during them, as discussed in the Polyglots Make P2 post [Translation Events Prototype](https://make.wordpress.org/polyglots/2024/02/28/translation-events-prototype/). It is live at https://translate.wordpress.org/events/.
 
-Then install dependencies:
+## Where to go now
 
-```shell
-composer install
-```
+- **Source code:** [`wordpress.org/public_html/wp-content/plugins/wporg-gp-translation-events`](https://github.com/WordPress/wordpress.org/tree/trunk/wordpress.org/public_html/wp-content/plugins/wporg-gp-translation-events) in the [WordPress Meta Git mirror](https://github.com/WordPress/wordpress.org). The canonical repository is [`meta.svn.wordpress.org`](https://meta.svn.wordpress.org/sites/trunk/wordpress.org/public_html/wp-content/plugins/wporg-gp-translation-events/).
+- **Bug reports and feature requests:** [Meta Trac](https://meta.trac.wordpress.org/), component [Translate Site & Plugins](https://meta.trac.wordpress.org/newticket?component=Translate+Site+%26+Plugins).
+- **Contributing:** open a pull request against the Meta Git mirror and reference the Trac ticket. A Meta committer commits the patch to SVN, which closes the PR automatically. See the mirror's [Contribution & PR Workflow](https://github.com/WordPress/wordpress.org#contribution--pr-workflow).
+- **Local development and tests:** the plugin is part of the `environments/translate` wp-env stack in the Meta repository. See the [Environments Guide](https://github.com/WordPress/wordpress.org/blob/trunk/environments/README.md) and the plugin's [README](https://github.com/WordPress/wordpress.org/blob/trunk/wordpress.org/public_html/wp-content/plugins/wporg-gp-translation-events/README.md).
 
-Then you can run a local WordPress instance with the plugin installed:
+## History
 
-```shell
-composer dev:start
-```
-
-Once the environment is running, you must create the database tables needed by this plugin:
-
-```shell
-composer dev:db:schema
-```
-
-WordPress is now running at http://localhost:8888, user: `admin`, password: `password`.
-
-### Local environment
-
-If you are not using `wp-env`, you need to add the tables to the database of your local environment. To do this, you can run this command from the plugin folder:
-
-```shell
-wp db query < schema.sql
-```
-
-### Tests
-
-You can run tests in `wp-env` with the following command:
-
-> Note that `wp-env` must be running.
-
-```shell
-composer dev:test
-```
-
-If you want to run only one test, you can use the following command:
-
-```shell
-composer dev:test -- --filter methods_name
-```
+This repository holds the full history of the plugin from its start in early 2024 through commit d0deff5 (2026-09-08), which is the state that was synced into Meta. It stays available read-only for reference and for links from older discussions.
